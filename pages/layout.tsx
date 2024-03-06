@@ -1,5 +1,6 @@
 "use client";
 import Header from "@components/layout/Header";
+import { Grid } from "@mui/material";
 
 /**
  *
@@ -10,7 +11,9 @@ export default function Layout({ children }: { children: React.ReactNode }): Rea
     return (
         <main id="root">
             <Header />
-            {children}
+            <Grid container spacing={0}>
+                {children}
+            </Grid>
         </main>
     );
 }
