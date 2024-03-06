@@ -3,6 +3,7 @@ export enum UserApiRouteName {
     GET_ALL = "get_all",
     LOGIN = "login",
     REFRESH_LOGIN = "refresh-login",
+    LOGOUT = "logout",
 }
 
 const USER_API_ROUTE_JSON = {
@@ -10,6 +11,7 @@ const USER_API_ROUTE_JSON = {
     [UserApiRouteName.GET_ALL]: "/all",
     [UserApiRouteName.LOGIN]: "/login",
     [UserApiRouteName.REFRESH_LOGIN]: "/refresh-login",
+    [UserApiRouteName.LOGOUT]: "/logout",
 };
 
 export const USER_API_BASE_URL = "/user";
