@@ -12,6 +12,7 @@ import { CardSearchType } from "@app/types/entity/Card";
 
 type CardSearchFormPropsType = {
     offsetState: [number, React.Dispatch<React.SetStateAction<number>>];
+    loadingFormState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
     setCardAllResultCount: React.Dispatch<React.SetStateAction<number>>;
     setCardResult: React.Dispatch<React.SetStateAction<CardSearchType[]>>;
     searchLimit: React.JSX.Element;
@@ -34,9 +35,9 @@ export default function CardSearchForm(props: CardSearchFormPropsType): React.JS
     const router = useRouter();
     const { dispatch } = useContext(StoreContext);
     const [offset, setOffset] = props.offsetState;
+    const [loadingForm, setLoadingForm] = props.loadingFormState;
     const [values, setValues] = useState<ValuesType>({});
     const [errors, setErrors] = useState<ErrorsType>({});
-    const [loading, setLoading] = useState<boolean>(false);
     const { enqueueSnackbar } = useSnackbar();
 
     const sendCardSearchReq = async (data: object): Promise<void> => {
@@ -49,7 +50,7 @@ export default function CardSearchForm(props: CardSearchFormPropsType): React.JS
                 enqueueSnackbar(err, { variant: "error" });
             })
             .finally(() => {
-                setLoading(false);
+                setLoadingForm(false);
             });
     };
 
@@ -58,6 +59,7 @@ export default function CardSearchForm(props: CardSearchFormPropsType): React.JS
     };
 
     const launchSendCardSearchReq = (resetOffset: boolean = true) => {
+        setLoadingForm(true);
         if (resetOffset === true) {
             setOffset(0);
         }
@@ -69,7 +71,6 @@ export default function CardSearchForm(props: CardSearchFormPropsType): React.JS
         const valuesLength = Object.keys(values).length;
         const errorsLength = Object.keys(errors).length;
         if (valuesLength > 0 && errorsLength === 0) {
-            setLoading(true);
             launchSendCardSearchReq();
         }
     }, [values, errors]);
@@ -95,7 +96,7 @@ export default function CardSearchForm(props: CardSearchFormPropsType): React.JS
                     Filter component
                 </Grid>
                 <Grid item xs={12}>
-                    <Button loading={loading}>Search Card</Button>
+                    <Button loading={loadingForm}>Search Card</Button>
                 </Grid>
             </Grid>
         </Form>
