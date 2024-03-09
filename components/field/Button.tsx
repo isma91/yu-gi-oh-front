@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ButtonTypeMap, Button as MUIButton } from "@mui/material";
 import CircularProgress from "@components/feedback/CircularProgress";
 import { ThemeColorEnumType } from "@app/types/Theme";
+import { IconPositionEnumType } from "@app/types/Input";
 
 type ButtonPropsType = {
     loading: boolean;
@@ -14,6 +15,8 @@ type ButtonPropsType = {
     type?: HTMLButtonElement["type"];
     className?: string;
     onClick?: (e: React.MouseEvent) => void;
+    icon?: React.ReactNode;
+    iconPosition?: IconPositionEnumType;
 };
 
 function Button(props: ButtonPropsType) {
@@ -44,6 +47,17 @@ function Button(props: ButtonPropsType) {
         className = props.className;
     }
 
+    let buttonOption: { startIcon?: React.ReactNode; endIcon?: React.ReactNode } = {};
+    let iconPosition: IconPositionEnumType = IconPositionEnumType.START;
+    if (props.iconPosition !== undefined) {
+        iconPosition = props.iconPosition;
+    }
+    if (props.icon !== undefined) {
+        buttonOption = {
+            [`${iconPosition}Icon`]: props.icon,
+        };
+    }
+
     useEffect(() => {
         let propsDisabled = false;
         if (props.disabled !== undefined) {
@@ -71,6 +85,7 @@ function Button(props: ButtonPropsType) {
             type={type}
             color={color}
             variant={variant}
+            {...buttonOption}
         >
             {loading ? <CircularProgress color={color} /> : children}
         </MUIButton>
