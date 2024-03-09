@@ -10,6 +10,7 @@ export default function CardSearchPage() {
     const [offset, setOffset] = useState<number>(0);
     const [limit, setLimit] = useState<number>(15);
     const [cardAllResultCount, setCardAllResultCount] = useState<number>(0);
+    const [loadingForm, setLoadingForm] = useState<boolean>(false);
     const [cardResult, setCardResult] = useState<CardSearchType[]>([]);
     const limitArray: number[] = [15, 30, 45, 60];
 
@@ -19,6 +20,7 @@ export default function CardSearchPage() {
                 <Grid item xs={12}>
                     <CardSearchForm
                         offsetState={[offset, setOffset]}
+                        loadingFormState={[loadingForm, setLoadingForm]}
                         setCardAllResultCount={setCardAllResultCount}
                         setCardResult={setCardResult}
                         limit={limit}
