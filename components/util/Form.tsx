@@ -7,10 +7,23 @@ type FormPropsType = {
     children: React.ReactNode;
 };
 
+type ErrorsType = {
+    [key in string]: string | undefined;
+};
+
+type ValuesType = { [key in string]: any };
+
 export default function Form({ setValues, setErrors, fields, children }: FormPropsType): React.JSX.Element {
     const formRef = useRef<HTMLFormElement | null>(null);
 
-    const checkConfirm = (check: boolean, values: object, errors: object, field: string, confirmField: string, errorMsg: string): object => {
+    const checkConfirm = (
+        check: boolean,
+        values: ValuesType,
+        errors: ErrorsType,
+        field: string,
+        confirmField: string,
+        errorMsg: string
+    ): ErrorsType => {
         if (check === true && values[field] !== values[confirmField]) {
             errors[field] = errorMsg;
             errors[confirmField] = errorMsg;
@@ -23,8 +36,8 @@ export default function Form({ setValues, setErrors, fields, children }: FormPro
         if (formRef.current === null) {
             return false;
         }
-        let values: object = {};
-        let errors: object = {};
+        let values: ValuesType = {};
+        let errors: ErrorsType = {};
         const elements: HTMLFormControlsCollection = formRef.current.elements;
         const checkConfirmPassword: boolean = fields.includes("password") && fields.includes("confirmPassword");
         const checkConfirmEmail: boolean = fields.includes("email") && fields.includes("confirmEmail");
