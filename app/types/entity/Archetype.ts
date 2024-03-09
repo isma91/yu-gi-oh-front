@@ -10,6 +10,6 @@ export type ArchetypeGetAllType = NameSlugNameEntity & {
     id: number;
 }
 
-export type ArchetypeGetAllRequestType = RequestGetAll<"Archetype", ArchetypeGetAllType>;
+export type ArchetypeGetAllRequestType = RequestGetAll<"archetype", ArchetypeGetAllType>;
 
-export type ArchetypeGetInfoRequestType = RequestGetInfo<"Archetype", ArchetypeGetAllType>;
+export type ArchetypeGetInfoRequestType = RequestGetInfo<"archetype", ArchetypeGetAllType>;

@@ -14,6 +14,6 @@ export type SetGetAllType = NameSlugNameEntity & {
     id: number;
 }
 
-export type SetGetAllRequestType = RequestGetAll<"Set", SetGetAllType>;
+export type SetGetAllRequestType = RequestGetAll<"set", SetGetAllType>;
 
-export type SetGetInfoRequestType = RequestGetInfo<"Set", SetGetAllType>;
+export type SetGetInfoRequestType = RequestGetInfo<"set", SetGetAllType>;

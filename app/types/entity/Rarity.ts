@@ -12,6 +12,6 @@ export type RarityGetAllType = NameSlugNameEntity & {
     id: number;
 }
 
-export type RarityGetAllRequestType = RequestGetAll<"Rarity", RarityGetAllType>;
+export type RarityGetAllRequestType = RequestGetAll<"rarity", RarityGetAllType>;
 
-export type RarityGetInfoRequestType = RequestGetInfo<"Rarity", RarityGetAllType>;
+export type RarityGetInfoRequestType = RequestGetInfo<"rarity", RarityGetAllType>;

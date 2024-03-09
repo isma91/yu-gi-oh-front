@@ -17,6 +17,6 @@ export type CardSetGetAllType = {
     id: number;
 }
 
-export type CardSetGetAllRequestType = RequestGetAll<"CardSet", CardSetGetAllType>;
+export type CardSetGetAllRequestType = RequestGetAll<"cardSet", CardSetGetAllType>;
 
-export type CardSetGetInfoRequestType = RequestGetInfo<"CardSet", CardSetGetAllType>;
+export type CardSetGetInfoRequestType = RequestGetInfo<"cardSet", CardSetGetAllType>;

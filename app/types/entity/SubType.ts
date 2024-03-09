@@ -12,6 +12,6 @@ export type SubTypeGetAllType = NameSlugNameEntity & {
     id: number;
 }
 
-export type SubTypeGetAllRequestType = RequestGetAll<"SubType", SubTypeGetAllType>;
+export type SubTypeGetAllRequestType = RequestGetAll<"subType", SubTypeGetAllType>;
 
-export type SubTypeGetInfoRequestType = RequestGetInfo<"SubType", SubTypeGetAllType>;
+export type SubTypeGetInfoRequestType = RequestGetInfo<"subType", SubTypeGetAllType>;

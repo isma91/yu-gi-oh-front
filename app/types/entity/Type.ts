@@ -10,6 +10,6 @@ export type TypeGetAllType = NameSlugNameEntity & {
     id: number;
 }
 
-export type TypeGetAllRequestType = RequestGetAll<"Type", TypeGetAllType>;
+export type TypeGetAllRequestType = RequestGetAll<"type", TypeGetAllType>;
 
-export type TypeGetInfoRequestType = RequestGetInfo<"Type", TypeGetAllType>;
+export type TypeGetInfoRequestType = RequestGetInfo<"type", TypeGetAllType>;
