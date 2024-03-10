@@ -1,7 +1,8 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
 import { StoreContext } from "@app/lib/state-provider";
 import { DashboardMenuItemElementChildrenType, DashboardMenuItemElementParentType, DashboardMenuItemElementType } from "@app/types/DashboardMenu";
-import { Drawer, List, Theme, useTheme, useMediaQuery, ListItem, Typography, Collapse, IconButton, ListItemButton, Divider } from "@mui/material";
+import { Drawer, List, Theme, useTheme, useMediaQuery, ListItem, Typography, Collapse, IconButton, ListItemButton } from "@mui/material";
+import Divider from "@components/Divider";
 import { makeStyles } from "@mui/styles";
 import GenericStyles from "@app/css/style";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -227,6 +228,10 @@ export default function Menu(props: DashboardMenuPropsType): React.JSX.Element {
         });
     };
 
+    const displayDivider = (): React.JSX.Element => {
+        return <Divider variant="middle" thickness={3} />;
+    };
+
     return (
         <Drawer
             variant={mediaQueryUpMd ? "permanent" : "temporary"}
@@ -247,18 +252,18 @@ export default function Menu(props: DashboardMenuPropsType): React.JSX.Element {
             {mediaQueryUpMd === false ? (
                 <>
                     {displayCloseMenu()}
-                    <Divider variant="middle" className={genericClasses.backgroundColorPrimaryMain} sx={{ borderBottomWidth: 3 }} />
+                    {displayDivider()}
                 </>
             ) : null}
             <List sx={{ with: "100%" }}>
                 {displayMenuItemFromArray(menuItem)}
                 {isAdmin === true ? (
                     <>
-                        <Divider variant="middle" className={genericClasses.backgroundColorPrimaryMain} sx={{ borderBottomWidth: 3 }} />
+                        {displayDivider()}
                         {displayMenuItemFromArray(menuItemAdmin, true)}
                     </>
                 ) : null}
-                <Divider variant="middle" className={genericClasses.backgroundColorPrimaryMain} sx={{ borderBottomWidth: 3 }} />
+                {displayDivider()}
                 <ListItem key="menu-logout" className={classes.elementMenu} onClick={handleLogout}>
                     <Typography component="span" className={genericClasses.verticalAlign}>
                         <LogoutIcon />

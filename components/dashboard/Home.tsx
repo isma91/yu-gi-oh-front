@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Grid, Theme, useTheme, useMediaQuery } from "@mui/material";
+import { Grid, Theme, useTheme, useMediaQuery, Container, Typography } from "@mui/material";
 import DashboardMenu from "@components/dashboard/Menu";
 import { DashboardMenuItemElementType } from "@app/types/DashboardMenu";
 import HomeIcon from "@mui/icons-material/Home";
@@ -14,11 +14,13 @@ import { CardRouteName, CARD_ROUTE_JSON, CARD_BASE_URL } from "@routes/Card";
 import { DECK_BASE_URL, DECK_ROUTE_JSON, DeckRouteName } from "@routes/Deck";
 import { COLLECTION_BASE_URL, COLLECTION_ROUTE_JSON, CollectionRouteName } from "@routes/Collection";
 import { SETTING_BASE_URL } from "@routes/Setting";
+import Divider from "@components/Divider";
 
 type DashboardHomeType = {
     children: React.ReactNode;
     active?: number;
     activeChild?: number;
+    title?: string;
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -137,7 +139,7 @@ export default function DashboardHome(props: DashboardHomeType): React.JSX.Eleme
             );
         } else {
             return (
-                <Grid item xs={12} md={2} className={genericClasses.positionSticky + " " + classes.gridMenu}>
+                <Grid item xs={2} className={genericClasses.positionSticky + " " + classes.gridMenu}>
                     {dashboardMenuJsx}
                 </Grid>
             );
@@ -145,10 +147,24 @@ export default function DashboardHome(props: DashboardHomeType): React.JSX.Eleme
     };
 
     return (
-        <Grid container spacing={0}>
+        <Grid container spacing={2}>
             {displayDashboardMenu()}
-            <Grid item xs={12} md={mediaQueryUpMd ? 10 : 12} className={classes.gridChildren}>
-                {children}
+            <Grid item xs={mediaQueryUpMd ? 10 : 12} className={classes.gridChildren}>
+                <Container>
+                    {props.title !== undefined ? (
+                        <>
+                            <Grid item xs={12}>
+                                <Typography component="span">{props.title}</Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Divider variant="middle" />
+                            </Grid>
+                        </>
+                    ) : null}
+                    <Grid item xs={12}>
+                        {children}
+                    </Grid>
+                </Container>
             </Grid>
         </Grid>
     );

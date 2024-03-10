@@ -7,27 +7,23 @@ type FormPropsType = {
     children: React.ReactNode;
 };
 
+type ErrorsType = {
+    [key in string]: string | undefined;
+};
+
+type ValuesType = { [key in string]: any };
+
 export default function Form({ setValues, setErrors, fields, children }: FormPropsType): React.JSX.Element {
     const formRef = useRef<HTMLFormElement | null>(null);
 
-    const fulfillValuesWithAddress = (valuesToFulfill: object, elementName: string, attributes: NamedNodeMap): object => {
-        const addressAttribute = attributes.getNamedItem("value");
-        const addressFieldArray: string[] = ["latitude", "longitude", "city", "zipcode", "administrativeArea2", "administrativeArea1", "country"];
-        for (let i = 0; i < addressFieldArray.length; i++) {
-            const addressFieldName = addressFieldArray[i];
-            const attribute: Attr | null = attributes.getNamedItem(addressFieldName);
-            const valuesToFulfillFieldName = elementName + "[" + addressFieldName + "]";
-            let attributeValue: string = "";
-            if (attribute !== null) {
-                attributeValue = attribute.value;
-            }
-            valuesToFulfill[valuesToFulfillFieldName] = attributeValue;
-        }
-        valuesToFulfill[elementName + "[address]"] = addressAttribute !== null ? addressAttribute.value : "";
-        return valuesToFulfill;
-    };
-
-    const checkConfirm = (check: boolean, values: object, errors: object, field: string, confirmField: string, errorMsg: string): object => {
+    const checkConfirm = (
+        check: boolean,
+        values: ValuesType,
+        errors: ErrorsType,
+        field: string,
+        confirmField: string,
+        errorMsg: string
+    ): ErrorsType => {
         if (check === true && values[field] !== values[confirmField]) {
             errors[field] = errorMsg;
             errors[confirmField] = errorMsg;
@@ -40,8 +36,8 @@ export default function Form({ setValues, setErrors, fields, children }: FormPro
         if (formRef.current === null) {
             return false;
         }
-        let values: object = {};
-        let errors: object = {};
+        let values: ValuesType = {};
+        let errors: ErrorsType = {};
         const elements: HTMLFormControlsCollection = formRef.current.elements;
         const checkConfirmPassword: boolean = fields.includes("password") && fields.includes("confirmPassword");
         const checkConfirmEmail: boolean = fields.includes("email") && fields.includes("confirmEmail");
@@ -73,13 +69,6 @@ export default function Form({ setValues, setErrors, fields, children }: FormPro
                 isFile = true;
                 if (elementFiles === null || elementFiles.length === 0) {
                     elementValue = "";
-                }
-            } else if (fieldName.substring(0, 8) === "address_") {
-                elementName = fieldName.substring(8);
-                if (elementValue !== "") {
-                    values[elementName + "[address]"] = elementValue;
-                    values = fulfillValuesWithAddress(values, elementName, elementAttributes);
-                    continue;
                 }
             } else if (fieldName.substring(0, 13) === "autocomplete_") {
                 elementName = fieldName.substring(13);

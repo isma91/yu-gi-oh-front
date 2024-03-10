@@ -130,7 +130,7 @@ export default function Select(props: SelectPropsType) {
                         onClose={() => setOpen(false)}
                         inputProps={{ ...selectOptions }}
                         error={error ? true : false}
-                        value={value}
+                        value={value as any}
                         onChange={handleChange}
                         labelId={labelId}
                         name={name}
