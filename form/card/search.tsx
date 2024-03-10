@@ -305,6 +305,7 @@ export default function CardSearchForm(props: CardSearchFormPropsType): React.JS
                 "subType",
                 "autocomplete_type",
                 "isPendulum",
+                "isEffect",
             ]}
         >
             <Grid container spacing={2}>
