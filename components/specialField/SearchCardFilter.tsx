@@ -332,7 +332,7 @@ export default function SearchCardFilter(props: SearchCardFilterPropsType) {
                                 error={errors.isPendulum}
                                 loading={false}
                                 optional
-                                helperText="Leave empty if it's not a Monster"
+                                helperText="Leave empty if it's not a Monster."
                             >
                                 {displayEmptyMenuItem("isPendulum", "null")}
                                 <MenuItem value="true">Yes</MenuItem>
@@ -346,7 +346,7 @@ export default function SearchCardFilter(props: SearchCardFilterPropsType) {
                                 error={errors.isEffect}
                                 loading={false}
                                 optional
-                                helperText="Leave empty if it's not a Monster"
+                                helperText="Leave empty if it's not a Monster or a Monster from the Extra-Deck."
                             >
                                 {displayEmptyMenuItem("isEffect", "null")}
                                 <MenuItem value="true">Yes</MenuItem>
