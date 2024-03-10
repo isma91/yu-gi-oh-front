@@ -1,6 +1,6 @@
 import { RequestGetInfo } from "@app/types/Request";
 import { NameSlugNameEntity, TimestampableEntity, UuidStringType } from "@app/types/Entity";
-import { AttributeEntityType, AttributeGetAllType } from "@app/types/entity/Attribute";
+import { CardAttributeEntityType, CardAttributeGetAllType } from "@app/types/entity/CardAttribute";
 import { PropertyEntityType, PropertyGetAllType } from "@app/types/entity/Property";
 import { CategoryEntityType, CategoryGetAllType } from "@app/types/entity/Category";
 import { CardPictureEntityType, CardPictureGetAllType } from "@app/types/entity/CardPicture";
@@ -14,7 +14,7 @@ import { SubCategoryEntityType, SubCategoryGetAllType } from "@app/types/entity/
 export type CardEntityType = TimestampableEntity & NameSlugNameEntity & {
     id: number;
     uuid: UuidStringType;
-    attribute: AttributeEntityType;
+    attribute: CardAttributeEntityType;
     property: PropertyEntityType;
     category: CategoryEntityType;
     pictures: CardPictureEntityType[];
@@ -42,9 +42,9 @@ export type CardGetAllType = NameSlugNameEntity & {
 export type CardSearchType = NameSlugNameEntity & {
     id: number;
     uuid: UuidStringType;
-    attribute: AttributeGetAllType;
+    attribute: CardAttributeGetAllType;
     property: PropertyGetAllType;
-    category: CategoryGetAllType;
+    category: Omit<CategoryGetAllType, "subCategories">;
     picture: Pick<CardPictureGetAllType, "id" | "pictureSmallUrl">;
     type: TypeGetAllType;
     subTypes: SubTypeGetAllType[];

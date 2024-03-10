@@ -1,6 +1,6 @@
 import { RequestGetAll, RequestGetInfo } from "@app/types/Request";
 import { NameSlugNameEntity, TimestampableEntity } from "@app/types/Entity";
-import { SubPropertyEntityType } from "@app/types/entity/SubProperty";
+import { SubPropertyEntityType, SubPropertyGetAllType } from "@app/types/entity/SubProperty";
 
 
 export type SubPropertyTypeEntityType = TimestampableEntity & NameSlugNameEntity & {
@@ -10,6 +10,7 @@ export type SubPropertyTypeEntityType = TimestampableEntity & NameSlugNameEntity
 
 export type SubPropertyTypeGetAllType = NameSlugNameEntity & {
     id: number;
+    subProperties: Array<Omit<SubPropertyGetAllType, "subPropertyType">>;
 }
 
 export type SubPropertyTypeGetAllRequestType = RequestGetAll<"subPropertyType", SubPropertyTypeGetAllType>;

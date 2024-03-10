@@ -10,7 +10,7 @@ export type PropertyTypeEntityType = TimestampableEntity & NameSlugNameEntity & 
 
 export type PropertyTypeGetAllType = NameSlugNameEntity & {
     id: number;
-    properties: PropertyGetAllType[];
+    properties: Array<Omit<PropertyGetAllType, "propertyType">>;
 }
 
 export type PropertyTypeGetAllRequestType = RequestGetAll<"propertyType", PropertyTypeGetAllType>;
