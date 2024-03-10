@@ -34,18 +34,22 @@ export function CompareTwoArray<ArrayType>(array1: ArrayType, array2: ArrayType)
  * @param {boolean} fieldIsString 
  * @returns {Array<T>}
  */
-export function SortAscFromField<T>(array: Array<T>, field: string = "name", fieldIsString: boolean = true): Array<T> {
+export function SortAscFromField<T extends { [key in string]: any}>(array: Array<T>, field: string = "name", fieldIsString: boolean = true): Array<T> {
     let newArray = [...array];
     newArray.sort((a, b) => {
         let aValue: string | number;
         let bValue: string | number;
+        let aField: string | number = a[field as keyof T];
+        let bField: string | number = b[field as keyof T];
         if (fieldIsString === true) {
-            aValue = a[field].toLowerCase() as string;
-            bValue = b[field].toLowerCase() as string;
+            aField = aField as string;
+            bField = bField as string;
+            aValue = aField.toLowerCase() as string;
+            bValue = bField.toLowerCase() as string;
             return aValue.localeCompare(bValue);
         } else {
-            aValue = a[field] as number;
-            bValue = b[field] as number;
+            aValue = aField as number;
+            bValue = bField as number;
             return aValue - bValue;
         }
     });
@@ -57,18 +61,21 @@ export function SortAscFromField<T>(array: Array<T>, field: string = "name", fie
  * @param {string} fieldArrayString 
  * @returns {T[]}
  */
-export function SortAscFromFieldArrayString<T>(array: Array<T>, fieldArrayString: string): T[] {
+export function SortAscFromFieldArrayString<T extends {[key in string] : any}>(array: Array<T>, fieldArrayString: string): T[] {
     let newArray = [...array];
     newArray.sort((a, b) => {
         let fieldAToCheck: string = "";
         let fieldBToCheck: string = "";
         const fieldArray = fieldArrayString.split(".");
         if (fieldArray.length === 1) {
-            fieldAToCheck = a[fieldArray[0]];
-            fieldBToCheck = b[fieldArray[0]];
+            const fieldArrayToUse: keyof T = fieldArray[0];
+            fieldAToCheck = a[fieldArrayToUse] as string;
+            fieldBToCheck = b[fieldArrayToUse] as string;
         } else if (fieldArray.length === 2) {
-            fieldAToCheck = a[fieldArray[0]][fieldArray[1]];
-            fieldBToCheck = b[fieldArray[0]][fieldArray[1]];
+            const fieldArrayZero: keyof T = fieldArray[0];
+            const fieldArrayOne: keyof T = fieldArray[1];
+            fieldAToCheck = a[fieldArrayZero][fieldArrayOne] as string;
+            fieldBToCheck = b[fieldArrayZero][fieldArrayOne] as string;
         }
         return fieldAToCheck.toLowerCase().localeCompare(fieldBToCheck.toLocaleLowerCase());
     })
@@ -94,27 +101,6 @@ export function SpliceMultiple<T>(array: T[], indexes: number[]): T[] {
 }
 
 /**
- * Create array of number who begin at `from` with `length` length
- * @param {number} from 
- * @param {number} length 
- * @returns {number[]}
- */
-export function CreateArrayNumber(from: number, length: number): number[] {
-    let newArray: number[] = [];
-    if (from === length) {
-        return newArray;
-    } else if (from > length) {
-        const newFrom = length;
-        length = from;
-        from = newFrom;
-    }
-    for (let i = from; i <= length; i++) {
-        newArray.push(i);
-    }
-    return newArray;
-}
-
-/**
  * 
  * @param {any[]} array 
  * @param {number} number must be supperior than 1 
@@ -131,6 +117,22 @@ export function GetRandomElement(array: any[], number: number): any[] {
     } else {
         const randomizedArray = array.sort(() => 0.5 - Math.random());
         newArray = randomizedArray.slice(0, number);
+    }
+    return newArray;
+}
+
+/**
+ * Function to use when we have Array<{..., fieldName => children[]}>
+ * @param {T[]} array 
+ * @param {string} fieldName 
+ * @returns {T[]}
+ */
+export function SortAscForArrayWithChildren<T extends { [key in string]: any }>(array: T[], fieldName: string): T[] {
+    const sortedArray = SortAscFromField(array);
+    let newArray = [];
+    for (let i = 0; i < sortedArray.length; i++) {
+        const el = sortedArray[i];
+        newArray.push({ ...el, [fieldName]: SortAscFromField(el[fieldName]) });
     }
     return newArray;
 }
