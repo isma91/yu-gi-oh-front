@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Collapse, MenuItem, Typography } from "@mui/material";
 import Button from "@components/field/Button";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
@@ -116,9 +116,7 @@ export default function SearchCardFilter(props: SearchCardFilterPropsType) {
                             setSelectedCategoryId(parseInt(e.target.value, 10));
                         }}
                     >
-                        <MenuItem key="category-0-0" value={0}>
-                            <em>empty</em>
-                        </MenuItem>
+                        {displayEmptyMenuItem("category")}
                         {category.data.map((categoryData, categoryKey) => {
                             return (
                                 <MenuItem key={`category-${categoryData.id}-${categoryKey}`} value={categoryData.id}>
@@ -131,9 +129,7 @@ export default function SearchCardFilter(props: SearchCardFilterPropsType) {
                 {selectedCategory !== null ? (
                     <Grid item xs={12} md={6}>
                         <Select name="subCategory" label="Card Sub Type" error={errors.subCategory} loading={category.loading} optional>
-                            <MenuItem key="subCategory-0-0" value="">
-                                <em>empty</em>
-                            </MenuItem>
+                            {displayEmptyMenuItem("subCategory", "")}
                             {selectedCategory.subCategories.map((subCategory, subCategoryKey) => {
                                 return (
                                     <MenuItem key={`subCategory-${subCategory.id}-${subCategoryKey}`} value={subCategory.id}>
@@ -163,9 +159,7 @@ export default function SearchCardFilter(props: SearchCardFilterPropsType) {
                             setSelectedPropertyTypeId(parseInt(e.target.value, 10));
                         }}
                     >
-                        <MenuItem key="propertyType-0-0" value={0}>
-                            <em>empty</em>
-                        </MenuItem>
+                        {displayEmptyMenuItem("propertyType")}
                         {propertyType.data.map((propertyTypeData, propertyTypeKey) => {
                             return (
                                 <MenuItem key={`propertyType-${propertyTypeData.id}-${propertyTypeKey}`} value={propertyTypeData.id}>
@@ -211,6 +205,7 @@ export default function SearchCardFilter(props: SearchCardFilterPropsType) {
                             setSelectedSubPropertyTypeId(parseInt(e.target.value, 10));
                         }}
                     >
+                        {displayEmptyMenuItem("subPropertyType")}
                         {subPropertyType.data.map((subPropertyTypeData, subPropertyTypeKey) => {
                             return (
                                 <MenuItem key={`subPropertyType-${subPropertyTypeData.id}-${subPropertyTypeKey}`} value={subPropertyTypeData.id}>
@@ -244,8 +239,12 @@ export default function SearchCardFilter(props: SearchCardFilterPropsType) {
         );
     };
 
-    const handleIsPendulum = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const checked = e.target.checked;
+    const displayEmptyMenuItem = (entityName: string, value: number | string = 0): React.JSX.Element => {
+        return (
+            <MenuItem key={`${entityName}-0-0`} value={value}>
+                <em>empty</em>
+            </MenuItem>
+        );
     };
 
     return (
@@ -278,11 +277,18 @@ export default function SearchCardFilter(props: SearchCardFilterPropsType) {
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Select name="cardAttribute" label="Attribute" error={errors.cardAttribute} loading={cardAttribute.loading} optional>
-                                <MenuItem key="cardAttribute-0-0" value="">
-                                    <em>empty</em>
-                                </MenuItem>
+                            <Select
+                                name="cardAttribute"
+                                label="Attribute"
+                                error={errors.cardAttribute}
+                                loading={cardAttribute.loading}
+                                multiple
+                                optional
+                            >
                                 {cardAttribute.data.map((cardAttributeData, cardAttributeKey) => {
+                                    {
+                                        displayEmptyMenuItem("cardAttribute");
+                                    }
                                     return (
                                         <MenuItem key={`cardAttribute-${cardAttributeData.id}-${cardAttributeKey}`} value={cardAttributeData.id}>
                                             {cardAttributeData.name}
@@ -296,6 +302,7 @@ export default function SearchCardFilter(props: SearchCardFilterPropsType) {
                         {displaySubPropertyTypeWithSubPropertySelect()}
                         <Grid item xs={12} md={6}>
                             <Select name="subType" label="Ability" error={errors.subType} loading={subType.loading} optional multiple>
+                                {displayEmptyMenuItem("subType")}
                                 {subType.data.map((subTypeData, subTypeKey) => {
                                     return (
                                         <MenuItem key={`subType-${subTypeData.id}-${subTypeKey}`} value={subTypeData.id}>
@@ -319,7 +326,32 @@ export default function SearchCardFilter(props: SearchCardFilterPropsType) {
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Switch name="isPendulum" error={errors.isPendulum} label="Is a Pendulum ???" isOnOff />
+                            <Select
+                                name="isPendulum"
+                                label="Is a PENDULUM ???"
+                                error={errors.isPendulum}
+                                loading={false}
+                                optional
+                                helperText="Leave empty if it's not a Monster"
+                            >
+                                {displayEmptyMenuItem("isPendulum", "null")}
+                                <MenuItem value="true">Yes</MenuItem>
+                                <MenuItem value="false">No</MenuItem>
+                            </Select>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Select
+                                name="isEffect"
+                                label="Is an Effect Monster ??"
+                                error={errors.isEffect}
+                                loading={false}
+                                optional
+                                helperText="Leave empty if it's not a Monster"
+                            >
+                                {displayEmptyMenuItem("isEffect", "null")}
+                                <MenuItem value="true">Yes</MenuItem>
+                                <MenuItem value="false">No</MenuItem>
+                            </Select>
                         </Grid>
                     </Grid>
                 </Collapse>
