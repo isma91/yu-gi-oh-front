@@ -5,7 +5,7 @@
  * @param {object} data 
  * @returns {FormData}
  */
-function CreateFormData(data: object): FormData {
+function CreateFormData(data: {[key in string]: any}): FormData {
     let formData: FormData = new FormData();
     for (let keyData in data) {
         const valueData = data[keyData];
