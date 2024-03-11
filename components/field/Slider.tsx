@@ -46,10 +46,9 @@ export default function Slider<T extends SliderValueType>(props: SliderPropsType
     }
     let value: T;
     let setValue: React.Dispatch<React.SetStateAction<T>>;
+    [value, setValue] = useState<T>(initialeVale);
     if (isValueExternal === true && props.valueState !== undefined) {
         [value, setValue] = props.valueState as any;
-    } else {
-        [value, setValue] = useState<T>(initialeVale);
     }
     let color: SliderColorType = "primary";
     if (props.color !== undefined) {
