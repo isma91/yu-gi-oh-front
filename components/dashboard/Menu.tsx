@@ -44,8 +44,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 }));
 
-//@todo: put logout at the end of menu because it's not a link
-
 export default function Menu(props: DashboardMenuPropsType): React.JSX.Element {
     const { name, menuItem, active, activeChild } = props;
     const { state: globalState, dispatch } = useContext(StoreContext);
