@@ -1,5 +1,5 @@
 import { ChangeEvent, useState, useEffect } from "react";
-import { Typography, Select as SelectMUI, FormControl, FormHelperText, InputLabel } from "@mui/material";
+import { Typography, Select as SelectMUI, FormControl, FormHelperText, InputLabel, SelectChangeEvent } from "@mui/material";
 import CircularProgress from "@components/feedback/CircularProgress";
 import GenericStyles from "@app/css/style";
 import { BasicInputPropsType } from "@app/types/Input";
@@ -11,7 +11,7 @@ type SelectPropsType = BasicInputPropsType & {
     children: React.ReactNode;
     multiple?: true;
     closeOnChange?: true;
-    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (event: SelectChangeEvent<string>) => void;
     fullWidth?: boolean;
     helperText?: string;
     className?: string;
@@ -60,7 +60,8 @@ export default function Select(props: SelectPropsType) {
         closeOnChange = true;
     }
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: SelectChangeEvent<string>) => {
         setValue(event.target.value);
         if (props.onChange) {
             props.onChange(event);
