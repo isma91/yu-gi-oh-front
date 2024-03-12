@@ -10,7 +10,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { SearchCardDisplayType } from "@app/types/Search";
 import Button from "@components/field/Button";
 import { IconPositionEnumType } from "@app/types/Input";
-import { AddApiBaseUrl } from "@utils/Url";
+import { AddApiBaseUrl, GetDefaultCardPicturePath } from "@utils/Url";
 import { LimitText } from "@utils/String";
 import "@app/css/card-search.css";
 import { useRouter } from "next/router";
@@ -394,7 +394,7 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
         if (cardInfo.picture.pictureSmallUrl !== null) {
             pictureUrl = AddApiBaseUrl(cardInfo.picture.pictureSmallUrl);
         } else {
-            pictureUrl = "/static/images/card/default.png";
+            pictureUrl = GetDefaultCardPicturePath();
         }
         return pictureUrl;
     };
