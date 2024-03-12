@@ -204,11 +204,12 @@ export default function Menu(props: DashboardMenuPropsType): React.JSX.Element {
                 className = `${classes.elementMenu} ${classes.elementMenuAdmin}`;
             }
             const childIsOpen = findOpenChildIsOpen(k);
-            const url = v.parentPath !== undefined ? v.parentPath : v.path;
+            const parentUrl = v.parentPath !== undefined ? v.parentPath : v.path;
+            const baseUrlFormChildren = v.path;
             const hasChildren = v.children !== undefined;
             return (
                 <Fragment key={key}>
-                    <ListItem onClick={(e) => router.push(url)} className={className}>
+                    <ListItem onClick={(e) => router.push(parentUrl)} className={className}>
                         {displayDrawerMenuItem(v)}
                         {hasChildren === true ? (
                             childIsOpen === true ? (
@@ -220,7 +221,7 @@ export default function Menu(props: DashboardMenuPropsType): React.JSX.Element {
                             )
                         ) : null}
                     </ListItem>
-                    {v.children !== undefined ? displayDrawerMenuItemChildren(v.children, url, k) : null}
+                    {v.children !== undefined ? displayDrawerMenuItemChildren(v.children, baseUrlFormChildren, k) : null}
                 </Fragment>
             );
         });
