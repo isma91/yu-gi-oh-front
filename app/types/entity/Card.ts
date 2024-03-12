@@ -60,13 +60,13 @@ export type CardSearchType = NameSlugNameEntity & {
     isPendulum: boolean | null;
 }
 
-export type CardGetInfo = NameSlugNameEntity & {
+export type CardGetInfoType = NameSlugNameEntity & {
     id: number;
     uuid: UuidStringType;
     attribute: CardAttributeGetAllType;
     property: PropertyGetAllType;
     category: Omit<CategoryGetAllType, "subCategories">;
-    picture: Pick<CardPictureGetAllType, "id" | "pictureUrl" | "pictureSmallUrl" | "artworkUrl">;
+    pictures: Array<Pick<CardPictureGetAllType, "id" | "pictureUrl" | "pictureSmallUrl" | "artworkUrl">>;
     type: TypeGetAllType;
     subTypes: SubTypeGetAllType[];
     isEffect: boolean;
@@ -91,4 +91,4 @@ export type CardSearchRequestType = {
     };
 }
 
-export type CardGetInfoRequestType = RequestGetInfo<"card", CardGetInfo>;
+export type CardGetInfoRequestType = RequestGetInfo<"card", CardGetInfoType>;
