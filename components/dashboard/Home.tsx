@@ -62,6 +62,7 @@ export default function DashboardHome(props: DashboardHomeType): React.JSX.Eleme
         {
             name: "Card",
             path: CARD_BASE_URL,
+            parentPath: `${CARD_BASE_URL}${CARD_ROUTE_JSON[CardRouteName.CARD_SEARCH]}`,
             logo: <StyleIcon />,
             children: [
                 {
