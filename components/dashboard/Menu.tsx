@@ -161,7 +161,7 @@ export default function Menu(props: DashboardMenuPropsType): React.JSX.Element {
 
     const displayCloseMenu = () => {
         return (
-            <ListItemButton sx={{ paddingBottom: "5%", justifyContent: "center" }} onClick={handleClose}>
+            <ListItemButton sx={{ paddingBottom: "5%", justifyContent: "center", maxHeight: "15vh" }} onClick={handleClose}>
                 <Typography
                     component="span"
                     sx={{
@@ -204,7 +204,7 @@ export default function Menu(props: DashboardMenuPropsType): React.JSX.Element {
                 className = `${classes.elementMenu} ${classes.elementMenuAdmin}`;
             }
             const childIsOpen = findOpenChildIsOpen(k);
-            const url = v.path;
+            const url = v.parentPath !== undefined ? v.parentPath : v.path;
             const hasChildren = v.children !== undefined;
             return (
                 <Fragment key={key}>

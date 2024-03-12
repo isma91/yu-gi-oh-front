@@ -24,15 +24,6 @@ type DashboardHomeType = {
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
-    icon: {
-        float: "left",
-        [theme.breakpoints.down("sm")]: {
-            fontSize: "x-large",
-        },
-        [theme.breakpoints.up("sm")]: {
-            fontSize: "xxx-large",
-        },
-    },
     gridMenu: {
         height: "100vh",
     },
@@ -71,6 +62,7 @@ export default function DashboardHome(props: DashboardHomeType): React.JSX.Eleme
         {
             name: "Card",
             path: CARD_BASE_URL,
+            parentPath: `${CARD_BASE_URL}${CARD_ROUTE_JSON[CardRouteName.CARD_SEARCH]}`,
             logo: <StyleIcon />,
             children: [
                 {
@@ -133,7 +125,19 @@ export default function DashboardHome(props: DashboardHomeType): React.JSX.Eleme
         if (mediaQueryUpMd === false) {
             return (
                 <>
-                    <MenuIcon className={`${genericClasses.cursorPointer} ${classes.icon}`} onClick={(e) => setOpenMenu(true)} />
+                    <Grid item>
+                        <MenuIcon
+                            className={`${genericClasses.cursorPointer}`}
+                            sx={{
+                                float: "left",
+                                fontSize: "xx-large",
+                                [Theme.breakpoints.down("md")]: {
+                                    fontSize: "xxx-large",
+                                },
+                            }}
+                            onClick={(e) => setOpenMenu(true)}
+                        />
+                    </Grid>
                     {dashboardMenuJsx}
                 </>
             );
