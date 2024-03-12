@@ -1,5 +1,5 @@
 import { RequestGetAll, RequestGetInfo } from "@app/types/Request";
-import { NameSlugNameEntity, TimestampableEntity } from "@app/types/Entity";
+import { DateStringType, NameSlugNameEntity, TimestampableEntity } from "@app/types/Entity";
 import { CardSetEntityType } from "@app/types/entity/CardSet";
 
 
@@ -12,6 +12,8 @@ export type SetEntityType = TimestampableEntity & NameSlugNameEntity & {
 
 export type SetGetAllType = NameSlugNameEntity & {
     id: number;
+    code: string;
+    releaseDate: DateStringType | null;
 }
 
 export type SetGetAllRequestType = RequestGetAll<"set", SetGetAllType>;
