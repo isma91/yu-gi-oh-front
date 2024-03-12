@@ -1,6 +1,7 @@
 export type DashboardMenuItemElementParentType = {
     name: string;
     path: string;
+    parentPath?: string;
     logo: React.JSX.Element;
 };
 
