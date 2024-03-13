@@ -506,7 +506,11 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
             slugName: slugName,
         };
         const url = GetFullRoute(CardRouteName.CARD_INFO, option);
-        router.push(url);
+        if (typeof window === "undefined") {
+            router.push(url);
+        } else {
+            window.open(url, "_blank");
+        }
     };
 
     return (
