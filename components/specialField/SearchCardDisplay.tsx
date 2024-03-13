@@ -12,7 +12,7 @@ import Button from "@components/field/Button";
 import { IconPositionEnumType } from "@app/types/Input";
 import { AddApiBaseUrl, GetDefaultCardPicturePath } from "@utils/Url";
 import { LimitText } from "@utils/String";
-import "@app/css/card-search.css";
+import "@app/css/card.css";
 import { useRouter } from "next/router";
 import { CardRouteName, GetFullRoute } from "@routes/Card";
 
