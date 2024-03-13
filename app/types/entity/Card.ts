@@ -48,7 +48,7 @@ export type CardSearchType = NameSlugNameEntity & {
     picture: Pick<CardPictureGetAllType, "id" | "pictureSmallUrl">;
     type: TypeGetAllType;
     subTypes: SubTypeGetAllType[];
-    isEffect: boolean;
+    isEffect: boolean | null;
     description: string;
     slugDescription: string;
     pendulumDescription: string;
@@ -69,7 +69,7 @@ export type CardGetInfoType = NameSlugNameEntity & {
     pictures: Array<Pick<CardPictureGetAllType, "id" | "pictureUrl" | "pictureSmallUrl" | "artworkUrl">>;
     type: TypeGetAllType;
     subTypes: SubTypeGetAllType[];
-    isEffect: boolean;
+    isEffect: boolean | null;
     description: string;
     slugDescription: string;
     pendulumDescription: string;
