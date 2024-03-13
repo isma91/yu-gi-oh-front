@@ -10,9 +10,11 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { SearchCardDisplayType } from "@app/types/Search";
 import Button from "@components/field/Button";
 import { IconPositionEnumType } from "@app/types/Input";
-import { AddApiBaseUrl } from "@utils/Url";
+import { AddApiBaseUrl, GetDefaultCardPicturePath } from "@utils/Url";
 import { LimitText } from "@utils/String";
-import "@app/css/card-search.css";
+import "@app/css/card.css";
+import { useRouter } from "next/router";
+import { CardRouteName, GetFullRoute } from "@routes/Card";
 
 type SearchCardDisplayProps = {
     cardResult: CardSearchType[];
@@ -101,6 +103,7 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
     const [cardInfoToDisplay, setCardInfoToDisplay] = useState<CardInfoToDisplayType | null>(null);
     const [offset, setOffset] = props.offsetState;
     const open = Boolean(anchorEl);
+    const router = useRouter();
     const Theme = useTheme();
     const genericClasses = GenericStyles();
     const classes = useStyles();
@@ -318,6 +321,7 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
                     },
                 }}
                 className={`${classes.gridListViewCardInfo} gridListViewCardInfo`}
+                onClick={(e) => handleCardClick(cardInfo)}
             >
                 <Grid item xs={12} md={3} className={classes.cardPictureGridListView}>
                     <img src={pictureUrl} className={classes.cardPictureListView} />
@@ -379,6 +383,7 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
                         setCardInfoToDisplay(cardInfoToDisplayJson);
                     }}
                     onMouseLeave={handlePopoverClose}
+                    onClick={(e) => handleCardClick(cardInfo)}
                 />
             </Grid>
         );
@@ -389,7 +394,7 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
         if (cardInfo.picture.pictureSmallUrl !== null) {
             pictureUrl = AddApiBaseUrl(cardInfo.picture.pictureSmallUrl);
         } else {
-            pictureUrl = "/static/images/card/default.png";
+            pictureUrl = GetDefaultCardPicturePath();
         }
         return pictureUrl;
     };
@@ -492,6 +497,16 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
                 </Grid>
             </Popover>
         );
+    };
+
+    const handleCardClick = (cardInfo: CardSearchType) => {
+        const { uuid, slugName } = cardInfo;
+        const option = {
+            uuid: uuid,
+            slugName: slugName,
+        };
+        const url = GetFullRoute(CardRouteName.CARD_INFO, option);
+        router.push(url);
     };
 
     return (

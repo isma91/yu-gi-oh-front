@@ -5,3 +5,11 @@ export function AddApiBaseUrl(url: string) {
     }
     return `${NEXT_PUBLIC_API_BASE_URL}${url}`;
 }
+
+
+/**
+ * @returns {string}
+ */
+export function GetDefaultCardPicturePath(): string {
+    return "/static/images/card/default.png";
+}

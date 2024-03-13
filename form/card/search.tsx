@@ -1,13 +1,12 @@
 "use client";
 import React, { useState, useEffect, useContext } from "react";
-import { Collapse, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import Form from "@components/util/Form";
 import InputText from "@components/field/InputText";
 import Button from "@components/field/Button";
 import CardSearchRequest from "@api/Search/Card";
 import { StoreContext } from "@app/lib/state-provider";
 import { useSnackbar } from "notistack";
-import { useRouter } from "next/router";
 import { CardSearchType } from "@app/types/entity/Card";
 import { ArchetypeGetAllType } from "@app/types/entity/Archetype";
 import { CardAttributeGetAllType } from "@app/types/entity/CardAttribute";
@@ -48,7 +47,6 @@ type ValuesType = {
 
 export default function CardSearchForm(props: CardSearchFormPropsType): React.JSX.Element {
     const { setCardAllResultCount, setCardResult, searchLimit, limit } = props;
-    const router = useRouter();
     const { state: globalState } = useContext(StoreContext);
     const [offset, setOffset] = props.offsetState;
     const [loadingForm, setLoadingForm] = props.loadingFormState;
