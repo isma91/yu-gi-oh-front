@@ -23,3 +23,22 @@ export function LimitText(text: string, length: number): string {
     limitted = limitted.replace(/[.,]*$/g, "");
     return `${limitted}...`;
 }
+
+function testRegex(regexString: string, val: string): boolean {
+    const regex = new RegExp(regexString);
+    return regex.test(val);
+};
+
+/**
+ * 
+ * @param {string} uuid 
+ * @param {number} version Symfony Uuid version 
+ * @returns {boolean}
+ */
+export function CheckUuid(uuid: string, version: number = 7): boolean {
+    let regex = "";
+    if (version === 7) {
+        regex = "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$";
+    }
+    return testRegex(regex, uuid);
+}

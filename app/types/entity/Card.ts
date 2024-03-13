@@ -6,8 +6,8 @@ import { CategoryEntityType, CategoryGetAllType } from "@app/types/entity/Catego
 import { CardPictureEntityType, CardPictureGetAllType } from "@app/types/entity/CardPicture";
 import { TypeEntityType, TypeGetAllType } from "@app/types/entity/Type";
 import { SubTypeEntityType, SubTypeGetAllType } from "@app/types/entity/SubType";
-import { ArchetypeEntityType } from "@app/types/entity/Archetype";
-import { CardSetEntityType } from "@app/types/entity/CardSet";
+import { ArchetypeEntityType, ArchetypeGetAllType } from "@app/types/entity/Archetype";
+import { CardSetEntityType, CardSetGetAllType } from "@app/types/entity/CardSet";
 import { SubPropertyEntityType, SubPropertyGetAllType } from "@app/types/entity/SubProperty";
 import { SubCategoryEntityType, SubCategoryGetAllType } from "@app/types/entity/SubCategory";
 
@@ -48,13 +48,36 @@ export type CardSearchType = NameSlugNameEntity & {
     picture: Pick<CardPictureGetAllType, "id" | "pictureSmallUrl">;
     type: TypeGetAllType;
     subTypes: SubTypeGetAllType[];
-    isEffect: boolean;
+    isEffect: boolean | null;
     description: string;
     slugDescription: string;
     pendulumDescription: string;
     monsterDescription: string;
     attackPoints: number | null;
     defensePoints: number | null;
+    subProperties: SubPropertyGetAllType[];
+    subCategory: SubCategoryGetAllType;
+    isPendulum: boolean | null;
+}
+
+export type CardGetInfoType = NameSlugNameEntity & {
+    id: number;
+    uuid: UuidStringType;
+    attribute: CardAttributeGetAllType;
+    property: PropertyGetAllType;
+    category: Omit<CategoryGetAllType, "subCategories">;
+    pictures: Array<Pick<CardPictureGetAllType, "id" | "pictureUrl" | "pictureSmallUrl" | "artworkUrl">>;
+    type: TypeGetAllType;
+    subTypes: SubTypeGetAllType[];
+    isEffect: boolean | null;
+    description: string;
+    slugDescription: string;
+    pendulumDescription: string;
+    monsterDescription: string;
+    attackPoints: number | null;
+    defensePoints: number | null;
+    archetype: ArchetypeGetAllType;
+    cardSets: CardSetGetAllType[];
     subProperties: SubPropertyGetAllType[];
     subCategory: SubCategoryGetAllType;
     isPendulum: boolean | null;
@@ -67,4 +90,5 @@ export type CardSearchRequestType = {
         cardAllResultCount: number;
     };
 }
-export type CardGetInfoRequestType = RequestGetInfo<"card", CardGetAllType>;
+
+export type CardGetInfoRequestType = RequestGetInfo<"card", CardGetInfoType>;

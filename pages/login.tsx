@@ -1,10 +1,11 @@
 "use client";
-import { Grid, Paper, Box, Avatar, Typography } from "@mui/material";
+import { Grid, Paper, Box, Avatar, Typography, useTheme } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import LoginForm from "@form/user/login";
 import { GetRandomElement } from "@utils/Array";
 
 function Login(): React.JSX.Element {
+    const Theme = useTheme();
     const getAllLoginImageUrl = () => {
         const numImage: number = 7;
         const numberArray: number[] = Array.from(Array(numImage).keys());
@@ -31,7 +32,34 @@ function Login(): React.JSX.Element {
                     backgroundPosition: "center",
                 }}
             />
-            <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+            <Grid
+                item
+                xs={12}
+                sm={8}
+                md={5}
+                component={Paper}
+                elevation={6}
+                square
+                //className={classes.gridLoginPart}
+                sx={{
+                    [Theme.breakpoints.down("md")]: {
+                        "&:before": {
+                            position: "absolute",
+                            top: 0,
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            zIndex: 1,
+                            backgroundImage: `url(${loginImageUrl})`,
+                            opacity: "0.35",
+                            backgroundRepeat: "no-repeat",
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                            content: `" "`,
+                        },
+                    },
+                }}
+            >
                 <Box
                     sx={{
                         my: 8,
@@ -39,6 +67,8 @@ function Login(): React.JSX.Element {
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
+                        position: "relative",
+                        zIndex: 2,
                     }}
                 >
                     <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
