@@ -172,7 +172,7 @@ export default function CardInfoPage() {
         );
     };
 
-    const displayCardInfoDescription = (cardInfoDescriptionJson: { [key in string]: string | null }): React.JSX.Element => {
+    const displayCardInfoDescription = (cardInfoDescriptionJson: { [key in string]: string | null }): Array<React.JSX.Element | null> => {
         const cardInfoDescriptionJsonKeyArray = Object.keys(cardInfoDescriptionJson);
         return cardInfoDescriptionJsonKeyArray.map((cardInfoDescriptionKey) => {
             const cardText = cardInfoDescriptionJson[cardInfoDescriptionKey];
