@@ -12,7 +12,7 @@ export type SetEntityType = TimestampableEntity & NameSlugNameEntity & {
 
 export type SetGetAllType = NameSlugNameEntity & {
     id: number;
-    code: string;
+    code: string | null;
     releaseDate: DateStringType | null;
 }
 

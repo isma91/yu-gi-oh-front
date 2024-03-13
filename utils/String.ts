@@ -24,6 +24,18 @@ export function LimitText(text: string, length: number): string {
     return `${limitted}...`;
 }
 
+/**
+ * @param {string | number} string 
+ * @param {number} [length=2] 
+ * @returns {string}
+ */
+export function FulfillZero(string: string | number, length: number = 2): string {
+    if (length < 2) {
+        length = 2;
+    }
+    return string.toString().padStart(length, "0")
+}
+
 function testRegex(regexString: string, val: string): boolean {
     const regex = new RegExp(regexString);
     return regex.test(val);
