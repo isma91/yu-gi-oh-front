@@ -78,6 +78,7 @@ export default function DashboardHome(props: DashboardHomeType): React.JSX.Eleme
         {
             name: "Deck",
             path: DECK_BASE_URL,
+            parentPath: `${DECK_BASE_URL}${DECK_ROUTE_JSON[DeckRouteName.LIST]}`,
             logo: <BookIcon />,
             children: [
                 {
