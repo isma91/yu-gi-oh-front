@@ -256,6 +256,8 @@ export default function CardInfoPage() {
         cardInfoFromSetKeyArray: number[],
         cardInfoName: string
     ): React.JSX.Element => {
+        let cardInfoCardSetGridMd = Math.ceil(12 / cardInfoFromSetKeyArray.length);
+        cardInfoCardSetGridMd = cardInfoCardSetGridMd < 5 ? 5 : cardInfoCardSetGridMd;
         return (
             <Grid
                 item
@@ -307,7 +309,7 @@ export default function CardInfoPage() {
                                     key={`${cardInfoName}-cardInfoCardSet-${cardInfoSetName}`}
                                     item
                                     xs={12}
-                                    md={5}
+                                    md={cardInfoCardSetGridMd}
                                     sx={{ width: "100%", margin: "auto" }}
                                 >
                                     <Paper
@@ -350,6 +352,10 @@ export default function CardInfoPage() {
                                                     key={`${cardInfoName}-otherInfo-${cardInfoSetName}-0`}
                                                     component="p"
                                                     className={classes.cardInfoCardSet}
+                                                    sx={{
+                                                        fontSize: "1rem",
+                                                        fontWeight: "bolder",
+                                                    }}
                                                 >
                                                     Characteristic (Code/Rarity):
                                                 </Typography>
