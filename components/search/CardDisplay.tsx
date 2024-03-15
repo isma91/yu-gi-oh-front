@@ -11,36 +11,21 @@ import { SearchCardDisplayType } from "@app/types/Search";
 import Button from "@components/field/Button";
 import { IconPositionEnumType } from "@app/types/Input";
 import { AddApiBaseUrl, GetDefaultCardPicturePath } from "@utils/Url";
-import { LimitText } from "@utils/String";
 import "@app/css/card.css";
 import { useRouter } from "next/router";
 import { CardRouteName, GetFullRoute } from "@routes/Card";
+import SearchCardPopover from "@components/search/CardPopover";
+import { GetCardDescription, GetCardInfoStringJson, GetCardPictureUrl } from "@utils/SearchCard";
+import { CardInfoToDisplayType } from "@app/types/SearchCard";
 
 type SearchCardDisplayProps = {
     cardResult: CardSearchType[];
     offsetState: [number, React.Dispatch<React.SetStateAction<number>>];
     limit: number;
     cardAllResultCount: number;
-};
-
-type SearchCardCardInfoJsonKeyType =
-    | "categoryWithSubCategory"
-    | "attribute"
-    | "type"
-    | "atkDef"
-    | "propertyWithPropertyType"
-    | "subPropertyWithPropertyType";
-
-type SearchCardCardInfoJsonType = {
-    [key in SearchCardCardInfoJsonKeyType]: string;
-};
-
-type AnchorPositionHorizontalType = "left" | "right";
-
-type CardInfoToDisplayType = {
-    cardInfo: CardSearchType;
-    popoverId: string;
-    countPicturePictureView: number;
+    isFromCreatePage?: true;
+    openDialogState?: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+    setCardDialogInfo?: React.Dispatch<React.SetStateAction<CardSearchType | null>>;
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -108,11 +93,17 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
     const genericClasses = GenericStyles();
     const classes = useStyles();
     const mediaQueryUpMd = useMediaQuery(Theme.breakpoints.up("md"));
-    const categoryMonsterSlugName = "monster";
     const limitText = mediaQueryUpMd === true ? 400 : 300;
-    const countCardPicturePictureViewPerRow = 4;
-    const countCardPicturePictureViewPerRowIsEvent = countCardPicturePictureViewPerRow % 2 === 0;
-    let countPicturePictureView = 0;
+    const isFromCreatePage = props.isFromCreatePage !== undefined;
+    let openDialog: boolean | null = null;
+    let setOpenDialog: React.Dispatch<React.SetStateAction<boolean>> | null = null;
+    if (props.openDialogState !== undefined) {
+        [openDialog, setOpenDialog] = props.openDialogState;
+    }
+    let setCardDialogInfo: React.Dispatch<React.SetStateAction<CardSearchType | null>> | null = null;
+    if (props.setCardDialogInfo !== undefined) {
+        setCardDialogInfo = props.setCardDialogInfo;
+    }
 
     const handleDisplayButton = (searchCardDisplayType: SearchCardDisplayType) => {
         handlePopoverClose();
@@ -198,101 +189,9 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
         );
     };
 
-    const displayCardCategoryWithSubCategory = (cardInfo: CardSearchType): string => {
-        const { category: cardInfoCategory, isEffect, subCategory: cardInfoSubCategory, subTypes: cardInfoSubTypeArray } = cardInfo;
-        if (cardInfoCategory === null) {
-            return "";
-        }
-        const isMonster = cardInfoCategory.slugName === categoryMonsterSlugName;
-        let cardCategoryWithSubCategory = cardInfoCategory.name;
-        if (cardInfoSubCategory !== null) {
-            cardCategoryWithSubCategory += `: ${cardInfoSubCategory.name}`;
-        }
-        if (isMonster === true) {
-            if (cardInfoSubCategory === null) {
-                if (isEffect !== null) {
-                    const stringIsEffect = isEffect === true ? "Effect" : "Normal";
-                    cardCategoryWithSubCategory += `: ${stringIsEffect}`;
-                }
-            }
-            if (cardInfo.isPendulum === true) {
-                cardCategoryWithSubCategory += ` / Pendulum`;
-            }
-        }
-        if (cardInfoSubTypeArray.length !== 0) {
-            cardInfoSubTypeArray.forEach((cardInfoSubType) => {
-                cardCategoryWithSubCategory += ` / ${cardInfoSubType.name}`;
-            });
-        }
-        return cardCategoryWithSubCategory;
-    };
-
-    const displayCardType = (cardInfo: CardSearchType): string => {
-        const { type: cardInfoType } = cardInfo;
-        if (cardInfoType === null) {
-            return "";
-        }
-        return `Type: ${cardInfoType.name}`;
-    };
-
-    const displayCardAtkDef = (cardInfo: CardSearchType): string => {
-        const { attackPoints: cardInfoAtk, defensePoints: cardInfoDef } = cardInfo;
-        if (cardInfoAtk === null && cardInfoDef === null) {
-            return "";
-        }
-        let stringCardAtkDef = "";
-        if (cardInfoAtk !== null) {
-            stringCardAtkDef = `Atk: ${cardInfoAtk}`;
-        }
-        if (cardInfoDef !== null) {
-            stringCardAtkDef += ` Def: ${cardInfoDef}`;
-        }
-        return stringCardAtkDef;
-    };
-
-    const displayCardDescription = (cardInfo: CardSearchType): string => {
-        const { description: cardInfoDescription, isPendulum, monsterDescription: cardInfoMonsterDescription } = cardInfo;
-        let cardDescription = isPendulum === true ? cardInfoMonsterDescription : cardInfoDescription;
-        return LimitText(cardDescription, limitText);
-    };
-
-    const displayCardAttribute = (cardInfo: CardSearchType): string => {
-        const { attribute: cardInfoAttribute } = cardInfo;
-        return cardInfoAttribute !== null ? `Attribute: ${cardInfoAttribute.name}` : "";
-    };
-
-    const displayPropertyWithPropertyType = (cardInfo: CardSearchType): string => {
-        const { property: cardInfoProperty } = cardInfo;
-        let cardInfoPropertyWithPopertyType = "";
-        if (cardInfoProperty !== null) {
-            const { propertyType: cardInfoPopertyType } = cardInfoProperty;
-            if (cardInfoPopertyType !== null) {
-                cardInfoPropertyWithPopertyType = `${cardInfoPopertyType.name}: ${cardInfoProperty.name}`;
-            }
-        }
-        return cardInfoPropertyWithPopertyType;
-    };
-
-    const displaySubProperty = (cardInfo: CardSearchType): string => {
-        const { subProperties: cardInfoSubPropertyArray } = cardInfo;
-        if (cardInfoSubPropertyArray === null || cardInfoSubPropertyArray.length === 0) {
-            return "";
-        }
-        let cardInfoSubProperty = "";
-        let cardInfoSubPropertyType = "";
-        cardInfoSubPropertyArray.forEach((subProperty) => {
-            if (cardInfoSubPropertyType === "" && subProperty.subPropertyType !== null) {
-                cardInfoSubPropertyType = `${cardInfoSubPropertyArray[0].subPropertyType.name}:`;
-            }
-            cardInfoSubProperty += ` ${subProperty.name}, `;
-        });
-        cardInfoSubProperty = cardInfoSubProperty.slice(0, -2);
-        return `${cardInfoSubPropertyType}${cardInfoSubProperty}`;
-    };
-
     const displayListView = (cardInfo: CardSearchType): React.JSX.Element => {
-        const pictureUrl = getPictureUrl(cardInfo);
-        const cardInfoStringJson = getCardInfoStringJson(cardInfo);
+        const pictureUrl = GetCardPictureUrl(cardInfo);
+        const cardInfoStringJson = GetCardInfoStringJson(cardInfo);
         const { categoryWithSubCategory, type, atkDef } = cardInfoStringJson;
         let cardInfoCategorySubCategoryTypeAtkDef = categoryWithSubCategory;
         if (type !== "") {
@@ -348,7 +247,7 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
                     </Grid>
                     <Grid item xs={12}>
                         <Typography component="p" className={genericClasses.textAlignCenter}>
-                            {displayCardDescription(cardInfo)}
+                            {GetCardDescription(cardInfo, limitText)}
                         </Typography>
                     </Grid>
                 </Grid>
@@ -358,12 +257,10 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
 
     const displayPictureView = (cardInfo: CardSearchType) => {
         const pictureUrl = getPictureUrl(cardInfo);
-        countPicturePictureView++;
         const popoverId = `popover-cardInfo-${cardInfo.id}`;
         const cardInfoToDisplayJson: CardInfoToDisplayType = {
             cardInfo: cardInfo,
             popoverId: popoverId,
-            countPicturePictureView: countPicturePictureView,
         };
         return (
             <Grid
@@ -404,112 +301,22 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
         setCardInfoToDisplay(null);
     };
 
-    const getCardInfoStringJson = (cardInfo: CardSearchType): SearchCardCardInfoJsonType => {
-        return {
-            categoryWithSubCategory: displayCardCategoryWithSubCategory(cardInfo),
-            attribute: displayCardAttribute(cardInfo),
-            type: displayCardType(cardInfo),
-            atkDef: displayCardAtkDef(cardInfo),
-            propertyWithPropertyType: displayPropertyWithPropertyType(cardInfo),
-            subPropertyWithPropertyType: displaySubProperty(cardInfo),
-        };
-    };
-
-    const displayPopover = () => {
-        if (cardInfoToDisplay === null || mediaQueryUpMd === false) {
-            return null;
-        }
-        const { cardInfo, popoverId, countPicturePictureView } = cardInfoToDisplay;
-        const pictureUrl = getPictureUrl(cardInfo);
-        const cardInfoStringJson: SearchCardCardInfoJsonType = getCardInfoStringJson(cardInfo);
-        const cardInfoStringJsonKeyArray = Object.keys(cardInfoStringJson) as Array<keyof SearchCardCardInfoJsonType>;
-        const countPicturePictureViewRow = Math.ceil(countPicturePictureView / countCardPicturePictureViewPerRow);
-        const countPicturePictureViewRowMinusOne = countPicturePictureViewRow > 0 ? countPicturePictureViewRow - 1 : 0;
-        const countPicturePictureViewRowPosition = countPicturePictureView - countPicturePictureViewRowMinusOne * countCardPicturePictureViewPerRow;
-        const countCardPicturePictureViewPerRowMiddle = Math.ceil(countCardPicturePictureViewPerRow / 2);
-        let anchorPositionHorizontal: AnchorPositionHorizontalType = "left";
-        if (
-            (countCardPicturePictureViewPerRowIsEvent === true && countPicturePictureViewRowPosition <= countCardPicturePictureViewPerRowMiddle) ||
-            (countCardPicturePictureViewPerRowIsEvent === false && countPicturePictureViewRowPosition < countCardPicturePictureViewPerRowMiddle)
-        ) {
-            anchorPositionHorizontal = "right";
-        }
-        let cardInfoStringArray: string[] = [];
-        cardInfoStringJsonKeyArray.map((cardInfoStringKey) => {
-            const cardInfoStringJsonValue = cardInfoStringJson[cardInfoStringKey];
-            if (cardInfoStringJsonValue !== "") {
-                cardInfoStringArray.push(cardInfoStringJsonValue);
-            }
-        });
-        return (
-            <Popover
-                open={open}
-                id={popoverId}
-                sx={{
-                    pointerEvents: "none",
-                    width: "100%",
-                    height: "100%",
-                }}
-                slotProps={{
-                    paper: {
-                        sx: {
-                            backgroundColor: "rgba(238,238,238, 0.9)",
-                            maxWidth: "40%",
-                            height: "auto",
-                        },
-                    },
-                }}
-                onClose={handlePopoverClose}
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                    vertical: "top",
-                    horizontal: anchorPositionHorizontal,
-                }}
-                transformOrigin={{
-                    vertical: "bottom",
-                    horizontal: "center",
-                }}
-                disableRestoreFocus
-                disableScrollLock
-            >
-                <Grid container spacing={0} sx={{ height: "100%" }}>
-                    <Grid item xs={9} spacing={0} sx={{ "& p": { marginLeft: Theme.spacing(1) } }}>
-                        <Typography component="p" sx={{ fontSize: "1.5rem", marginTop: Theme.spacing(1) }}>
-                            {cardInfo.name}
-                        </Typography>
-                        <br />
-                        <Typography component="p">
-                            {cardInfoStringArray.map((str, k) => {
-                                return (
-                                    <Fragment key={`cardInfo-${cardInfo.id}-popover-text-${k}`}>
-                                        {str}
-                                        <br />
-                                    </Fragment>
-                                );
-                            })}
-                        </Typography>
-                        <br />
-                        <Typography component="p">{displayCardDescription(cardInfo)}</Typography>
-                    </Grid>
-                    <Grid item xs={3} sx={{ height: "100%", textAlign: "center" }}>
-                        <img src={pictureUrl} className={classes.cardPicturePopover} />
-                    </Grid>
-                </Grid>
-            </Popover>
-        );
-    };
-
     const handleCardClick = (cardInfo: CardSearchType) => {
         const { uuid, slugName } = cardInfo;
-        const option = {
-            uuid: uuid,
-            slugName: slugName,
-        };
-        const url = GetFullRoute(CardRouteName.CARD_INFO, option);
-        if (typeof window === "undefined") {
-            router.push(url);
+        if (isFromCreatePage === true && openDialog !== null && setOpenDialog !== null && setCardDialogInfo !== null) {
+            setCardDialogInfo(cardInfo);
+            setOpenDialog(true);
         } else {
-            window.open(url, "_blank");
+            const option = {
+                uuid: uuid,
+                slugName: slugName,
+            };
+            const url = GetFullRoute(CardRouteName.CARD_INFO, option);
+            if (typeof window === "undefined") {
+                router.push(url);
+            } else {
+                window.open(url, "_blank");
+            }
         }
     };
 
@@ -526,7 +333,7 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
                     </Grid>
                 </Paper>
             </Grid>
-            {open === true && anchorEl !== null && cardInfoToDisplay !== null ? displayPopover() : null}
+            <SearchCardPopover open={open} handleClose={handlePopoverClose} anchorEl={anchorEl} cardInfoToDisplay={cardInfoToDisplay} />
         </Grid>
     );
 }
