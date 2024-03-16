@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState } from "react";
 import { CardSearchType } from "@app/types/entity/Card";
 import GenericStyles from "@app/css/style";
 import { makeStyles } from "@mui/styles";
@@ -26,6 +26,7 @@ type SearchCardDisplayProps = {
     isFromCreatePage?: true;
     openDialogState?: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
     setCardDialogInfo?: React.Dispatch<React.SetStateAction<CardSearchType | null>>;
+    autoClick?: boolean;
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -103,6 +104,10 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
     let setCardDialogInfo: React.Dispatch<React.SetStateAction<CardSearchType | null>> | null = null;
     if (props.setCardDialogInfo !== undefined) {
         setCardDialogInfo = props.setCardDialogInfo;
+    }
+    let autoClick: boolean = false;
+    if (props.autoClick !== undefined) {
+        autoClick = props.autoClick;
     }
 
     const handleDisplayButton = (searchCardDisplayType: SearchCardDisplayType) => {
@@ -305,7 +310,9 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
         const { uuid, slugName } = cardInfo;
         if (isFromCreatePage === true && openDialog !== null && setOpenDialog !== null && setCardDialogInfo !== null) {
             setCardDialogInfo(cardInfo);
-            setOpenDialog(true);
+            if (autoClick === false) {
+                setOpenDialog(true);
+            }
         } else {
             const option = {
                 uuid: uuid,
