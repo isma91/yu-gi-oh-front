@@ -37,11 +37,14 @@ export type AutocompletePropsType = BasicInputPropsType & {
     onChange?: (event: React.SyntheticEvent, value: object | null | object[]) => void;
     defaultValue?: object | null | object[];
     loadingDefaultValue?: boolean;
+    renderOption?: (props: React.HTMLAttributes<HTMLLIElement>, option: any) => React.JSX.Element;
 };
 
 type AutocompleteOptionType = {
     groupBy?: (option: object) => string;
     multiple: boolean;
+    getOptionLabel?: (option: object) => string;
+    renderOption?: (props: React.HTMLAttributes<HTMLLIElement>, option: any) => React.JSX.Element;
 };
 
 type AutocompleteInputOptionType = {
@@ -201,6 +204,10 @@ export default function Autocomplete(props: AutocompletePropsType) {
             setSkipDefaultValue(true);
         }
     }, [props]);
+
+    if (props.renderOption !== undefined) {
+        optionAutoComplete.renderOption = props.renderOption;
+    }
 
     return (
         <FormControl fullWidth={fullWidth}>
