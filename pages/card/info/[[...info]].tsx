@@ -231,7 +231,7 @@ export default function CardInfoPage() {
                     </Typography>
                 </Grid>
                 <Grid item xs={12} container spacing={2} sx={{ margin: "auto" }}>
-                    <Collapse in={openCardOtherPicture} timeout="auto" unmountOnExit={true} sx={{ width: "100%", marginTop: Theme.spacing(2) }}>
+                    <Collapse in={openCardOtherPicture} timeout="auto" sx={{ width: "100%", marginTop: Theme.spacing(2) }}>
                         <Grid item xs={12} container spacing={2} justifyContent="center" alignItems="center">
                             {cardInfoOtherPictureArray.map((otherPictureArray, otherPictureArrayKey) => {
                                 return (
@@ -286,7 +286,7 @@ export default function CardInfoPage() {
                         )}
                     </Typography>
                 </Grid>
-                <Collapse in={openCardSetInfo} timeout="auto" unmountOnExit={true}>
+                <Collapse in={openCardSetInfo} timeout="auto">
                     <Grid
                         item
                         xs={12}
