@@ -39,7 +39,7 @@ import Alert from "@components/feedback/Alert";
 import { IconPositionEnumType } from "@app/types/Input";
 import { Sort as CardSort } from "@utils/CardSort";
 import Switch from "@components/field/Switch";
-import { SelectDeckArtowrkType } from "@app/types/Deck";
+import { SelectDeckArtowrkType, DeckCardFieldType, DeckCardType } from "@app/types/Deck";
 
 const useStyles = makeStyles((theme: Theme) => ({
     cardPicturePictureView: {
@@ -50,16 +50,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         },
     },
 }));
-
-enum DeckCardFieldType {
-    MAIN_DECK = "main-deck",
-    EXTRA_DECK = "extra-deck",
-    SIDE_DECK = "side-deck",
-}
-
-type DeckCardType = {
-    [key in DeckCardFieldType]: CardSearchType[];
-};
 
 type DeckCardOpenType = {
     [key in DeckCardFieldType]: boolean;
