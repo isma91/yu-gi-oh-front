@@ -219,7 +219,7 @@ export default function SearchCardFilter(props: SearchCardFilterPropsType) {
                     <Grid item xs={12} md={6}>
                         <Select
                             name="subProperty"
-                            label="Card Sub Property"
+                            label={`${selectedSubPropertyType.name}`}
                             error={errors.subProperty}
                             loading={subPropertyType.loading}
                             optional
@@ -285,10 +285,8 @@ export default function SearchCardFilter(props: SearchCardFilterPropsType) {
                                 multiple
                                 optional
                             >
+                                {displayEmptyMenuItem("cardAttribute")}
                                 {cardAttribute.data.map((cardAttributeData, cardAttributeKey) => {
-                                    {
-                                        displayEmptyMenuItem("cardAttribute");
-                                    }
                                     return (
                                         <MenuItem key={`cardAttribute-${cardAttributeData.id}-${cardAttributeKey}`} value={cardAttributeData.id}>
                                             {cardAttributeData.name}
