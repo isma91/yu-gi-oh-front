@@ -15,8 +15,9 @@ import "@app/css/card.css";
 import { useRouter } from "next/router";
 import { CardRouteName, GetFullRoute } from "@routes/Card";
 import SearchCardPopover from "@components/search/CardPopover";
-import { GetCardDescription, GetCardInfoStringJson, GetCardPictureUrl } from "@utils/SearchCard";
+import { GetCardCategoryWithSubCategory, GetCardDescription, GetCardInfoStringJson, GetCardPictureUrl } from "@utils/SearchCard";
 import { CardInfoToDisplayType } from "@app/types/SearchCard";
+import { enqueueSnackbar } from "notistack";
 
 type SearchCardDisplayProps = {
     cardResult: CardSearchType[];
@@ -309,9 +310,15 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
     const handleCardClick = (cardInfo: CardSearchType) => {
         const { uuid, slugName } = cardInfo;
         if (isFromCreatePage === true && openDialog !== null && setOpenDialog !== null && setCardDialogInfo !== null) {
-            setCardDialogInfo(cardInfo);
-            if (autoClick === false) {
-                setOpenDialog(true);
+            const cardInfoCategorySubCategory = GetCardCategoryWithSubCategory(cardInfo);
+            if (cardInfoCategorySubCategory.toLowerCase().includes("token") === true) {
+                enqueueSnackbar("You can't add token in your deck.", { variant: "warning" });
+                setCardDialogInfo(null);
+            } else {
+                setCardDialogInfo(cardInfo);
+                if (autoClick === false) {
+                    setOpenDialog(true);
+                }
             }
         } else {
             const option = {
