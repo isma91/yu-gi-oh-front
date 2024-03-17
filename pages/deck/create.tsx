@@ -24,7 +24,6 @@ import InputNumber from "@components/field/InputNumber";
 import Select from "@components/field/Select";
 import { Capitalize } from "@utils/String";
 import Button from "@components/field/Button";
-import GenericStyles from "@app/css/style";
 import { GetCardPictureUrl } from "@utils/SearchCard";
 import SearchCardPopover from "@components/search/CardPopover";
 import { CardInfoToDisplayType } from "@app/types/SearchCard";
@@ -455,7 +454,7 @@ export default function DeckCreatePage() {
             <Grid item xs={12} container spacing={4}>
                 <Grid item xs={12} md={6} container sx={{ height: "fit-content" }}>
                     <Grid item xs={12}>
-                        <DeckCreateForm selectDeckArtowrkArray={selectDeckArtowrkArray} />
+                        <DeckCreateForm selectDeckArtowrkArray={selectDeckArtowrkArray} deckCard={deckCard} />
                     </Grid>
                     <Grid item xs={12} sx={{ marginTop: Theme.spacing(2) }} container spacing={2}>
                         {displayCardDialog()}
