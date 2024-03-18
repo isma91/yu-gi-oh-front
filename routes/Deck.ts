@@ -9,12 +9,12 @@ export enum DeckRouteName {
 export const DECK_ROUTE_JSON = {
     [DeckRouteName.LIST]: "/list",
     [DeckRouteName.CREATE]: "/create",
-    [DeckRouteName.INFO]: "/info/{uuid}/{slugName}",
+    [DeckRouteName.INFO]: "/info/{id}/{slugName}",
 };
 
 export const DECK_BASE_URL = "/deck";
 
-type DeckRouteOptionKey = "uuid" | "slugName";
+type DeckRouteOptionKey = "id" | "slugName";
 
 type DeckRouteOption = {
     [key in DeckRouteOptionKey]: string;
