@@ -2,14 +2,10 @@ import React, { useState } from "react";
 import { CardSearchType } from "@app/types/entity/Card";
 import GenericStyles from "@app/css/style";
 import { makeStyles } from "@mui/styles";
-import { useTheme, Theme, useMediaQuery, Grid, IconButton, Typography, Paper, Popover } from "@mui/material";
+import { useTheme, Theme, useMediaQuery, Grid, IconButton, Typography, Paper } from "@mui/material";
 import ViewListOutlinedIcon from "@mui/icons-material/ViewListOutlined";
 import ImageIcon from "@mui/icons-material/Image";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { SearchCardDisplayType } from "@app/types/Search";
-import Button from "@components/field/Button";
-import { IconPositionEnumType } from "@app/types/Input";
 import { AddApiBaseUrl, GetDefaultCardPicturePath } from "@utils/Url";
 import "@app/css/card.css";
 import { useRouter } from "next/router";
@@ -18,6 +14,7 @@ import SearchCardPopover from "@components/search/CardPopover";
 import { GetCardCategoryWithSubCategory, GetCardDescription, GetCardInfoStringJson, GetCardPictureUrl } from "@utils/SearchCard";
 import { CardInfoToDisplayType } from "@app/types/SearchCard";
 import { enqueueSnackbar } from "notistack";
+import SearchPaginationDisplay from "@components/search/PaginationDisplay";
 
 type SearchCardDisplayProps = {
     cardResult: CardSearchType[];
@@ -88,7 +85,6 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
     const [displayType, setDisplayType] = useState<SearchCardDisplayType>(SearchCardDisplayType.LIST);
     const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
     const [cardInfoToDisplay, setCardInfoToDisplay] = useState<CardInfoToDisplayType | null>(null);
-    const [offset, setOffset] = props.offsetState;
     const open = Boolean(anchorEl);
     const router = useRouter();
     const Theme = useTheme();
@@ -144,53 +140,6 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
                         </Grid>
                     </>
                 )}
-            </Grid>
-        );
-    };
-
-    const displaySearchButtonWithInfo = (): React.JSX.Element => {
-        const currentPage = offset + 1;
-        const numTotalPage = Math.ceil(cardAllResultCount / limit);
-        const disablePreviousPageButton = currentPage <= 1;
-        const disableNextPageButton = currentPage >= numTotalPage;
-        return (
-            <Grid item xs={12} container direction="row" justifyContent="center" alignItems="center">
-                <Grid item xs={4}>
-                    <Button
-                        loading={false}
-                        icon={<ArrowBackIcon />}
-                        iconPosition={IconPositionEnumType.START}
-                        disabled={disablePreviousPageButton}
-                        onClick={(e) => {
-                            if (offset >= 1) {
-                                setOffset(offset - 1);
-                            }
-                        }}
-                    >
-                        previous page
-                    </Button>
-                </Grid>
-                <Grid item xs={4}>
-                    <Typography
-                        component="p"
-                        className={genericClasses.textAlignCenter}
-                    >{`Page ${currentPage}/${numTotalPage} of ${cardAllResultCount} total card`}</Typography>
-                </Grid>
-                <Grid item xs={4}>
-                    <Button
-                        loading={false}
-                        icon={<ArrowForwardIcon />}
-                        iconPosition={IconPositionEnumType.END}
-                        disabled={disableNextPageButton}
-                        onClick={(e) => {
-                            if (offset <= numTotalPage) {
-                                setOffset(offset + 1);
-                            }
-                        }}
-                    >
-                        next page
-                    </Button>
-                </Grid>
             </Grid>
         );
     };
@@ -337,7 +286,7 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
     return (
         <Grid container spacing={2}>
             {displayIconView()}
-            {displaySearchButtonWithInfo()}
+            <SearchPaginationDisplay offsetState={props.offsetState} allResultCount={cardAllResultCount} limit={limit} entity="card" />
             <Grid item xs={12}>
                 <Paper elevation={1} sx={{ width: "100%", backgroundColor: Theme.palette.grey[200] }}>
                     <Grid item xs={12} container>
