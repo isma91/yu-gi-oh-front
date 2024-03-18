@@ -17,4 +17,10 @@ export type DeckGetAllFromCurrentUserType = NameSlugNameEntity & {
     artworkUrl: Pick<CardPictureGetAllType, "artworkUrl">;
 }
 
-export type DeckGetAllFromCurrentUserRequestType = RequestGetAll<"deck", DeckGetAllFromCurrentUserType>;
+export type DeckGetFromFilterFromCurrentUserTypeRequestType = {
+    success: string;
+    data: {
+        deck: DeckGetAllFromCurrentUserType[];
+        deckAllResultCount: number;
+    };
+}
