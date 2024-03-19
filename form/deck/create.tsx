@@ -75,7 +75,7 @@ export default function DeckCreateForm(props: DeckCreateForm) {
             Object.keys(deckCardUniqueJson[cardFieldType]).forEach((cardInfoIdString, index) => {
                 const cardInfoId = parseInt(cardInfoIdString, 10);
                 const nbCopie = deckCardUniqueJson[cardFieldType][cardInfoId];
-                const newDeckCardValuesBaseKey = `[deck-card][${cardFieldType}][${index}]`;
+                const newDeckCardValuesBaseKey = `deck-card[${cardFieldType}][${index}]`;
                 newDeckCardValues[`${newDeckCardValuesBaseKey}[id]`] = cardInfoId.toString(10);
                 newDeckCardValues[`${newDeckCardValuesBaseKey}[nbCopie]`] = nbCopie.toString(10);
             });
