@@ -21,7 +21,8 @@ type SearchDeckDisplayProps = {
 const useStyles = makeStyles((theme: Theme) => ({
     deckPicture: {
         width: "100%",
-        objectFit: "contain",
+        objectFit: "cover",
+        height: "350px",
         [theme.breakpoints.down("md")]: {
             height: "200px",
             objectFit: "cover",
@@ -105,9 +106,7 @@ export default function SearchDeckDisplay(props: SearchDeckDisplayProps) {
                             <Paper
                                 elevation={1}
                                 sx={{
-                                    [Theme.breakpoints.down("md")]: {
-                                        width: "100%",
-                                    },
+                                    width: "100%",
                                 }}
                             >
                                 <Grid item xs={12}>
