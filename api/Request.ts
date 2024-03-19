@@ -51,6 +51,10 @@ export default async function Request(
     isProtected: boolean = false,
     isCreation: boolean = false
 ): Promise<any> {
+    //must send at least empty object because axios put need data
+    if (type === RequestMethodType.PUT && data === null) {
+        data = {};
+    }
     const withData = data !== null;
     const arrayToCheck = withData === true ? requestMethodTypeWithDataArray : requestMethodTypeWithoutDataArray;
     ThrowErrorIfNotGoodType(arrayToCheck, type);

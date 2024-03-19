@@ -8,7 +8,7 @@ export default function DeckUpdatePublicFromId(id: number, isPublic: number): Pr
         GetFullRoute(DeckApiRouteName.UPDATE_PUBLIC, { id: id.toString(10), public: isPublic.toString(10) }),
         RequestMethodType.PUT,
         "Error while updating deck.",
-        {},
+        null,
         true
     );
 }
