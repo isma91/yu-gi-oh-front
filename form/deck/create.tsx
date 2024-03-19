@@ -7,7 +7,7 @@ import Switch from "@components/field/Switch";
 import Button from "@components/field/Button";
 import { DeckCardFieldType, DeckCardType, SelectDeckArtowrkType } from "@app/types/Deck";
 import Autocomplete from "@components/field/Autocomplete";
-import DeckCreateRequest from "@api/deck/Create";
+import DeckCreateRequest from "@api/Deck/Create";
 import { useSnackbar } from "notistack";
 import { useRouter } from "next/router";
 import { DeckRouteName, GetFullRoute } from "@routes/Deck";
