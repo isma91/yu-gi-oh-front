@@ -1,7 +1,9 @@
 import { RequestGetAll, RequestGetInfo } from "@app/types/Request";
 import { NameSlugNameEntity, TimestampableEntity } from "@app/types/Entity";
-import { CardPictureGetAllType } from "@app/types/entity/CardPicture";
 import { UserGetAllType } from "@app/types/entity/User";
+import { CardMainDeckeGetInfoType } from "@app/types/entity/CardMainDeck";
+import { CardExtraDeckeGetInfoType } from "@app/types/entity/CardExtraDeck";
+import { CardSideDeckeGetInfoType } from "@app/types/entity/CardSideDeck";
 
 
 export type DeckEntityType = TimestampableEntity & NameSlugNameEntity & {
@@ -19,6 +21,16 @@ export type DeckGetAllFromCurrentUserType = NameSlugNameEntity & {
     artworkUrl: string | null;
 }
 
+export type DeckGetInfoType = NameSlugNameEntity & {
+    id: number;
+    isPublic: boolean;
+    user: Pick<UserGetAllType, "username">;
+    cardMainDecks: CardMainDeckeGetInfoType[],
+    cardExtraDecks: CardExtraDeckeGetInfoType[],
+    cardSideDecks: CardSideDeckeGetInfoType[],
+    artworkUrl: string | null;
+}
+
 export type DeckGetFromFilterFromCurrentUserTypeRequestType = {
     success: string;
     data: {
@@ -26,3 +38,5 @@ export type DeckGetFromFilterFromCurrentUserTypeRequestType = {
         deckAllResultCount: number;
     };
 }
+
+export type DeckGetInfoRequestType = RequestGetInfo<"deck", DeckGetInfoType>;
