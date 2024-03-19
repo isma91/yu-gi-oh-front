@@ -9,6 +9,7 @@ import { AddApiBaseUrl, GetDefaultCardPicturePath } from "@utils/Url";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import { DeckRouteName, GetFullRoute } from "@routes/Deck";
+import { IsAdmin } from "@utils/Role";
 
 type SearchDeckDisplayProps = {
     deckResult: DeckGetAllFromCurrentUserType[];
@@ -47,6 +48,9 @@ export default function SearchDeckDisplay(props: SearchDeckDisplayProps) {
         const deckUserUserName = deckInfo.user.username;
         const { isPublic } = deckInfo;
         const { user } = globalState;
+        if (IsAdmin(globalState) === true) {
+            return true;
+        }
         if (user === null) {
             return false;
         }
