@@ -70,17 +70,7 @@ export default function SearchDeckDisplay(props: SearchDeckDisplayProps) {
                     if (checkIfDisplayable(deckInfo) === false) {
                         return null;
                     }
-                    const {
-                        id,
-                        name,
-                        slugName,
-                        isPublic,
-                        cardUniqueNumber,
-                        cardMainDeckNumber,
-                        cardExtraDeckNumber,
-                        cardSideDeckNumber,
-                        artworkUrl,
-                    } = deckInfo;
+                    const { id, name, slugName, isPublic, artworkUrl } = deckInfo;
                     let artwork = artworkUrl;
                     if (artwork !== null) {
                         artwork = AddApiBaseUrl(artwork);
