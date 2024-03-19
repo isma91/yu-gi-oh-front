@@ -13,7 +13,7 @@ export const CARD_API_BASE_URL = "/card";
 type CardApiRouteOptionKey = "uuid";
 
 type CardApiRouteOption = {
-    [key in CardApiRouteOptionKey]: string;
+    [key in CardApiRouteOptionKey]?: string;
 }
 
 export function GetFullRoute(name: CardApiRouteName, option: CardApiRouteOption | null = null): string {
