@@ -3,10 +3,11 @@ import { StoreContext } from "@app/lib/state-provider";
 import useRouterQuery from "@app/hooks/useRouterQuery";
 import { useSnackbar } from "notistack";
 import { useRouter } from "next/router";
-import { CardRouteName, GetFullRoute } from "@routes/Card";
+import { CardRouteName, GetFullRoute as CardGetFullRoute } from "@routes/Card";
 import { Capitalize, CheckUuid } from "@utils/String";
 import DashboardHome from "@components/dashboard/Home";
 import CardGetInfoRequest from "@api/Card/GetInfo";
+import { DeckRouteName, GetFullRoute as DeckGetFullRoute } from "@routes/Deck";
 import { makeStyles } from "@mui/styles";
 import { Paper, Grid, useTheme, Skeleton, Theme, Typography, Collapse } from "@mui/material";
 import { CardGetInfoType } from "@app/types/entity/Card";
@@ -17,6 +18,9 @@ import { GetFormat } from "@utils/Date";
 import { DateFormatTypeType } from "@app/types/Date";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
+import { RedirectToNewTab } from "@utils/Route";
 
 type CardInfoPictureType = Pick<CardPictureGetAllType, "id" | "pictureUrl" | "pictureSmallUrl" | "artworkUrl">;
 
@@ -62,6 +66,23 @@ const useStyles = makeStyles((theme: Theme) => ({
         fontSize: "1rem",
         fontWeight: "bolder",
     },
+    deckPicture: {
+        width: "100%",
+        objectFit: "cover",
+        height: "350px",
+        [theme.breakpoints.down("md")]: {
+            height: "200px",
+            objectFit: "cover",
+        },
+    },
+    deckTitle: {
+        fontSize: "1.2rem",
+        fontWeight: "bolder",
+        textAlign: "center",
+    },
+    deckIcon: {
+        verticalAlign: "text-bottom",
+    },
 }));
 
 export default function CardInfoPage() {
@@ -78,10 +99,11 @@ export default function CardInfoPage() {
     const cardInfoPictureRef = useRef<React.LegacyRef<HTMLImageElement> | any>(null);
     const [openCardOtherPicture, setOpenCardOtherPicture] = useState<boolean>(true);
     const [openCardSetInfo, setOpenCardSetInfo] = useState<boolean>(true);
+    const [openDeckInfo, setOpenDeckInfo] = useState<boolean>(true);
     const queryKeyName = "info";
 
     const redirectToCardSearchPage = () => {
-        router.push(GetFullRoute(CardRouteName.CARD_SEARCH));
+        router.push(CardGetFullRoute(CardRouteName.CARD_SEARCH));
     };
 
     const getCardInfoReq = async (cardUuid: string) => {
@@ -395,6 +417,90 @@ export default function CardInfoPage() {
         }
     };
 
+    const displayDeck = (cardInfo: CardGetInfoType): React.JSX.Element | null => {
+        const { name: cardName, decks } = cardInfo;
+        if (decks.length === 0) {
+            return null;
+        }
+        return (
+            <Grid item xs={12} container spacing={2}>
+                <Grid item xs={12} sx={{ textAlign: "center" }}>
+                    <Typography
+                        component="span"
+                        sx={{
+                            cursor: "pointer",
+                            fontWeight: "bolder",
+                            fontSize: "1.5rem",
+                            textAlign: "center",
+                        }}
+                        onClick={(e) => setOpenDeckInfo(!openDeckInfo)}
+                    >
+                        {`${cardName} use in Deck (${decks.length})`}
+                        {openDeckInfo === true ? (
+                            <KeyboardArrowUpIcon sx={{ verticalAlign: "middle" }} />
+                        ) : (
+                            <KeyboardArrowDownIcon sx={{ verticalAlign: "middle" }} />
+                        )}
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} container spacing={2} sx={{ margin: "auto" }}>
+                    <Collapse in={openDeckInfo} timeout="auto" sx={{ width: "100%", marginTop: Theme.spacing(2) }}>
+                        <Grid item xs={12} container spacing={2} justifyContent="center" alignItems="center">
+                            {decks.map((deck, deckKey) => {
+                                const { id, name, slugName, isPublic, artworkUrl, user } = deck;
+                                let artwork = artworkUrl;
+                                if (artwork !== null) {
+                                    artwork = AddApiBaseUrl(artwork);
+                                } else {
+                                    artwork = GetDefaultCardPicturePath();
+                                }
+                                return (
+                                    <Grid
+                                        key={`card-info-deck-${id}-${deckKey}`}
+                                        item
+                                        xs={12}
+                                        md={3}
+                                        container
+                                        spacing={2}
+                                        sx={{
+                                            cursor: "pointer",
+                                            marginLeft: Theme.spacing(2),
+                                            marginTop: Theme.spacing(1),
+                                            padding: `${Theme.spacing(0)} !important`,
+                                        }}
+                                        onClick={(e) =>
+                                            RedirectToNewTab(
+                                                router,
+                                                DeckGetFullRoute(DeckRouteName.INFO, { id: id.toString(10), slugName: slugName })
+                                            )
+                                        }
+                                    >
+                                        <Paper elevation={1} sx={{ width: "100%" }}>
+                                            <Grid item xs={12}>
+                                                <img src={artwork} className={classes.deckPicture} />
+                                            </Grid>
+                                            <Grid item xs={12} sx={{ textAlign: "center" }}>
+                                                <Typography component="span">
+                                                    <span className={classes.deckTitle}>{name}</span>
+                                                    <span>{` by ${user.username}`}</span>
+                                                    {isPublic ? (
+                                                        <LockOpenOutlinedIcon className={classes.deckIcon} />
+                                                    ) : (
+                                                        <LockOutlinedIcon className={classes.deckIcon} />
+                                                    )}
+                                                </Typography>
+                                            </Grid>
+                                        </Paper>
+                                    </Grid>
+                                );
+                            })}
+                        </Grid>
+                    </Collapse>
+                </Grid>
+            </Grid>
+        );
+    };
+
     const displayCardInfo = (cardInfo: CardGetInfoType): React.JSX.Element => {
         const {
             category,
@@ -608,6 +714,7 @@ export default function CardInfoPage() {
                 </Grid>
                 {cardInfoOtherPictureArray.length > 1 ? displayCardInfoOtherPicture(cardInfoOtherPictureArray, cardInfo.name) : null}
                 {cardInfoFromSetKeyArray.length !== 0 ? displayCardInfoCardSet(cardInfoFromSet, cardInfoFromSetKeyArray, cardInfo.name) : null}
+                {displayDeck(cardInfo)}
             </Grid>
         );
     };

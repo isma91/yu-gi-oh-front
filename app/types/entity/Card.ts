@@ -10,6 +10,7 @@ import { ArchetypeEntityType, ArchetypeGetAllType } from "@app/types/entity/Arch
 import { CardSetEntityType, CardSetGetAllType } from "@app/types/entity/CardSet";
 import { SubPropertyEntityType, SubPropertyGetAllType } from "@app/types/entity/SubProperty";
 import { SubCategoryEntityType, SubCategoryGetAllType } from "@app/types/entity/SubCategory";
+import { DeckGetInfoType } from "@app/types/entity/Deck";
 
 export type CardEntityType = TimestampableEntity & NameSlugNameEntity & {
     id: number;
@@ -81,6 +82,7 @@ export type CardGetInfoType = NameSlugNameEntity & {
     subProperties: SubPropertyGetAllType[];
     subCategory: SubCategoryGetAllType;
     isPendulum: boolean | null;
+    decks: Array<Pick<DeckGetInfoType, "id" | "name" | "slugName" | "isPublic" | "user" | "artworkUrl">>
 }
 
 export type CardSearchRequestType = {

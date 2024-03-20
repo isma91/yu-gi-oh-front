@@ -32,7 +32,6 @@ export default function Dialog(props: DialogType) {
     }
     const genericClasses = GenericStyles();
     const Theme = useTheme();
-    const mediaQueryUpMd = useMediaQuery(Theme.breakpoints.up("md"));
     const mediaQueryDownSm = useMediaQuery(Theme.breakpoints.down("xs"));
 
     let elementTriggerOption = {
