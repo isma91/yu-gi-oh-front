@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { ButtonTypeMap, Button as MUIButton } from "@mui/material";
 import CircularProgress from "@components/feedback/CircularProgress";
-import { ThemeColorEnumType } from "@app/types/Theme";
-import { IconPositionEnumType } from "@app/types/Input";
+import { IconPositionEnumType, InputColorType } from "@app/types/Input";
 
 type ButtonPropsType = {
     loading: boolean;
     children: React.ReactNode;
     loadingText?: string;
     fullWidth?: boolean;
-    color?: ThemeColorEnumType;
+    color?: InputColorType;
     variant?: ButtonTypeMap["props"]["variant"];
     disabled?: boolean;
     type?: HTMLButtonElement["type"];
@@ -30,7 +29,7 @@ function Button(props: ButtonPropsType) {
     if (props.fullWidth !== undefined) {
         fullWidth = props.fullWidth;
     }
-    let color: ThemeColorEnumType = ThemeColorEnumType.PRIMARY;
+    let color: InputColorType = "primary";
     if (props.color !== undefined) {
         color = props.color;
     }

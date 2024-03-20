@@ -9,11 +9,14 @@ export type BasicInputPropsType = {
     optional?: true;
     defaultValue?: InputTextValueType;
     disabled?: boolean;
+    id?: string;
 }
 
 export type BasicInputMUIInputPropsOptionType = {
     isoptional?: string;
 };
+
+export type InputColorType = 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning';
 
 export enum IconPositionEnumType {
     START = 'start',
@@ -37,6 +40,7 @@ export type InputTextInputPropsOptionType = {
     isoptional?: string;
     maxlength?: number;
     margin?: FormControlTypeMap["props"]["margin"];
+    id?: string;
 };
 
 export type InputTextValueType = unknown | null;
@@ -46,4 +50,5 @@ export type InputNumberInputPropsType = Omit<InputTextInputPropsType, "multiline
 export type InputNumberInputPropsOptionType = Omit<InputTextInputPropsOptionType, "maxlength"> & {
     step?: number;
     max?: number;
+    min?: number;
 }

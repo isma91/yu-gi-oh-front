@@ -1,3 +1,5 @@
+import { NextRouter } from "next/router";
+
 /**
  * @param {string} url 
  * @param {T | null} option 
@@ -17,4 +19,12 @@ export function GetFullRouteFromRouteNameAndRouteOption
         })
     }
     return url;
+}
+
+export function RedirectToNewTab(router: NextRouter, url: string) {
+    if (typeof window === "undefined") {
+        router.push(url);
+    } else {
+        window.open(url, "_blank");
+    }
 }

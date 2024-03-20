@@ -1,8 +1,8 @@
 import { CircularProgress as CircularProgressMUI } from "@mui/material";
-import { ThemeColorEnumType } from "@app/types/Theme";
+import { InputColorType } from "@app/types/Input";
 
 type CircularProgressPropsType = {
-    color?: ThemeColorEnumType;
+    color?: InputColorType;
 };
 
 /**
@@ -12,7 +12,7 @@ type CircularProgressPropsType = {
  */
 export default function CircularProgress({ color }: CircularProgressPropsType): React.JSX.Element {
     if (color === undefined) {
-        color = ThemeColorEnumType.PRIMARY;
+        color = "primary";
     }
     return <CircularProgressMUI color={color} />;
 }
