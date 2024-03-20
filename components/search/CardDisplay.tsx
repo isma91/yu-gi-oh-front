@@ -15,6 +15,7 @@ import { GetCardCategoryWithSubCategory, GetCardDescription, GetCardInfoStringJs
 import { CardInfoToDisplayType } from "@app/types/SearchCard";
 import { enqueueSnackbar } from "notistack";
 import SearchPaginationDisplay from "@components/search/PaginationDisplay";
+import { RedirectToNewTab } from "@utils/Route";
 
 type SearchCardDisplayProps = {
     cardResult: CardSearchType[];
@@ -275,11 +276,7 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
                 slugName: slugName,
             };
             const url = GetFullRoute(CardRouteName.CARD_INFO, option);
-            if (typeof window === "undefined") {
-                router.push(url);
-            } else {
-                window.open(url, "_blank");
-            }
+            RedirectToNewTab(router, url);
         }
     };
 
