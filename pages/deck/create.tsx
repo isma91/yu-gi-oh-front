@@ -21,8 +21,9 @@ import Alert from "@components/feedback/Alert";
 import { IconPositionEnumType } from "@app/types/Input";
 import { Sort as CardSort } from "@utils/CardSort";
 import Switch from "@components/field/Switch";
-import { SelectDeckArtowrkType, DeckCardFieldType, DeckCardType } from "@app/types/Deck";
+import { SelectDeckArtworkType, DeckCardFieldType, DeckCardType } from "@app/types/Deck";
 import DisplayDeckCard from "@components/deck/DisplayCard";
+import { GetSelectDeckArtworkFromDeckCard } from "@utils/DeckCard";
 
 type ErrorsType = {
     [key in string]: string | undefined;
@@ -61,7 +62,7 @@ export default function DeckCreatePage() {
     const [cardInfoToDisplay, setCardInfoToDisplay] = useState<CardInfoToDisplayType | null>(null);
     const [deckCardWarning, setDeckCardWarning] = useState<string | null>(null);
     const [autoClick, setAutoClick] = useState<boolean>(true);
-    const [selectDeckArtowrkArray, setSelectDeckArtowrkArray] = useState<SelectDeckArtowrkType[]>([]);
+    const [selectDeckArtworkArray, setselectDeckArtworkArray] = useState<SelectDeckArtworkType[]>([]);
     const openPopover = Boolean(anchorEl);
     const cardFieldTypeArray: DeckCardFieldType[] = Object.values(DeckCardFieldType);
     const subCategoryNotInExtraDeck = "ritual";
@@ -100,25 +101,8 @@ export default function DeckCreatePage() {
             newDeckCardWarning = `The ${DeckCardFieldType.SIDE_DECK} have more than ${nbCardMaxSideDeck} cards !!`;
         }
         setDeckCardWarning(newDeckCardWarning);
-        setSelectDeckArtowrkArray(getDeckCardUniqueWithIdAndUrl());
+        setselectDeckArtworkArray(GetSelectDeckArtworkFromDeckCard(deckCard));
     }, [deckCard]);
-
-    const getDeckCardUniqueWithIdAndUrl = (): SelectDeckArtowrkType[] => {
-        let newDeckCardUniqueArray: SelectDeckArtowrkType[] = [];
-        let newDeckCardUniqueJson: { [key in number]: { url: string; name: string } } = {};
-        cardFieldTypeArray.forEach((cardFieldType) => {
-            deckCard[cardFieldType].forEach((cardInfo) => {
-                const { id, name } = cardInfo;
-                newDeckCardUniqueJson[id] = { url: GetCardPictureUrl(cardInfo), name };
-            });
-        });
-        Object.keys(newDeckCardUniqueJson).forEach((idString) => {
-            const id = parseInt(idString, 10);
-            const { url, name } = newDeckCardUniqueJson[id];
-            newDeckCardUniqueArray.push({ id: id, url: url, name: name });
-        });
-        return newDeckCardUniqueArray;
-    };
 
     const findDeckFieldTypeFromCardInfo = (cardInfo: CardSearchType): DeckCardFieldType => {
         const { subCategory: cardInfoSubCategory, category: cardInfoCategory } = cardInfo;
@@ -337,7 +321,7 @@ export default function DeckCreatePage() {
             <Grid item xs={12} container spacing={4}>
                 <Grid item xs={12} md={6} container sx={{ height: "fit-content" }}>
                     <Grid item xs={12}>
-                        <DeckCreateForm selectDeckArtowrkArray={selectDeckArtowrkArray} deckCard={deckCard} />
+                        <DeckCreateForm selectDeckArtworkArray={selectDeckArtworkArray} deckCard={deckCard} />
                     </Grid>
                     <Grid item xs={12} sx={{ marginTop: Theme.spacing(2) }} container spacing={2}>
                         {displayCardDialog()}
