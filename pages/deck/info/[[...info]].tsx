@@ -19,9 +19,12 @@ import { IsAdmin } from "@utils/Role";
 import Dialog from "@components/display/Dialog";
 import DeckDeleteFromIdRequest from "@api/Deck/Delete";
 import DeckUpdatePublicFromIdRequest from "@api/Deck/UpdatePublic";
-import { DeckCardFieldType, DeckInfoType } from "@app/types/Deck";
+import { DeckCardFieldType, DeckCardType, DeckInfoType } from "@app/types/Deck";
 import DisplayDeckCard from "@components/deck/DisplayCard";
 import { CardDeckGetInfoType } from "@app/types/Entity";
+import { Sort as CardSort } from "@utils/CardSort";
+import { CardSearchType } from "@app/types/entity/Card";
+import { CreateArrayNumber } from "@utils/Array";
 
 const useStyles = makeStyles((theme: Theme) => ({
     deckTitle: {
@@ -48,6 +51,11 @@ export default function DeckInfoPage() {
         [DeckCardFieldType.EXTRA_DECK]: [],
         [DeckCardFieldType.SIDE_DECK]: [],
     });
+    const [deckCardClassic, setDeckCardClassic] = useState<DeckCardType>({
+        [DeckCardFieldType.MAIN_DECK]: [],
+        [DeckCardFieldType.EXTRA_DECK]: [],
+        [DeckCardFieldType.SIDE_DECK]: [],
+    });
     const [loading, setLoading] = useState(true);
     const queryKeyName = "info";
 
@@ -65,6 +73,20 @@ export default function DeckInfoPage() {
         return newArray;
     };
 
+    const transformCardDeckClassic = (array: CardDeckGetInfoType[]): CardSearchType[] => {
+        let newArray: CardSearchType[] = [];
+        array.forEach((v) => {
+            const { nbCopie, cards } = v;
+            let newCardInfo = cards[0];
+            const arrayNumber = CreateArrayNumber(0, nbCopie - 1);
+            newCardInfo.picture = newCardInfo.pictures[0];
+            for (let i = 0; i < arrayNumber.length; i++) {
+                newArray.push(newCardInfo);
+            }
+        });
+        return newArray;
+    };
+
     const transformToDeckInfo = (deckInfo: DeckGetInfoType | null): DeckInfoType | null => {
         if (deckInfo === null) {
             return null;
@@ -76,15 +98,33 @@ export default function DeckInfoPage() {
         };
     };
 
+    const transformToDeckCardClassic = (deckInfo: DeckGetInfoType | null): DeckCardType | null => {
+        if (deckInfo === null) {
+            return null;
+        }
+        return {
+            [DeckCardFieldType.MAIN_DECK]: CardSort(transformCardDeckClassic(deckInfo.cardMainDecks)),
+            [DeckCardFieldType.EXTRA_DECK]: CardSort(transformCardDeckClassic(deckInfo.cardExtraDecks)),
+            [DeckCardFieldType.SIDE_DECK]: CardSort(transformCardDeckClassic(deckInfo.cardSideDecks)),
+        };
+    };
+
+    const handleGetDeckInfoReq = (resData: DeckGetInfoType | null) => {
+        setDeckInfo(resData);
+        const transformedResData = transformToDeckInfo(resData);
+        const transformedResDataClassic = transformToDeckCardClassic(resData);
+        if (transformedResData !== null) {
+            setDeckCard(transformedResData);
+        }
+        if (transformedResDataClassic !== null) {
+            setDeckCardClassic(transformedResDataClassic);
+        }
+    };
+
     const getDeckInfoReq = async (id: number) => {
         return DeckGetInfoRequest(id)
             .then((res) => {
-                const resData = res.data.deck;
-                setDeckInfo(resData);
-                const transformedResData = transformToDeckInfo(resData);
-                if (transformedResData !== null) {
-                    setDeckCard(transformedResData);
-                }
+                handleGetDeckInfoReq(res.data.deck);
             })
             .catch((err) => enqueueSnackbar(err, { variant: "error" }))
             .finally(() => setLoading(false));
@@ -196,13 +236,7 @@ export default function DeckInfoPage() {
                             setLoading(true);
                             return DeckUpdatePublicFromIdRequest(deckInfo.id, isPublicUpdateValue)
                                 .then((res) => {
-                                    const resData = res.data.deck;
-                                    enqueueSnackbar(res.success, { variant: "success" });
-                                    setDeckInfo(resData);
-                                    const transformedResData = transformToDeckInfo(resData);
-                                    if (transformedResData !== null) {
-                                        setDeckCard(transformedResData);
-                                    }
+                                    handleGetDeckInfoReq(res.data.deck);
                                 })
                                 .catch((err) => {
                                     enqueueSnackbar(err, { variant: "error" });
@@ -235,7 +269,7 @@ export default function DeckInfoPage() {
                 </Grid>
                 {mediaQueryUpMd === false && checkIfButtonDisplayable() === true ? displayDeckButton(deckInfo) : null}
                 <Grid item xs={12} container spacing={2}>
-                    <DisplayDeckCard deckCard={deckCard} displayRemoveIcon={true} redirectToCardInfoPage={true} />
+                    <DisplayDeckCard deckCard={deckCardClassic} displayRemoveIcon={true} redirectToCardInfoPage={true} />
                 </Grid>
             </>
         );
