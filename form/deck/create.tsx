@@ -9,7 +9,7 @@ import DeckCreateRequest from "@api/Deck/Create";
 import { useSnackbar } from "notistack";
 import { useRouter } from "next/router";
 import { DeckRouteName, GetFullRoute } from "@routes/Deck";
-import { TransformDeckCardToValueRequest } from "@utils/DeckCard";
+import { GetSelectDeckArtworkFromDeckCard, TransformDeckCardToValueRequest } from "@utils/DeckCard";
 import AutocompleteDeckArtwork from "@components/deck/AutocompleteArtwork";
 
 type ErrorsType = {
@@ -21,17 +21,21 @@ type ValuesType = {
 };
 
 type DeckCreateForm = {
-    selectDeckArtworkArray: SelectDeckArtworkType[];
     deckCard: DeckCardType;
 };
 
 export default function DeckCreateForm(props: DeckCreateForm) {
-    const { selectDeckArtworkArray, deckCard } = props;
+    const { deckCard } = props;
     const { enqueueSnackbar } = useSnackbar();
     const router = useRouter();
     const [values, setValues] = useState<ValuesType>({});
     const [errors, setErrors] = useState<ErrorsType>({});
     const [loading, setLoading] = useState<boolean>(false);
+    const [selectDeckArtworkArray, setSelectDeckArtworkArray] = useState<SelectDeckArtworkType[]>([]);
+
+    useEffect(() => {
+        setSelectDeckArtworkArray(GetSelectDeckArtworkFromDeckCard(deckCard));
+    }, [deckCard]);
 
     const sendDeckCreateReq = async (data: object) => {
         return DeckCreateRequest(data)
