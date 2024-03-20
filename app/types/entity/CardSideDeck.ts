@@ -1,5 +1,5 @@
-import { CardDeckEntityType, CardDeckeGetInfoType } from "@app/types/Entity";
+import { CardDeckEntityType, CardDeckGetInfoType } from "@app/types/Entity";
 
 export type CardSideDeckEntityType = CardDeckEntityType;
 
-export type CardSideDeckeGetInfoType = CardDeckeGetInfoType;
+export type CardSideDeckGetInfoType = CardDeckGetInfoType;
