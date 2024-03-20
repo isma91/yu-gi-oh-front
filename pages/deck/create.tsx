@@ -1,20 +1,6 @@
 import React, { useState, useEffect } from "react";
 import DashboardHome from "@components/dashboard/Home";
-import { makeStyles } from "@mui/styles";
-import {
-    Theme,
-    useTheme,
-    Grid,
-    Dialog,
-    Typography,
-    DialogTitle,
-    DialogContent,
-    DialogContentText,
-    MenuItem,
-    DialogActions,
-    Badge,
-    Collapse,
-} from "@mui/material";
+import { useTheme, Grid, Dialog, DialogTitle, DialogContent, DialogContentText, MenuItem, DialogActions } from "@mui/material";
 import { CardSearchType } from "@app/types/entity/Card";
 import SearchLimitSelect from "@components/search/LimitSelect";
 import CardSearchForm from "@form/card/search";
@@ -30,29 +16,13 @@ import { CardInfoToDisplayType } from "@app/types/SearchCard";
 import { ArrayIncludes, CreateArrayNumber } from "@utils/Array";
 import Form from "@components/util/Form";
 import { enqueueSnackbar } from "notistack";
-import RemoveIcon from "@mui/icons-material/Remove";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import SortIcon from "@mui/icons-material/Sort";
 import Alert from "@components/feedback/Alert";
 import { IconPositionEnumType } from "@app/types/Input";
 import { Sort as CardSort } from "@utils/CardSort";
 import Switch from "@components/field/Switch";
 import { SelectDeckArtowrkType, DeckCardFieldType, DeckCardType } from "@app/types/Deck";
-
-const useStyles = makeStyles((theme: Theme) => ({
-    cardPicturePictureView: {
-        objectFit: "contain",
-        height: "200px",
-        "&:hover": {
-            cursor: "pointer",
-        },
-    },
-}));
-
-type DeckCardOpenType = {
-    [key in DeckCardFieldType]: boolean;
-};
+import DisplayDeckCard from "@components/deck/DisplayCard";
 
 type ErrorsType = {
     [key in string]: string | undefined;
@@ -72,7 +42,6 @@ type NewValuesType = {
 
 export default function DeckCreatePage() {
     const Theme = useTheme();
-    const classes = useStyles();
     const [values, setValues] = useState<ValuesType>({});
     const [errors, setErrors] = useState<ErrorsType>({});
     const [offset, setOffset] = useState<number>(0);
@@ -85,11 +54,6 @@ export default function DeckCreatePage() {
         [DeckCardFieldType.MAIN_DECK]: [],
         [DeckCardFieldType.EXTRA_DECK]: [],
         [DeckCardFieldType.SIDE_DECK]: [],
-    });
-    const [openDeckCard, setOpenDeckCard] = useState<DeckCardOpenType>({
-        [DeckCardFieldType.MAIN_DECK]: true,
-        [DeckCardFieldType.EXTRA_DECK]: true,
-        [DeckCardFieldType.SIDE_DECK]: true,
     });
     const [openCardDialog, setOpenCardDialog] = useState<boolean>(false);
     const [cardDialogInfo, setCardDialogInfo] = useState<CardSearchType | null>(null);
@@ -274,46 +238,6 @@ export default function DeckCreatePage() {
         });
     };
 
-    const displayDeckCardPicture = (cardInfo: CardSearchType, fieldType: DeckCardFieldType, key: number) => {
-        const pictureUrl = GetCardPictureUrl(cardInfo);
-        const popoverId = `popover-${fieldType}-cardInfo-${cardInfo.id}-${key}`;
-        const cardInfoToDisplayJson: CardInfoToDisplayType = {
-            cardInfo: cardInfo,
-            popoverId: popoverId,
-        };
-        return (
-            <Grid
-                key={`${fieldType}-cardInfo-${cardInfo.id}-${key}`}
-                item
-                xs={6}
-                md={3}
-                sx={{ [Theme.breakpoints.down("md")]: { margin: "auto", textAlign: "center" } }}
-            >
-                <Badge
-                    color="error"
-                    overlap="rectangular"
-                    anchorOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                    }}
-                    badgeContent={<RemoveIcon sx={{ cursor: "pointer" }} onClick={() => removeCard(key, fieldType)} />}
-                >
-                    <img
-                        aria-owns={popoverId}
-                        aria-haspopup="true"
-                        src={pictureUrl}
-                        className={classes.cardPicturePictureView}
-                        onMouseEnter={(e) => {
-                            setAnchorEl(e.currentTarget);
-                            setCardInfoToDisplay(cardInfoToDisplayJson);
-                        }}
-                        onMouseLeave={handlePopoverClose}
-                    />
-                </Badge>
-            </Grid>
-        );
-    };
-
     const transformCardDialogValues = (): NewValuesType | null => {
         let fieldType: DeckCardFieldType = DeckCardFieldType.MAIN_DECK;
         if (values.cardField !== undefined && ArrayIncludes(cardFieldTypeArray, values.cardField) === true) {
@@ -408,47 +332,6 @@ export default function DeckCreatePage() {
         ) : null;
     };
 
-    const displayDeckCard = (): React.JSX.Element[] => {
-        return cardFieldTypeArray.map((cardFieldType) => {
-            const openDeckCardFromFieldType = openDeckCard[cardFieldType];
-            const deckCardFromFieldTypeArray = deckCard[cardFieldType];
-            const nbCardInFieldType = deckCard[cardFieldType].length;
-            return (
-                <Grid key={`deckCard-${cardFieldType}`} item xs={12} container spacing={2} sx={{ marginTop: Theme.spacing(2) }}>
-                    <Grid item xs={12}>
-                        <Typography
-                            component="span"
-                            sx={{ fontWeight: "bolder", cursor: "pointer" }}
-                            onClick={(e) =>
-                                setOpenDeckCard((prevState) => {
-                                    let newOpenDeckCard = { ...prevState };
-                                    newOpenDeckCard[cardFieldType] = !newOpenDeckCard[cardFieldType];
-                                    return newOpenDeckCard;
-                                })
-                            }
-                        >
-                            {`${Capitalize(cardFieldType)} (${nbCardInFieldType})`}
-                            {openDeckCardFromFieldType === true ? (
-                                <KeyboardArrowUpIcon sx={{ verticalAlign: "middle" }} />
-                            ) : (
-                                <KeyboardArrowDownIcon sx={{ verticalAlign: "middle" }} />
-                            )}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12} container spacing={1}>
-                        <Collapse in={openDeckCardFromFieldType} timeout="auto" sx={{ width: "100%", marginTop: Theme.spacing(2) }}>
-                            <Grid item xs={12} container spacing={1} direction="row" justifyItems="flex-start" alignContent="flex-start">
-                                {deckCardFromFieldTypeArray.map((deckCardInfo, deckCardInfoKey) => {
-                                    return displayDeckCardPicture(deckCardInfo, cardFieldType, deckCardInfoKey);
-                                })}
-                            </Grid>
-                        </Collapse>
-                    </Grid>
-                </Grid>
-            );
-        });
-    };
-
     return (
         <DashboardHome active={2} activeChild={1} title="Deck Create Page">
             <Grid item xs={12} container spacing={4}>
@@ -471,7 +354,7 @@ export default function DeckCreatePage() {
                         {displayAutoClick()}
                         {displayDeckCardWarning()}
                         {displaySort()}
-                        {displayDeckCard()}
+                        <DisplayDeckCard deckCard={deckCard} handleRemoveCard={removeCard} />
                     </Grid>
                 </Grid>
                 <Grid item xs={12} md={6} container spacing={2} sx={{ height: "fit-content" }}>
