@@ -25,11 +25,10 @@ export default function Dialog(props: DialogType) {
     const { name, elementTrigger, title } = props;
     let open: boolean;
     let setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    [open, setOpen] = useState<boolean>(false);
     if (props.openState !== undefined) {
         open = props.openState[0];
         setOpen = props.openState[1];
-    } else {
-        [open, setOpen] = useState<boolean>(false);
     }
     const genericClasses = GenericStyles();
     const Theme = useTheme();
