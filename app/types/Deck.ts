@@ -3,7 +3,7 @@ import { CardMainDeckGetInfoType } from "@app/types/entity/CardMainDeck";
 import { CardExtraDeckGetInfoType } from "@app/types/entity/CardExtraDeck";
 import { CardSideDeckGetInfoType } from "@app/types/entity/CardSideDeck";
 
-export type SelectDeckArtowrkType = {
+export type SelectDeckArtworkType = {
     id: number;
     url: string;
     name: string;
