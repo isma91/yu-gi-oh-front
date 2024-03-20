@@ -1,9 +1,9 @@
 import { RequestGetAll, RequestGetInfo } from "@app/types/Request";
 import { NameSlugNameEntity, TimestampableEntity } from "@app/types/Entity";
 import { UserGetAllType } from "@app/types/entity/User";
-import { CardMainDeckeGetInfoType } from "@app/types/entity/CardMainDeck";
-import { CardExtraDeckeGetInfoType } from "@app/types/entity/CardExtraDeck";
-import { CardSideDeckeGetInfoType } from "@app/types/entity/CardSideDeck";
+import { CardMainDeckGetInfoType } from "@app/types/entity/CardMainDeck";
+import { CardExtraDeckGetInfoType } from "@app/types/entity/CardExtraDeck";
+import { CardSideDeckGetInfoType } from "@app/types/entity/CardSideDeck";
 
 
 export type DeckEntityType = TimestampableEntity & NameSlugNameEntity & {
@@ -25,9 +25,9 @@ export type DeckGetInfoType = NameSlugNameEntity & {
     id: number;
     isPublic: boolean;
     user: Pick<UserGetAllType, "username">;
-    cardMainDecks: CardMainDeckeGetInfoType[],
-    cardExtraDecks: CardExtraDeckeGetInfoType[],
-    cardSideDecks: CardSideDeckeGetInfoType[],
+    cardMainDecks: CardMainDeckGetInfoType[],
+    cardExtraDecks: CardExtraDeckGetInfoType[],
+    cardSideDecks: CardSideDeckGetInfoType[],
     artworkUrl: string | null;
 }
 
