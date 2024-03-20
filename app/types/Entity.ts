@@ -1,5 +1,6 @@
 import { CardEntityType, CardSearchType } from "@app/types/entity/Card";
 import { DeckEntityType } from "@app/types/entity/Deck";
+import { CardPictureGetAllType } from "@app/types/entity/CardPicture";
 
 export interface TimestampableEntity {
     createdAt: Date | DateStringType;
@@ -22,8 +23,10 @@ export type CardDeckEntityType = TimestampableEntity & NameSlugNameEntity & {
     deck: DeckEntityType;
 };
 
-export type CardDeckeGetInfoType = NameSlugNameEntity & {
+export type CardDeckGetInfoType = NameSlugNameEntity & {
     id: number;
     nbCopie: number;
-    cards: CardSearchType[],
+    cards: Array<CardSearchType & {
+        pictures: Array<Omit<CardPictureGetAllType, "picture" | 'artwork' | "pictureSmall" | "idYGO">>
+    }>,
 }
