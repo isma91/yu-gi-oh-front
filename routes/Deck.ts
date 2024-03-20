@@ -4,12 +4,14 @@ export enum DeckRouteName {
     LIST = "list",
     CREATE = "create",
     INFO = "info",
+    EDIT = "edit",
 }
 
 export const DECK_ROUTE_JSON = {
     [DeckRouteName.LIST]: "/list",
     [DeckRouteName.CREATE]: "/create",
     [DeckRouteName.INFO]: "/info/{id}/{slugName}",
+    [DeckRouteName.EDIT]: "/edit/{id}/{slugName}",
 };
 
 export const DECK_BASE_URL = "/deck";

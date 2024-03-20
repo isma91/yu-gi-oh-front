@@ -5,6 +5,7 @@ export enum DeckApiRouteName {
     GET_INFO = "info",
     DELETE = "delete",
     UPDATE_PUBLIC = "update-public",
+    EDIT = "edit",
     
 }
 
@@ -13,6 +14,7 @@ const DECK_API_ROUTE_JSON = {
     [DeckApiRouteName.GET_INFO]: "/info/{id}",
     [DeckApiRouteName.DELETE]: "/delete/{id}",
     [DeckApiRouteName.UPDATE_PUBLIC]: "/update-public/{id}/{public}",
+    [DeckApiRouteName.EDIT]: "/edit/{id}",
 };
 
 export const DECK_API_BASE_URL = "/deck";
