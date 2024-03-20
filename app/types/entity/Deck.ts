@@ -29,6 +29,7 @@ export type DeckGetInfoType = NameSlugNameEntity & {
     cardExtraDecks: CardExtraDeckGetInfoType[],
     cardSideDecks: CardSideDeckGetInfoType[],
     artworkUrl: string | null;
+    artworkCardId: number | null;
 }
 
 export type DeckGetFromFilterFromCurrentUserTypeRequestType = {
