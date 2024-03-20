@@ -136,3 +136,36 @@ export function SortAscForArrayWithChildren<T extends { [key in string]: any }>(
     }
     return newArray;
 }
+
+/**
+ * We create this function to avoid TS error because 
+ * the classic Array.includes can't check properly with Array custom type.
+ * We put the Array type T who extends with U just to avoid that error.
+ * @param {T[]} array 
+ * @param {U} el 
+ * @returns 
+ */
+export function ArrayIncludes<T extends U, U>(array: T[], el: U): boolean {
+    return array.includes(el as T);
+}
+
+/**
+ * Create array of number who begin at `from` with `length` length
+ * @param {number} from 
+ * @param {number} length 
+ * @returns {number[]}
+ */
+export function CreateArrayNumber(from: number, length: number): number[] {
+    let newArray: number[] = [];
+    if (from === length) {
+        return [from];
+    } else if (from > length) {
+        const newFrom = length;
+        length = from;
+        from = newFrom;
+    }
+    for (let i = from; i <= length; i++) {
+        newArray.push(i);
+    }
+    return newArray;
+}

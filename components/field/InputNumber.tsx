@@ -11,6 +11,8 @@ type InputNumberPropsType = BasicInputPropsType & {
     type?: InputNumberTypeType;
     margin?: FormControlTypeMap["props"]["margin"];
     max?: number;
+    min?: number;
+    isPositif?: boolean;
 };
 
 export default function InputNumber(props: InputNumberPropsType) {
@@ -21,9 +23,16 @@ export default function InputNumber(props: InputNumberPropsType) {
     if (props.label !== undefined) {
         label = props.label;
     }
+    let isPositif = false;
+    if (props.isPositif !== undefined) {
+        isPositif = props.isPositif;
+    }
 
     let optionInput: InputNumberInputPropsType = { required: true };
     let inputPropsOption: InputNumberInputPropsOptionType = {};
+    if (props.id !== undefined) {
+        inputPropsOption.id = props.id;
+    }
 
     let placeholder = label;
     if (props.placeholder !== undefined) {
@@ -64,6 +73,11 @@ export default function InputNumber(props: InputNumberPropsType) {
         max = props.max;
         inputPropsOption.max = max;
     }
+    let min: null | number = null;
+    if (props.min !== undefined) {
+        min = props.min;
+        inputPropsOption.min = min;
+    }
     let margin: FormControlTypeMap["props"]["margin"] = "normal";
     if (props.margin !== undefined) {
         margin = props.margin;
@@ -74,9 +88,11 @@ export default function InputNumber(props: InputNumberPropsType) {
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { value: eTargetValue } = e.target;
         if (props.onChange) {
             props.onChange(e);
+        }
+        if (isPositif === true) {
+            e.target.value = Math.abs(parseInt(e.target.value, 10)).toString(10);
         }
     };
 

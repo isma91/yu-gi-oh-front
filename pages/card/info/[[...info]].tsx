@@ -231,7 +231,7 @@ export default function CardInfoPage() {
                     </Typography>
                 </Grid>
                 <Grid item xs={12} container spacing={2} sx={{ margin: "auto" }}>
-                    <Collapse in={openCardOtherPicture} timeout="auto" unmountOnExit={true} sx={{ width: "100%", marginTop: Theme.spacing(2) }}>
+                    <Collapse in={openCardOtherPicture} timeout="auto" sx={{ width: "100%", marginTop: Theme.spacing(2) }}>
                         <Grid item xs={12} container spacing={2} justifyContent="center" alignItems="center">
                             {cardInfoOtherPictureArray.map((otherPictureArray, otherPictureArrayKey) => {
                                 return (
@@ -256,6 +256,8 @@ export default function CardInfoPage() {
         cardInfoFromSetKeyArray: number[],
         cardInfoName: string
     ): React.JSX.Element => {
+        let cardInfoCardSetGridMd = Math.ceil(12 / cardInfoFromSetKeyArray.length);
+        cardInfoCardSetGridMd = cardInfoCardSetGridMd < 5 ? 5 : cardInfoCardSetGridMd;
         return (
             <Grid
                 item
@@ -284,7 +286,7 @@ export default function CardInfoPage() {
                         )}
                     </Typography>
                 </Grid>
-                <Collapse in={openCardSetInfo} timeout="auto" unmountOnExit={true}>
+                <Collapse in={openCardSetInfo} timeout="auto">
                     <Grid
                         item
                         xs={12}
@@ -307,7 +309,7 @@ export default function CardInfoPage() {
                                     key={`${cardInfoName}-cardInfoCardSet-${cardInfoSetName}`}
                                     item
                                     xs={12}
-                                    md={5}
+                                    md={cardInfoCardSetGridMd}
                                     sx={{ width: "100%", margin: "auto" }}
                                 >
                                     <Paper
@@ -350,6 +352,10 @@ export default function CardInfoPage() {
                                                     key={`${cardInfoName}-otherInfo-${cardInfoSetName}-0`}
                                                     component="p"
                                                     className={classes.cardInfoCardSet}
+                                                    sx={{
+                                                        fontSize: "1rem",
+                                                        fontWeight: "bolder",
+                                                    }}
                                                 >
                                                     Characteristic (Code/Rarity):
                                                 </Typography>

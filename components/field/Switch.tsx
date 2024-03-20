@@ -17,6 +17,7 @@ type SwitchOptionType = {
     inputProps: {
         [key in string]: string;
     };
+    defaultChecked?: boolean;
 };
 
 export default function Switch(props: SwitchPropsType) {
@@ -52,6 +53,9 @@ export default function Switch(props: SwitchPropsType) {
 
     if (props.disabled !== undefined) {
         switchOption.disabled = props.disabled;
+    }
+    if (props.defaultValue === true) {
+        switchOption.defaultChecked = true;
     }
 
     const displayOnOff = () => {

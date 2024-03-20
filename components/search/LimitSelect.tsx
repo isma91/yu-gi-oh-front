@@ -9,7 +9,7 @@ type SearchLimitPropsType = {
     limitState: [number, React.Dispatch<React.SetStateAction<number>>];
 };
 
-export default function SearchLimit(props: SearchLimitPropsType): React.JSX.Element {
+export default function SearchLimitSelect(props: SearchLimitPropsType): React.JSX.Element {
     const { valueArray } = props;
     const [limit, setLimit] = props.limitState;
     let name = "limit";

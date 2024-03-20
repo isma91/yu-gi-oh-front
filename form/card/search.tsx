@@ -23,7 +23,7 @@ import SubPropertyTypeGetAllRequest from "@api/SubPropertyType/GetAll";
 import SubTypeGetAllRequest from "@api/SubType/GetAll";
 import TypeGetAllRequest from "@api/Type/GetAll";
 import { SortAscForArrayWithChildren, SortAscFromField } from "@utils/Array";
-import SearchCardFilter from "@components/specialField/SearchCardFilter";
+import SearchCardFilter from "@components/search/CardFilter";
 import { SliderValueRangeType, SliderValueType } from "@components/field/Slider";
 
 type CardSearchFormPropsType = {

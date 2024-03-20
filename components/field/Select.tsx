@@ -25,6 +25,7 @@ type SelectOptionsType = {
     multiple?: boolean;
     isoptional?: string;
     className?: string;
+    id?: string;
 };
 
 export default function Select(props: SelectPropsType) {
@@ -35,6 +36,9 @@ export default function Select(props: SelectPropsType) {
         label = props.label;
     }
     let selectOptions: SelectOptionsType = { required: true };
+    if (props.id !== undefined) {
+        selectOptions.id = props.id;
+    }
     let initialValue: SelectValueType = "";
     if (props.multiple !== undefined) {
         selectOptions.multiple = true;
@@ -60,7 +64,6 @@ export default function Select(props: SelectPropsType) {
         closeOnChange = true;
     }
 
-    //const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const handleChange = (event: SelectChangeEvent<string>) => {
         setValue(event.target.value);
         if (props.onChange) {

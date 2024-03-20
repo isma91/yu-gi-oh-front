@@ -14,6 +14,7 @@ const requestMethodTypeWithDataArray = [
 
 const requestMethodTypeWithoutDataArray = [
     RequestMethodType.GET,
+    RequestMethodType.PUT,
     RequestMethodType.DELETE,
 ];
 
@@ -50,6 +51,10 @@ export default async function Request(
     isProtected: boolean = false,
     isCreation: boolean = false
 ): Promise<any> {
+    //must send at least empty object because axios put need data
+    if (type === RequestMethodType.PUT && data === null) {
+        data = {};
+    }
     const withData = data !== null;
     const arrayToCheck = withData === true ? requestMethodTypeWithDataArray : requestMethodTypeWithoutDataArray;
     ThrowErrorIfNotGoodType(arrayToCheck, type);
@@ -57,12 +62,9 @@ export default async function Request(
     if (isProtected === true) {
         config.protected = true;
     }
-    let expectedHttpCode = 200;
-    if (withData === true && isCreation === true) {
-        expectedHttpCode = 201;
-    }
-    let request = ResolvePromise({status: null, data: undefined});
-    if (withData === true) {
+    const expectedHttpCode = (isCreation === true) ? 201 : 200;
+    let request = ResolvePromise({ status: null, data: undefined });
+    if (withData === true && data !== null) {
         const formData = CreateFormData(data);
         request = Api[type](url, formData, { ...config });
     } else {
