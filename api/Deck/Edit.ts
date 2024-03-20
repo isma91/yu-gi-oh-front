@@ -5,7 +5,7 @@ import { GetFullRoute, DeckApiRouteName } from "@routes/api/Deck";
 
 export default function DeckEditFromId(id: number, data: object): Promise<DeckGetInfoRequestType> {
     return Request(
-        GetFullRoute(DeckApiRouteName.UPDATE_PUBLIC, { id: id.toString(10) }),
+        GetFullRoute(DeckApiRouteName.EDIT, { id: id.toString(10) }),
         RequestMethodType.POST,
         "Error while updating deck.",
         data,
