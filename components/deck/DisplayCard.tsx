@@ -133,7 +133,15 @@ export default function DisplayDeckCard(props: DisplayDeckCardPropsType) {
         return cardFieldTypeArray.map((cardFieldType) => {
             const openDeckCardFromFieldType = openDeckCard[cardFieldType];
             const deckCardFromFieldTypeArray = deckCard[cardFieldType];
-            const nbCardInFieldType = deckCard[cardFieldType].length;
+            let nbCardInFieldType = 0;
+            for (let i = 0; i < deckCardFromFieldTypeArray.length; i++) {
+                const el = deckCardFromFieldTypeArray[i];
+                let nbCopieToAdd = 1;
+                if ("nbCopie" in el) {
+                    nbCopieToAdd = el.nbCopie;
+                }
+                nbCardInFieldType += nbCopieToAdd;
+            }
             return (
                 <Grid key={`deckCard-${cardFieldType}`} item xs={12} container spacing={2} sx={{ marginTop: Theme.spacing(2) }}>
                     <Grid item xs={12}>
