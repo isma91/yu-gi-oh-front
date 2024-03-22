@@ -16,6 +16,14 @@ export type SetGetAllType = NameSlugNameEntity & {
     releaseDate: DateStringType | null;
 }
 
+export type SetSearchRequestType = {
+    success: string;
+    data: {
+        set: SetGetAllType[];
+        setAllResultCount: number;
+    };
+}
+
 export type SetGetAllRequestType = RequestGetAll<"set", SetGetAllType>;
 
 export type SetGetInfoRequestType = RequestGetInfo<"set", SetGetAllType>;
