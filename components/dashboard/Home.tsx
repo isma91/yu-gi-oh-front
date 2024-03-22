@@ -8,6 +8,7 @@ import StyleIcon from "@mui/icons-material/Style";
 import BookIcon from "@mui/icons-material/Book";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import SettingsIcon from "@mui/icons-material/Settings";
+import FeaturedPlayListIcon from "@mui/icons-material/FeaturedPlayList";
 import GenericStyles from "@app/css/style";
 import { makeStyles } from "@mui/styles";
 import { CardRouteName, CARD_ROUTE_JSON, CARD_BASE_URL } from "@routes/Card";
@@ -15,6 +16,7 @@ import { DECK_BASE_URL, DECK_ROUTE_JSON, DeckRouteName } from "@routes/Deck";
 import { COLLECTION_BASE_URL, COLLECTION_ROUTE_JSON, CollectionRouteName } from "@routes/Collection";
 import { SETTING_BASE_URL } from "@routes/Setting";
 import Divider from "@components/Divider";
+import { SET_BASE_URL, SET_ROUTE_JSON, SetRouteName } from "@routes/Set";
 
 type DashboardHomeType = {
     children: React.ReactNode;
@@ -62,16 +64,24 @@ export default function DashboardHome(props: DashboardHomeType): React.JSX.Eleme
         {
             name: "Card",
             path: CARD_BASE_URL,
-            parentPath: `${CARD_BASE_URL}${CARD_ROUTE_JSON[CardRouteName.CARD_SEARCH]}`,
+            parentPath: `${CARD_BASE_URL}${CARD_ROUTE_JSON[CardRouteName.SEARCH]}`,
             logo: <StyleIcon />,
             children: [
                 {
-                    name: "Card Search",
-                    path: CARD_ROUTE_JSON[CardRouteName.CARD_SEARCH],
+                    name: "Search",
+                    path: CARD_ROUTE_JSON[CardRouteName.SEARCH],
                 },
+            ],
+        },
+        {
+            name: "Set",
+            path: SET_BASE_URL,
+            parentPath: `${SET_BASE_URL}${SET_ROUTE_JSON[SetRouteName.SEARCH]}`,
+            logo: <FeaturedPlayListIcon />,
+            children: [
                 {
-                    name: "Set Search",
-                    path: CARD_ROUTE_JSON[CardRouteName.SET_SEARCH],
+                    name: "Search",
+                    path: SET_ROUTE_JSON[SetRouteName.SEARCH],
                 },
             ],
         },

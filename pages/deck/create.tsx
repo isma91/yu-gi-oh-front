@@ -20,7 +20,7 @@ export default function DeckCreatePage() {
     const [autoClick, setAutoClick] = useState<boolean>(true);
 
     return (
-        <DashboardHome active={2} activeChild={1} title="Deck Create Page">
+        <DashboardHome active={3} activeChild={1} title="Deck Create Page">
             <Grid item xs={12} container spacing={4}>
                 <Grid item xs={12} md={6} container sx={{ height: "fit-content" }}>
                     <Grid item xs={12}>

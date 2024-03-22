@@ -103,7 +103,7 @@ export default function CardInfoPage() {
     const queryKeyName = "info";
 
     const redirectToCardSearchPage = () => {
-        router.push(CardGetFullRoute(CardRouteName.CARD_SEARCH));
+        router.push(CardGetFullRoute(CardRouteName.SEARCH));
     };
 
     const getCardInfoReq = async (cardUuid: string) => {

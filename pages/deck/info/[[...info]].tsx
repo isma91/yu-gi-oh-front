@@ -293,7 +293,7 @@ export default function DeckInfoPage() {
     };
 
     return (
-        <DashboardHome active={2} title="Deck info Page">
+        <DashboardHome active={3} title="Deck info Page">
             <Grid container spacing={2} sx={{ marginTop: (theme) => theme.spacing(1), height: "100%" }}>
                 {loading === true ? (
                     <Grid item xs={12}>
