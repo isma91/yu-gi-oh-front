@@ -1,7 +1,7 @@
 import { useState } from "react";
 import DashboardHome from "@components/dashboard/Home";
 import { Grid } from "@mui/material";
-import { SetGetAllType } from "@app/types/entity/Set";
+import { SetSearchType } from "@app/types/entity/Set";
 import SetSearchForm from "@form/set/search";
 import SearchLimitSelect from "@components/search/LimitSelect";
 import SearchSetDisplay from "@components/search/SetDisplay";
@@ -11,7 +11,7 @@ export default function SetSearchPage() {
     const [limit, setLimit] = useState<number>(30);
     const [setAllResultCount, setSetAllResultCount] = useState<number>(0);
     const [loadingForm, setLoadingForm] = useState<boolean>(false);
-    const [setResult, setSetResult] = useState<SetGetAllType[]>([]);
+    const [setResult, setSetResult] = useState<SetSearchType[]>([]);
     const limitArray: number[] = [30, 45, 60];
 
     return (

@@ -6,15 +6,15 @@ export enum SetRouteName {
 
 export const SET_ROUTE_JSON = {
     [SetRouteName.SEARCH]: "/search",
-    [SetRouteName.INFO]: "/info/{uuid}/{slugName}",
+    [SetRouteName.INFO]: "/info/{id}/{slugName}",
 };
 
 export const SET_BASE_URL = "/set";
 
-type SetRouteOptionKey = "uuid" | "slugName";
+type SetRouteOptionKey = "id" | "slugName";
 
 type SetRouteOption = {
-    [key in SetRouteOptionKey]: string;
+    [key in SetRouteOptionKey]?: string;
 }
 
 export function GetFullRoute(setRouteName: SetRouteName, option: SetRouteOption | null = null): string {

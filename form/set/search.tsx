@@ -5,7 +5,7 @@ import InputText from "@components/field/InputText";
 import Form from "@components/util/Form";
 import { Grid } from "@mui/material";
 import SearchSetRequest from "@api/Search/Set";
-import { SetGetAllType } from "@app/types/entity/Set";
+import { SetSearchType } from "@app/types/entity/Set";
 import { useSnackbar } from "notistack";
 
 type ErrorsType = {
@@ -16,7 +16,7 @@ type SetSearchFormPropsType = {
     offsetState: [number, React.Dispatch<React.SetStateAction<number>>];
     loadingFormState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
     setSetAllResultCount: React.Dispatch<React.SetStateAction<number>>;
-    setSetResult: React.Dispatch<React.SetStateAction<SetGetAllType[]>>;
+    setSetResult: React.Dispatch<React.SetStateAction<SetSearchType[]>>;
     searchLimit: React.JSX.Element;
     limit: number;
 };

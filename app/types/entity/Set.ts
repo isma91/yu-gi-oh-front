@@ -16,10 +16,14 @@ export type SetGetAllType = NameSlugNameEntity & {
     releaseDate: DateStringType | null;
 }
 
+export type SetSearchType = SetGetAllType & {
+    nbCard: number;
+}
+
 export type SetSearchRequestType = {
     success: string;
     data: {
-        set: SetGetAllType[];
+        set: SetSearchType[];
         setAllResultCount: number;
     };
 }
