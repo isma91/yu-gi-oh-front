@@ -76,7 +76,7 @@ export default function Form({ setValues, setErrors, fields, children }: FormPro
                 elementValue = autocompleteAttribute !== null ? autocompleteAttribute.value : "";
             } else if (elementType === "radio" || elementType === "checkbox") {
                 elementValue = element["checked"] === true ? "true" : "";
-            } else if (["password", "confirmPassword"].includes(fieldName) === true) {
+            } else if (elementType === "password") {
                 if (elementValue.trim() === "") {
                     elementValue = "";
                 }
