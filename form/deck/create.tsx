@@ -66,7 +66,7 @@ export default function DeckCreateForm(props: DeckCreateForm) {
                     <InputText name="name" error={errors.name} />
                 </Grid>
                 <Grid item xs={12}>
-                    <Switch name="isPublic" label="Is your Deck giong to be public ?" error={errors.isPublic} isOnOff />
+                    <Switch name="isPublic" label="Is your Deck going to be public ?" error={errors.isPublic} isOnOff />
                 </Grid>
                 <Grid item xs={12}>
                     <AutocompleteDeckArtwork error={errors.artwork} options={selectDeckArtworkArray} />

@@ -87,7 +87,7 @@ export default function DeckEditForm(props: DeckEditForm) {
                 <Grid item xs={12}>
                     <Switch
                         name="isPublic"
-                        label="Is your Deck giong to be public ?"
+                        label="Is your Deck going to be public ?"
                         defaultValue={deckInfo.isPublic}
                         error={errors.isPublic}
                         isOnOff

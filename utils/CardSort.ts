@@ -43,7 +43,7 @@ function getMonsterSubCategorySort(cardInfo: CardSearchType, cardMonsterSortType
     return monsterSortSubCategory;
 }
 
-function sortCheckEl(aEl: any, bEl: any): number | null {
+export function SortCheckEl(aEl: any, bEl: any): number | null {
     if (aEl === null && bEl === null) {
         return 0;
     }
@@ -67,7 +67,7 @@ function SortFromLevel(a: CardSearchType, b: CardSearchType, asc: boolean = true
     if (bProperty !== null) {
         bLevel = parseInt(bProperty.name, 10);
     }
-    const checkEl = sortCheckEl(aProperty, bProperty);
+    const checkEl = SortCheckEl(aProperty, bProperty);
     if (checkEl !== null) {
         return checkEl;
     }
@@ -99,7 +99,7 @@ function SortByAttribute(a: CardSearchType, b: CardSearchType, sortType: CustomS
     if (bAttribute !== null) {
         bAttributeValue = bAttribute.slugName as AttributeType;
     }
-    const checkEl = sortCheckEl(aAttribute, bAttribute);
+    const checkEl = SortCheckEl(aAttribute, bAttribute);
     if (checkEl !== null) {
         return checkEl;
     }
@@ -127,7 +127,7 @@ function SortByMonsterType(a: CardSearchType, b: CardSearchType, asc: boolean = 
     if (bType !== null) {
         bTypeValue = bType.slugName;
     }
-    const checkEl = sortCheckEl(aTypeValue, bTypeValue);
+    const checkEl = SortCheckEl(aTypeValue, bTypeValue);
     if (checkEl !== null) {
         return checkEl;
     }
@@ -151,7 +151,7 @@ function SortByAtk(a: CardSearchType, b: CardSearchType, asc: boolean = true): n
     if (bAttackPoints !== null) {
         bAtk = bAttackPoints;
     }
-    const checkEl = sortCheckEl(aAtk, bAtk);
+    const checkEl = SortCheckEl(aAtk, bAtk);
     if (checkEl !== null) {
         return checkEl;
     }
@@ -175,7 +175,7 @@ function SortByDef(a: CardSearchType, b: CardSearchType, asc: boolean = true): n
     if (bDefensePoints !== null) {
         bDef = bDefensePoints;
     }
-    const checkEl = sortCheckEl(aDef, bDef);
+    const checkEl = SortCheckEl(aDef, bDef);
     if (checkEl !== null) {
         return checkEl;
     }
@@ -199,7 +199,7 @@ function SortByName(a: CardSearchType, b: CardSearchType, asc: boolean = true): 
     if (bName !== null) {
         bNameValue = bName;
     }
-    const checkEl = sortCheckEl(aNameValue, bNameValue);
+    const checkEl = SortCheckEl(aNameValue, bNameValue);
     if (checkEl !== null) {
         return checkEl;
     }
@@ -231,7 +231,7 @@ function SortBySpellTrapType<T extends string>(sortJson: { [key in T]: number },
     if (bSubCategory !== null) {
         bSubCategoryValue = bSubCategory.slugName as T;
     }
-    const checkEl = sortCheckEl(aSubCategoryValue, bSubCategoryValue);
+    const checkEl = SortCheckEl(aSubCategoryValue, bSubCategoryValue);
     if (checkEl !== null) {
         return checkEl;
     }
@@ -329,14 +329,6 @@ export function Sort(cardInfoArray: CardSearchType[]) {
                 SortByDef(a, b, false) ||
                 SortByName(a, b);
         });
-        /*let cardMonsterSorted = cardMonsterSort[cardMonsterSortType].sort((a, b) => SortFromLevel(a, b, false));
-        cardMonsterSorted = cardMonsterSorted.sort(SortByAttribute);
-        cardMonsterSorted = cardMonsterSorted.sort(SortByMonsterType);
-        cardMonsterSorted = cardMonsterSorted.sort((a, b) => SortByAtk(a, b, false));
-        cardMonsterSorted = cardMonsterSorted.sort((a, b) => SortByDef(a, b, false));
-        cardMonsterSorted = cardMonsterSorted.sort(SortByName);
-        cardMonsterSorted = regroupEl(cardMonsterSorted);
-        newCardInfoArray = newCardInfoArray.concat(cardMonsterSorted);*/
         cardMonsterSorted = regroupEl(cardMonsterSorted);
         newCardInfoArray = newCardInfoArray.concat(cardMonsterSorted);
     });
