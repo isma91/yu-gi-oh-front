@@ -113,7 +113,7 @@ export default function DeckEditPage() {
     }, [loadingRouterQuery, globalState]);
 
     return (
-        <DashboardHome active={2} title="Deck edit Page">
+        <DashboardHome active={3} title="Deck edit Page">
             <Grid item xs={12} container spacing={4}>
                 {loading === true ? (
                     <Grid item xs={12}>

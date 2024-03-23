@@ -67,7 +67,7 @@ export default function DisplayDeckCard(props: DisplayDeckCardPropsType) {
                 uuid: uuid,
                 slugName: slugName,
             };
-            const url = GetFullRoute(CardRouteName.CARD_INFO, option);
+            const url = GetFullRoute(CardRouteName.INFO, option);
             RedirectToNewTab(router, url);
         }
     };

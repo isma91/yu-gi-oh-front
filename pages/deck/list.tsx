@@ -16,7 +16,7 @@ export default function DeckListPage() {
     const limitArray: number[] = [15, 30, 45, 60];
 
     return (
-        <DashboardHome active={2} activeChild={0} title="Deck List Page">
+        <DashboardHome active={3} activeChild={0} title="Deck List Page">
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <DeckSearchCurrentUserForm
