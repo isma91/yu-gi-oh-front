@@ -1,6 +1,7 @@
 import { RequestGetAll, RequestGetInfo } from "@app/types/Request";
 import { DateStringType, NameSlugNameEntity, TimestampableEntity } from "@app/types/Entity";
-import { CardSetEntityType } from "@app/types/entity/CardSet";
+import { CardSetEntityType, CardSetGetAllType } from "@app/types/entity/CardSet";
+import { CardSearchType } from "./Card";
 
 
 export type SetEntityType = TimestampableEntity & NameSlugNameEntity & {
@@ -14,6 +15,12 @@ export type SetGetAllType = NameSlugNameEntity & {
     id: number;
     code: string | null;
     releaseDate: DateStringType | null;
+}
+
+export type SetGetInfoType = SetSearchType & {
+    cardSets: Array<Omit<CardSetGetAllType, "sets"> & {
+        card: CardSearchType
+    }>
 }
 
 export type SetSearchType = SetGetAllType & {
@@ -30,4 +37,4 @@ export type SetSearchRequestType = {
 
 export type SetGetAllRequestType = RequestGetAll<"set", SetGetAllType>;
 
-export type SetGetInfoRequestType = RequestGetInfo<"set", SetGetAllType>;
+export type SetGetInfoRequestType = RequestGetInfo<"set", SetGetInfoType>;
