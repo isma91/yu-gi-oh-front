@@ -85,6 +85,10 @@ export type CardGetInfoType = NameSlugNameEntity & {
     decks: Array<Pick<DeckGetInfoType, "id" | "name" | "slugName" | "isPublic" | "user" | "artworkUrl">>
 }
 
+export type CardRandomType = Pick<CardSearchType, "id" | "name" | "slugName" | "uuid"> & {
+    pictures: Array<Pick<CardPictureGetAllType, "pictureUrl">>
+}
+
 export type CardSearchRequestType = {
     success: string;
     data: {
@@ -94,3 +98,5 @@ export type CardSearchRequestType = {
 }
 
 export type CardGetInfoRequestType = RequestGetInfo<"card", CardGetInfoType>;
+
+export type CardGetRandomRequestType = RequestGetInfo<"card", CardRandomType>;
