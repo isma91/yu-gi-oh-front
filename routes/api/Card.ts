@@ -2,10 +2,12 @@ import { GetFullRouteFromRouteNameAndRouteOption } from "@utils/Route";
 
 export enum CardApiRouteName {
     GET_INFO = "get-info",
+    RANDOM = "random",
 }
 
 const CARD_API_ROUTE_JSON = {
     [CardApiRouteName.GET_INFO]: "/info/{uuid}",
+    [CardApiRouteName.RANDOM]: "/random",
 };
 
 export const CARD_API_BASE_URL = "/card";
