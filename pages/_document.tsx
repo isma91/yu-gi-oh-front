@@ -11,7 +11,6 @@ export default function Document() {
                 <link rel="icon" type="image/png" sizes="32x32" href="/static/images/favicon/favicon-32x32.png" key="icon-32" />
                 <link rel="icon" type="image/png" sizes="16x16" href="/static/images/favicon/favicon-16x16.png" key="icon-16" />
                 <meta name="description" content="isma91 Yu-Gi-Oh! front page" key="description" />
-                <Head />
             </Head>
             <body>
                 <Main />
