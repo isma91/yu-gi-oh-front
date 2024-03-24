@@ -67,7 +67,7 @@ function Button(props: ButtonPropsType) {
         } else {
             setDisabled(true);
         }
-    }, [props]);
+    }, [props, loading]);
 
     const handleOnClick = (e: React.MouseEvent) => {
         if (props.onClick !== undefined) {
