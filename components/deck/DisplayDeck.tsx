@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSnackbar } from "notistack";
 import { DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, MenuItem, Dialog } from "@mui/material";
 import SortIcon from "@mui/icons-material/Sort";
@@ -17,6 +17,7 @@ import { CardSearchType } from "@app/types/entity/Card";
 import { ArrayIncludes, CreateArrayNumber } from "@utils/Array";
 import { Capitalize } from "@utils/String";
 import { Sort as CardSort } from "@utils/CardSort";
+import { GetLocalStorageValue } from "@utils/Window";
 
 type DisplayDeckPropsType = {
     deckCardState: [DeckCardType, React.Dispatch<React.SetStateAction<DeckCardType>>];
@@ -54,13 +55,8 @@ export default function DisplayDeck(props: DisplayDeckPropsType) {
     const [errors, setErrors] = useState<ErrorsType>({});
     const [deckCardWarning, setDeckCardWarning] = useState<string | null>(null);
     const cardFieldTypeArray: DeckCardFieldType[] = Object.values(DeckCardFieldType);
-    const nbCopieMaxPerCard = parseInt(process.env["NEXT_PUBLIC_NB_SAME_CARD_DECK"] as string, 10);
-    const nbCardMinMainDeck = parseInt(process.env["NEXT_PUBLIC_NB_MIN_CARD_MAIN_DECK"] as string, 10);
-    const nbCardMaxMainDeck = parseInt(process.env["NEXT_PUBLIC_NB_MAX_CARD_MAIN_DECK"] as string, 10);
-    const nbCardMaxExtraDeck = parseInt(process.env["NEXT_PUBLIC_NB_MAX_CARD_EXTRA_DECK"] as string, 10);
-    const nbCardMaxSideDeck = parseInt(process.env["NEXT_PUBLIC_NB_MAX_CARD_SIDE_DECK"] as string, 10);
-
-    const findFieldTypeFromCardInfo = (cardInfo: CardSearchType): DeckCardFieldType => {
+    const nbCopieMaxPerCard = parseInt(GetLocalStorageValue("NEXT_PUBLIC_NB_SAME_CARD_DECK") as string, 10);
+    const findFieldTypeFromCardInfo = useCallback((cardInfo: CardSearchType): DeckCardFieldType => {
         const { subCategory: cardInfoSubCategory, category: cardInfoCategory } = cardInfo;
         if (cardInfoCategory.slugName !== "monster") {
             return DeckCardFieldType.MAIN_DECK;
@@ -72,20 +68,12 @@ export default function DisplayDeck(props: DisplayDeckPropsType) {
             return DeckCardFieldType.MAIN_DECK;
         }
         return DeckCardFieldType.EXTRA_DECK;
-    };
-
-    useEffect(() => {
-        if (autoClick === true && cardDialogInfo !== null) {
-            handleValues({
-                fieldType: findFieldTypeFromCardInfo(cardDialogInfo),
-                nbCopie: 1,
-                cardInfo: cardDialogInfo,
-            });
-            setCardDialogInfo(null);
-        }
-    }, [cardDialogInfo]);
-
-    const checkDeckCardWarning = () => {
+    }, []);
+    const checkDeckCardWarning = useMemo(() => {
+        const nbCardMinMainDeck = parseInt(GetLocalStorageValue("NEXT_PUBLIC_NB_MIN_CARD_MAIN_DECK") as string, 10);
+        const nbCardMaxMainDeck = parseInt(GetLocalStorageValue("NEXT_PUBLIC_NB_MAX_CARD_MAIN_DECK") as string, 10);
+        const nbCardMaxExtraDeck = parseInt(GetLocalStorageValue("NEXT_PUBLIC_NB_MAX_CARD_EXTRA_DECK") as string, 10);
+        const nbCardMaxSideDeck = parseInt(GetLocalStorageValue("NEXT_PUBLIC_NB_MAX_CARD_SIDE_DECK") as string, 10);
         const deckCardMainDeckArray = deckCard[DeckCardFieldType.MAIN_DECK];
         const deckCardMainDeckNumber = deckCardMainDeckArray.length;
         const deckCardExtraDeckArray = deckCard[DeckCardFieldType.EXTRA_DECK];
@@ -102,12 +90,23 @@ export default function DisplayDeck(props: DisplayDeckPropsType) {
         } else if (deckCardSideDeckNumber > nbCardMaxSideDeck) {
             newDeckCardWarning = `The ${DeckCardFieldType.SIDE_DECK} have more than ${nbCardMaxSideDeck} cards !!`;
         }
-        return newDeckCardWarning;
-    };
+        setDeckCardWarning(newDeckCardWarning);
+    }, [deckCard]);
 
     useEffect(() => {
+        if (autoClick === true && cardDialogInfo !== null) {
+            handleValues({
+                fieldType: findFieldTypeFromCardInfo(cardDialogInfo),
+                nbCopie: 1,
+                cardInfo: cardDialogInfo,
+            });
+            setCardDialogInfo(null);
+        }
+    }, [autoClick, cardDialogInfo, setCardDialogInfo, findFieldTypeFromCardInfo]);
+
+    /*useEffect(() => {
         setDeckCardWarning(checkDeckCardWarning());
-    }, [deckCard]);
+    }, [deckCard, checkDeckCardWarning]);*/
 
     const handleSort = (deckCard: DeckCardType): DeckCardType => {
         const deckCardFieldTypeArray = Object.values(DeckCardFieldType);
@@ -156,25 +155,6 @@ export default function DisplayDeck(props: DisplayDeckPropsType) {
             array.push(cardInfo);
         }
         return array;
-    };
-
-    const transformCardDialogValues = (): NewValuesType | null => {
-        let fieldType: DeckCardFieldType = DeckCardFieldType.MAIN_DECK;
-        if (values.cardField !== undefined && ArrayIncludes(cardFieldTypeArray, values.cardField) === true) {
-            fieldType = values.cardField as DeckCardFieldType;
-        }
-        let nbCopie = 0;
-        if (values.nbCopie !== undefined) {
-            const valuesNbCopie = parseInt(values.nbCopie, 10);
-            if (Number.isNaN(valuesNbCopie) === false && valuesNbCopie > 0 && valuesNbCopie <= nbCopieMaxPerCard) {
-                nbCopie = valuesNbCopie;
-            }
-        }
-        if (cardDialogInfo !== null) {
-            return { nbCopie: nbCopie, fieldType: fieldType, cardInfo: cardDialogInfo };
-        } else {
-            return null;
-        }
     };
 
     const handleValues = (newValues: NewValuesType): boolean => {
@@ -228,6 +208,25 @@ export default function DisplayDeck(props: DisplayDeckPropsType) {
         return false;
     };
 
+    const transformCardDialogValues = (): NewValuesType | null => {
+        let fieldType: DeckCardFieldType = DeckCardFieldType.MAIN_DECK;
+        if (values.cardField !== undefined && ArrayIncludes(cardFieldTypeArray, values.cardField) === true) {
+            fieldType = values.cardField as DeckCardFieldType;
+        }
+        let nbCopie = 0;
+        if (values.nbCopie !== undefined) {
+            const valuesNbCopie = parseInt(values.nbCopie, 10);
+            if (Number.isNaN(valuesNbCopie) === false && valuesNbCopie > 0 && valuesNbCopie <= nbCopieMaxPerCard) {
+                nbCopie = valuesNbCopie;
+            }
+        }
+        if (cardDialogInfo !== null) {
+            return { nbCopie: nbCopie, fieldType: fieldType, cardInfo: cardDialogInfo };
+        } else {
+            return null;
+        }
+    };
+
     useEffect(() => {
         const valuesLength = Object.keys(values).length;
         const errorsLength = Object.keys(errors).length;
@@ -240,7 +239,7 @@ export default function DisplayDeck(props: DisplayDeckPropsType) {
                 handleValues(newValues);
             }
         }
-    }, [values, errors]);
+    }, [values, errors, enqueueSnackbar]);
 
     const displayDialog = (): React.JSX.Element => {
         return (
