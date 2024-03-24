@@ -47,7 +47,7 @@ export default function App(props: AppPropsType): React.JSX.Element {
             router.events.on("routeChangeComplete", () => FadeLoading(setLoading));
             router.events.on("routeChangeError", () => FadeLoading(setLoading));
         }
-    }, [router]);
+    }, [router, layoutlessPathName]);
 
     return (
         <StateProvider>
