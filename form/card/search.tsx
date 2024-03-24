@@ -100,7 +100,6 @@ export default function CardSearchForm(props: CardSearchFormPropsType): React.JS
             setOffset(0);
         }
         const newValues = fullfilValuesBeforeSendReq();
-        setLoadingForm(false);
         sendCardSearchReq(newValues);
     };
 
