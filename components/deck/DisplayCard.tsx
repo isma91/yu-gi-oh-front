@@ -14,6 +14,7 @@ import { CardRouteName, GetFullRoute } from "@routes/Card";
 import { RedirectToNewTab } from "@utils/Route";
 import { useRouter } from "next/router";
 import { CreateArrayNumber } from "@utils/Array";
+import Image from "next/image";
 
 type DisplayDeckCardPropsType = {
     deckCard: DeckCardType | DeckInfoType;
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     cardPicturePictureView: {
         objectFit: "contain",
         height: "200px",
+        width: "auto",
         "&:hover": {
             cursor: "pointer",
         },
@@ -80,7 +82,10 @@ export default function DisplayDeckCard(props: DisplayDeckCardPropsType) {
             popoverId: popoverId,
         };
         const img = (
-            <img
+            <Image
+                width={0}
+                height={0}
+                sizes="100vw"
                 aria-owns={popoverId}
                 aria-haspopup="true"
                 src={pictureUrl}
@@ -91,6 +96,7 @@ export default function DisplayDeckCard(props: DisplayDeckCardPropsType) {
                 }}
                 onMouseLeave={handlePopoverClose}
                 onClick={(e) => handleClick(cardInfo)}
+                alt={`Card ${cardInfo.name} picture`}
             />
         );
         return (

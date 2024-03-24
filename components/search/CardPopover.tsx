@@ -3,6 +3,7 @@ import { makeStyles } from "@mui/styles";
 import { Grid, Typography, Theme, useTheme, Popover, useMediaQuery } from "@mui/material";
 import { GetCardDescription, GetCardInfoStringJson, GetCardPictureUrl } from "@utils/SearchCard";
 import { CardInfoToDisplayType, SearchCardCardInfoJsonType } from "@app/types/SearchCard";
+import Image from "next/image";
 
 type PositionHorizontalPopoverType = "left" | "right" | "center";
 type PositionVerticalPopoverType = "center" | "bottom" | "top";
@@ -117,7 +118,14 @@ export default function SearchCardPopover(props: SearchPopoverPropsType) {
                         <Typography component="p">{GetCardDescription(cardInfo, limitText)}</Typography>
                     </Grid>
                     <Grid item xs={3} sx={{ height: "100%", textAlign: "center" }}>
-                        <img src={pictureUrl} className={classes.cardPicturePopover} />
+                        <Image
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            alt={`Card ${cardInfo.name} picture in popover`}
+                            src={pictureUrl}
+                            className={classes.cardPicturePopover}
+                        />
                     </Grid>
                 </Grid>
             </Popover>

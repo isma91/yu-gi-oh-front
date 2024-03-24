@@ -10,6 +10,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import { DeckRouteName, GetFullRoute } from "@routes/Deck";
 import { IsAdmin } from "@utils/Role";
+import Image from "next/image";
 
 type SearchDeckDisplayProps = {
     deckResult: DeckGetAllFromCurrentUserType[];
@@ -100,7 +101,14 @@ export default function SearchDeckDisplay(props: SearchDeckDisplayProps) {
                                 }}
                             >
                                 <Grid item xs={12}>
-                                    <img src={artwork} className={classes.deckPicture} />
+                                    <Image
+                                        width={0}
+                                        height={0}
+                                        sizes="100vw"
+                                        alt={`Dack ${deckInfo.name} artwork`}
+                                        src={artwork}
+                                        className={classes.deckPicture}
+                                    />
                                 </Grid>
                                 <Grid item xs={12} sx={{ textAlign: "center" }}>
                                     <Typography component="span">
