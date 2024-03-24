@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo, useCallback } from "react";
 import { useTheme, Theme, Grid, Skeleton, Typography, useMediaQuery } from "@mui/material";
 import { StoreContext } from "@app/lib/state-provider";
 import useRouterQuery from "@app/hooks/useRouterQuery";
@@ -42,7 +42,7 @@ export default function DeckInfoPage() {
     const classes = useStyles();
     const genericClasses = GenericStyles();
     const { enqueueSnackbar } = useSnackbar();
-    const { query, loading: loadingRouterQuery } = useRouterQuery(router.query);
+    const customRouterQuery = useRouterQuery(router.query);
     const Theme = useTheme();
     const mediaQueryUpMd = useMediaQuery(Theme.breakpoints.up("md"));
     const [deckInfo, setDeckInfo] = useState<DeckGetInfoType | null>(null);
@@ -57,88 +57,84 @@ export default function DeckInfoPage() {
         [DeckCardFieldType.SIDE_DECK]: [],
     });
     const [loading, setLoading] = useState(true);
+    const [skip, setSkip] = useState(false);
+    const deckCurrentUserListPage = useMemo(() => GetFullRoute(DeckRouteName.LIST), []);
     const queryKeyName = "info";
-
-    const redirectToDeckCurrentListPage = () => {
-        router.push(GetFullRoute(DeckRouteName.LIST));
-    };
-
-    const transformCardDeck = (array: CardDeckGetInfoType[]): CardDeckGetInfoType[] => {
-        let newArray: CardDeckGetInfoType[] = [];
-        array.forEach((v) => {
-            let newCardInfo = v.cards[0];
-            newCardInfo.picture = newCardInfo.pictures[0];
-            newArray.push({ ...v, cards: [newCardInfo] });
-        });
-        return newArray;
-    };
-
-    const transformCardDeckClassic = (array: CardDeckGetInfoType[]): CardSearchType[] => {
-        let newArray: CardSearchType[] = [];
-        array.forEach((v) => {
-            const { nbCopie, cards } = v;
-            let newCardInfo = cards[0];
-            const arrayNumber = CreateArrayNumber(0, nbCopie - 1);
-            newCardInfo.picture = newCardInfo.pictures[0];
-            for (let i = 0; i < arrayNumber.length; i++) {
-                newArray.push(newCardInfo);
-            }
-        });
-        return newArray;
-    };
-
-    const transformToDeckInfo = (deckInfo: DeckGetInfoType | null): DeckInfoType | null => {
+    const transformDeckInfoToDeckClassic = useCallback((deckInfo: DeckGetInfoType | null): DeckCardType => {
         if (deckInfo === null) {
-            return null;
+            return {
+                [DeckCardFieldType.MAIN_DECK]: [],
+                [DeckCardFieldType.EXTRA_DECK]: [],
+                [DeckCardFieldType.SIDE_DECK]: [],
+            };
         }
-        return {
-            [DeckCardFieldType.MAIN_DECK]: transformCardDeck(deckInfo.cardMainDecks),
-            [DeckCardFieldType.EXTRA_DECK]: transformCardDeck(deckInfo.cardExtraDecks),
-            [DeckCardFieldType.SIDE_DECK]: transformCardDeck(deckInfo.cardSideDecks),
+        const transformCardDeckClassic = (array: CardDeckGetInfoType[]): CardSearchType[] => {
+            let newArray: CardSearchType[] = [];
+            array.forEach((v) => {
+                const { nbCopie, cards } = v;
+                let newCardInfo = cards[0];
+                const arrayNumber = CreateArrayNumber(0, nbCopie - 1);
+                newCardInfo.picture = newCardInfo.pictures[0];
+                for (let i = 0; i < arrayNumber.length; i++) {
+                    newArray.push(newCardInfo);
+                }
+            });
+            return newArray;
         };
-    };
-
-    const transformToDeckCardClassic = (deckInfo: DeckGetInfoType | null): DeckCardType | null => {
-        if (deckInfo === null) {
-            return null;
-        }
         return {
             [DeckCardFieldType.MAIN_DECK]: CardSort(transformCardDeckClassic(deckInfo.cardMainDecks)),
             [DeckCardFieldType.EXTRA_DECK]: CardSort(transformCardDeckClassic(deckInfo.cardExtraDecks)),
             [DeckCardFieldType.SIDE_DECK]: CardSort(transformCardDeckClassic(deckInfo.cardSideDecks)),
         };
-    };
-
-    const handleGetDeckInfoReq = (resData: DeckGetInfoType | null) => {
-        setDeckInfo(resData);
-        const transformedResData = transformToDeckInfo(resData);
-        const transformedResDataClassic = transformToDeckCardClassic(resData);
-        if (transformedResData !== null) {
-            setDeckCard(transformedResData);
+    }, []);
+    const transformDeckInfoToDeckCard = useCallback((deckInfo: DeckGetInfoType | null): DeckInfoType => {
+        if (deckInfo === null) {
+            return {
+                [DeckCardFieldType.MAIN_DECK]: [],
+                [DeckCardFieldType.EXTRA_DECK]: [],
+                [DeckCardFieldType.SIDE_DECK]: [],
+            };
         }
-        if (transformedResDataClassic !== null) {
-            setDeckCardClassic(transformedResDataClassic);
-        }
-    };
-
-    const getDeckInfoReq = async (id: number) => {
-        return DeckGetInfoRequest(id)
-            .then((res) => {
-                handleGetDeckInfoReq(res.data.deck);
-            })
-            .catch((err) => enqueueSnackbar(err, { variant: "error" }))
-            .finally(() => setLoading(false));
-    };
+        const transformCardDeck = (array: CardDeckGetInfoType[]): CardDeckGetInfoType[] => {
+            let newArray: CardDeckGetInfoType[] = [];
+            array.forEach((v) => {
+                let newCardInfo = v.cards[0];
+                newCardInfo.picture = newCardInfo.pictures[0];
+                newArray.push({ ...v, cards: [newCardInfo] });
+            });
+            return newArray;
+        };
+        return {
+            [DeckCardFieldType.MAIN_DECK]: transformCardDeck(deckInfo.cardMainDecks),
+            [DeckCardFieldType.EXTRA_DECK]: transformCardDeck(deckInfo.cardExtraDecks),
+            [DeckCardFieldType.SIDE_DECK]: transformCardDeck(deckInfo.cardSideDecks),
+        };
+    }, []);
+    const handleGetDeckInfoReq = useCallback(
+        (resData: DeckGetInfoType | null) => {
+            setDeckInfo(resData);
+            const transformedResData = transformDeckInfoToDeckCard(resData);
+            const transformedResDataClassic = transformDeckInfoToDeckClassic(resData);
+            if (transformedResData !== null) {
+                setDeckCard(transformedResData);
+            }
+            if (transformedResDataClassic !== null) {
+                setDeckCardClassic(transformedResDataClassic);
+            }
+        },
+        [transformDeckInfoToDeckClassic, transformDeckInfoToDeckCard]
+    );
 
     useEffect(() => {
-        if (globalState.user !== null && loadingRouterQuery === false) {
+        if (globalState.user !== null && customRouterQuery.loading === false && skip === false) {
+            const { query } = customRouterQuery;
             const queryKeyArray = Object.keys(query);
             if (queryKeyArray.length === 0 || queryKeyArray.includes(queryKeyName) === false) {
-                redirectToDeckCurrentListPage();
+                router.push(deckCurrentUserListPage);
             } else {
                 const queryInfoArray = query[queryKeyName] as string[];
                 if (queryInfoArray.length === 0) {
-                    redirectToDeckCurrentListPage();
+                    router.push(deckCurrentUserListPage);
                 }
                 let deckId = null;
                 for (let i = 0; i < queryInfoArray.length; i++) {
@@ -151,12 +147,21 @@ export default function DeckInfoPage() {
                 }
                 if (deckId === null) {
                     setLoading(false);
+                    setSkip(true);
                 } else {
-                    getDeckInfoReq(deckId);
+                    DeckGetInfoRequest(deckId)
+                        .then((res) => {
+                            handleGetDeckInfoReq(res.data.deck);
+                        })
+                        .catch((err) => enqueueSnackbar(err, { variant: "error" }))
+                        .finally(() => {
+                            setLoading(false);
+                            setSkip(true);
+                        });
                 }
             }
         }
-    }, [loadingRouterQuery, globalState]);
+    }, [customRouterQuery, globalState, enqueueSnackbar, skip, deckCurrentUserListPage, router, handleGetDeckInfoReq]);
 
     const checkIfButtonDisplayable = (): boolean => {
         if (deckInfo === null) {

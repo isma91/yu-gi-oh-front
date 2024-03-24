@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import { useTheme, Theme, Grid, Skeleton, Typography } from "@mui/material";
 import { StoreContext } from "@app/lib/state-provider";
 import useRouterQuery from "@app/hooks/useRouterQuery";
@@ -21,11 +21,13 @@ import Collapse from "@components/display/Collapse";
 import { GetCardPictureUrl } from "@utils/SearchCard";
 import { RedirectToNewTab } from "@utils/Route";
 import { GetFullRoute as CardGetFullRoute, CardRouteName } from "@routes/Card";
+import Image from "next/image";
 
 const useStyles = makeStyles((theme: Theme) => ({
     cardPicturePictureView: {
         objectFit: "contain",
         height: "200px",
+        width: "auto",
         "&:hover": {
             cursor: "pointer",
         },
@@ -50,65 +52,33 @@ export default function DeckInfoPage() {
     const router = useRouter();
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
-    const { query, loading: loadingRouterQuery } = useRouterQuery(router.query);
+    const customRouterQuery = useRouterQuery(router.query);
     const Theme = useTheme();
     const [setInfo, setSetInfo] = useState<SetInfoType | null>(null);
     const [loading, setLoading] = useState(true);
+    const [skip, setSkip] = useState(false);
     const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
     const [cardInfoToDisplay, setCardInfoToDisplay] = useState<CardInfoToDisplayType | null>(null);
     const openPopover = Boolean(anchorEl);
+    const setSearchPage = useMemo(() => SetGetFullRoute(SetRouteName.SEARCH), []);
     const queryKeyName = "info";
+    const nextImageProps = { width: 0, height: 0, sizes: "100vw" };
 
     const handlePopoverClose = () => {
         setAnchorEl(null);
         setCardInfoToDisplay(null);
     };
 
-    const redirectToSetSearchPage = () => {
-        router.push(SetGetFullRoute(SetRouteName.SEARCH));
-    };
-
-    const sendSetGetInfoReq = async (id: number) => {
-        return SetGetInfoRequest(id)
-            .then((res) => {
-                const resData = res.data.set;
-                if (resData !== null) {
-                    const { cardSets, ...rest } = resData;
-                    let cardFromRarity: {
-                        [key in number]: {
-                            rarity: RarityGetAllType;
-                            cardSets: Array<
-                                Omit<CardSetGetAllType, "sets"> & {
-                                    card: CardSearchType;
-                                }
-                            >;
-                        };
-                    } = {};
-                    for (let i = 0; i < cardSets.length; i++) {
-                        const el = cardSets[i];
-                        const rarity = el.rarities[0];
-                        if (cardFromRarity[rarity.id] === undefined) {
-                            cardFromRarity[rarity.id] = { rarity: { ...rarity }, cardSets: [{ ...el }] };
-                        } else {
-                            cardFromRarity[rarity.id].cardSets.push({ ...el });
-                        }
-                    }
-                    setSetInfo({ ...rest, cardFromRarity: cardFromRarity });
-                }
-            })
-            .catch((err) => enqueueSnackbar(err, { variant: "error" }))
-            .finally(() => setLoading(false));
-    };
-
     useEffect(() => {
-        if (globalState.user !== null && loadingRouterQuery === false) {
+        if (globalState.user !== null && customRouterQuery.loading === false && skip === false) {
+            const { query } = customRouterQuery;
             const queryKeyArray = Object.keys(query);
             if (queryKeyArray.length === 0 || queryKeyArray.includes(queryKeyName) === false) {
-                redirectToSetSearchPage();
+                router.push(setSearchPage);
             } else {
                 const queryInfoArray = query[queryKeyName] as string[];
                 if (queryInfoArray.length === 0) {
-                    redirectToSetSearchPage();
+                    router.push(setSearchPage);
                 }
                 let setId = null;
                 for (let i = 0; i < queryInfoArray.length; i++) {
@@ -122,11 +92,42 @@ export default function DeckInfoPage() {
                 if (setId === null) {
                     setLoading(false);
                 } else {
-                    sendSetGetInfoReq(setId);
+                    SetGetInfoRequest(setId)
+                        .then((res) => {
+                            const resData = res.data.set;
+                            if (resData !== null) {
+                                const { cardSets, ...rest } = resData;
+                                let cardFromRarity: {
+                                    [key in number]: {
+                                        rarity: RarityGetAllType;
+                                        cardSets: Array<
+                                            Omit<CardSetGetAllType, "sets"> & {
+                                                card: CardSearchType;
+                                            }
+                                        >;
+                                    };
+                                } = {};
+                                for (let i = 0; i < cardSets.length; i++) {
+                                    const el = cardSets[i];
+                                    const rarity = el.rarities[0];
+                                    if (cardFromRarity[rarity.id] === undefined) {
+                                        cardFromRarity[rarity.id] = { rarity: { ...rarity }, cardSets: [{ ...el }] };
+                                    } else {
+                                        cardFromRarity[rarity.id].cardSets.push({ ...el });
+                                    }
+                                }
+                                setSetInfo({ ...rest, cardFromRarity: cardFromRarity });
+                            }
+                        })
+                        .catch((err) => enqueueSnackbar(err, { variant: "error" }))
+                        .finally(() => {
+                            setLoading(false);
+                            setSkip(true);
+                        });
                 }
             }
         }
-    }, [loadingRouterQuery, globalState]);
+    }, [customRouterQuery, globalState, enqueueSnackbar, skip, setSearchPage, router]);
 
     const handleClick = (cardInfo: CardSearchType) => {
         const { uuid, slugName } = cardInfo;
@@ -173,7 +174,7 @@ export default function DeckInfoPage() {
                                 </Typography>
                             }
                         >
-                            <Grid item xs={12} container spacing={2}>
+                            <Grid item xs={12} container spacing={2} justifyContent="center">
                                 {cardSetsSorted.map((cardSet, cardSetKey) => {
                                     const { card: cardInfo } = cardSet;
                                     const cardGridKey = `${cardFromRarityKey}-${cardInfo.id}-${cardSetKey}`;
@@ -196,7 +197,8 @@ export default function DeckInfoPage() {
                                     return (
                                         <Grid key={cardGridKey} item xs={6} md={3} container spacing={2} sx={{ marginTop: Theme.spacing(2) }}>
                                             <Grid item xs={12}>
-                                                <img
+                                                <Image
+                                                    {...nextImageProps}
                                                     aria-owns={popoverId}
                                                     aria-haspopup="true"
                                                     src={pictureUrl}
@@ -207,6 +209,7 @@ export default function DeckInfoPage() {
                                                     }}
                                                     onMouseLeave={handlePopoverClose}
                                                     onClick={(e) => handleClick(cardInfo)}
+                                                    alt={`Card ${cardInfo.name} picture`}
                                                 />
                                             </Grid>
                                             <Grid item xs={12}>
