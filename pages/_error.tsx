@@ -8,27 +8,33 @@ import { useSnackbar } from "notistack";
 import { CardRandomType } from "@app/types/entity/Card";
 import { AddApiBaseUrl, GetDefaultCardPicturePath } from "@utils/Url";
 import { CardRouteName, GetFullRoute } from "@routes/Card";
-import Button from "@components/field/Button";
+import Image from "next/image";
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
     const { enqueueSnackbar } = useSnackbar();
     const [card, setCard] = useState<CardRandomType | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const [skip, setSkip] = useState<boolean>(false);
     const pictureId = "picture";
     const gridPictureSx = { margin: "auto", textAlign: "center" };
-
-    const sendCardGetRandomReq = async () => {
-        return CardGetRandomRequest()
-            .then((res) => {
-                setCard(res.data.card);
-            })
-            .catch((err) => enqueueSnackbar(err, { variant: "error" }))
-            .finally(() => setLoading(false));
-    };
+    const nextImageProps = { id: pictureId, width: 0, height: 0, sizes: "100vw" };
 
     useEffect(() => {
-        sendCardGetRandomReq();
-    }, []);
+        const sendCardGetRandomReq = async () => {
+            return CardGetRandomRequest()
+                .then((res) => {
+                    setCard(res.data.card);
+                })
+                .catch((err) => enqueueSnackbar(err, { variant: "error" }))
+                .finally(() => {
+                    setLoading(false);
+                    setSkip(true);
+                });
+        };
+        if (skip === false) {
+            sendCardGetRandomReq();
+        }
+    }, [skip, card, enqueueSnackbar]);
 
     useEffect(() => {
         console.error("error info:");
@@ -47,7 +53,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
         return (
             <Grid item xs={12} sx={{ ...gridPictureSx }}>
                 <Link style={{ textDecoration: "none" }} href={cardUrl}>
-                    <img id={pictureId} src={pictureUrl} alt={`Card ${name} picture`} />
+                    <Image {...nextImageProps} src={pictureUrl} alt={`Card ${name} picture`} />
                     <br />
                     <Typography component="span" sx={{ fontSize: "1.5rem", color: "#FFFFFF", marginTop: (theme) => theme.spacing(2) }}>
                         {cardInfo.name}
@@ -72,7 +78,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
                 ) : (
                     <Grid item xs={12} sx={{ ...gridPictureSx }}>
                         <Link href="/">
-                            <img id={pictureId} src={GetDefaultCardPicturePath()} alt="default card picture" />
+                            <Image {...nextImageProps} src={GetDefaultCardPicturePath()} alt="default card picture" />
                         </Link>
                     </Grid>
                 )}

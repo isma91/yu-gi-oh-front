@@ -6,7 +6,6 @@ import Button from "@components/field/Button";
 import LoginRequest from "@api/User/Auth/Login";
 import { StoreContext } from "@app/lib/state-provider";
 import { useSnackbar } from "notistack";
-import { useRouter } from "next/router";
 import { ActionNameType } from "@app/types/GlobalState";
 
 type ErrorsType = {
@@ -15,7 +14,6 @@ type ErrorsType = {
 };
 
 export default function LoginForm(): React.JSX.Element {
-    const router = useRouter();
     const { dispatch } = useContext(StoreContext);
     const [loading, setLoading] = useState<boolean>(false);
     const [values, setValues] = useState({});
@@ -26,11 +24,6 @@ export default function LoginForm(): React.JSX.Element {
         return LoginRequest(data)
             .then((res) => {
                 dispatch({ type: ActionNameType.Login, payload: res.data.userInfo });
-                let returnUrl: string = "/";
-                if (router.query.returnUrl !== undefined && typeof router.query.returnUrl === "string") {
-                    returnUrl = router.query.returnUrl;
-                }
-                router.push(returnUrl);
             })
             .catch((err) => {
                 enqueueSnackbar(err, { variant: "error" });

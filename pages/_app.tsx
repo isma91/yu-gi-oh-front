@@ -11,6 +11,7 @@ import { USER_ROUTE_JSON, UserRouteName } from "@routes/User";
 import LoadingPage from "@components/feedback/LoadingPage";
 import type { Metadata } from "next";
 import { FadeLoading } from "@utils/Loading";
+import Head from "next/head";
 
 export const metadata: Metadata = {
     title: "Yu-Gi-Oh!",
@@ -31,41 +32,45 @@ type AppPropsType = {
 export default function App(props: AppPropsType): React.JSX.Element {
     const { Component, pageProps } = props;
     const router: NextRouter = useRouter();
-    const [loading, setLoading] = useState(true);
-    const loginPathArray = [USER_ROUTE_JSON[UserRouteName.LOGIN]];
-    const layoutlessPathName: boolean = loginPathArray.includes(router.pathname);
+    const [loading, setLoading] = useState(false);
+    const isLoginPage: boolean = router.pathname.startsWith(USER_ROUTE_JSON[UserRouteName.LOGIN]);
 
     useEffect(() => {
         /**
-         * The layoutlessPathName containes route page who don't have layout nor needed auth
+         * The Login page is the only one where we don't want to display the layout nor needed auth
          * and strangly don't trigger router event
          */
-        if (layoutlessPathName === true) {
+        if (isLoginPage === true) {
             FadeLoading(setLoading);
         } else {
             router.events.on("routeChangeStart", () => setLoading(true));
             router.events.on("routeChangeComplete", () => FadeLoading(setLoading));
             router.events.on("routeChangeError", () => FadeLoading(setLoading));
         }
-    }, [router]);
+    }, [router, isLoginPage]);
 
     return (
-        <StateProvider>
-            <ThemeProvider>
-                <SnackbarProvider>
-                    <RouteGuard>
-                        {loading === true ? (
-                            <LoadingPage setLoading={setLoading} />
-                        ) : layoutlessPathName === true ? (
-                            <Component {...pageProps} />
-                        ) : (
-                            <Layout>
+        <>
+            <Head>
+                <title>Yu-Gi-Oh!</title>
+            </Head>
+            <StateProvider>
+                <ThemeProvider>
+                    <SnackbarProvider>
+                        <RouteGuard>
+                            {loading === true ? (
+                                <LoadingPage setLoading={setLoading} />
+                            ) : isLoginPage === true ? (
                                 <Component {...pageProps} />
-                            </Layout>
-                        )}
-                    </RouteGuard>
-                </SnackbarProvider>
-            </ThemeProvider>
-        </StateProvider>
+                            ) : (
+                                <Layout>
+                                    <Component {...pageProps} />
+                                </Layout>
+                            )}
+                        </RouteGuard>
+                    </SnackbarProvider>
+                </ThemeProvider>
+            </StateProvider>
+        </>
     );
 }

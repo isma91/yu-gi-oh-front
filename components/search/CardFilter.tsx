@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Grid, Collapse, MenuItem, Typography } from "@mui/material";
 import Button from "@components/field/Button";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
@@ -14,7 +14,6 @@ import Autocomplete from "@components/field/Autocomplete";
 import Select from "@components/field/Select";
 import { GetIndexArray } from "@utils/Parsing";
 import Slider, { SliderValueRangeType, SliderValueType } from "@components/field/Slider";
-import Switch from "@components/field/Switch";
 
 type SearchCardFilterPropsType = {
     loadingForm: boolean;
@@ -45,6 +44,11 @@ export default function SearchCardFilter(props: SearchCardFilterPropsType) {
     const [cardPropertyRangeValue, setCardPropertyRangeValue] = props.cardPropertyRangeValueState;
     const [selectedSubPropertyTypeId, setSelectedSubPropertyTypeId] = useState<number>(0);
     const [selectedSubPropertyType, setSelectedSubPropertyType] = useState<SubPropertyTypeGetAllType | null>(null);
+    const resetSelectedPropertyState = useCallback(() => {
+        setSelectedPropertyTypePropertyRange(null);
+        setSelectedPropertyType(null);
+        setCardPropertyRangeValue([0, 12]);
+    }, [setCardPropertyRangeValue]);
 
     useEffect(() => {
         if (selectedCategoryId === 0) {
@@ -57,13 +61,7 @@ export default function SearchCardFilter(props: SearchCardFilterPropsType) {
                 setSelectedCategory(category.data[selectedCategoryIndex]);
             }
         }
-    }, [selectedCategoryId]);
-
-    const resetSelectedPropertyState = () => {
-        setSelectedPropertyTypePropertyRange(null);
-        setSelectedPropertyType(null);
-        setCardPropertyRangeValue([0, 12]);
-    };
+    }, [selectedCategoryId, category.data]);
 
     useEffect(() => {
         if (selectedPropertyTypeId === 0) {
@@ -86,7 +84,7 @@ export default function SearchCardFilter(props: SearchCardFilterPropsType) {
                 setSelectedPropertyType(newSelectedPropertyType);
             }
         }
-    }, [selectedPropertyTypeId]);
+    }, [selectedPropertyTypeId, propertyType.data, resetSelectedPropertyState]);
 
     useEffect(() => {
         if (selectedSubPropertyTypeId === 0) {
@@ -99,7 +97,7 @@ export default function SearchCardFilter(props: SearchCardFilterPropsType) {
                 setSelectedSubPropertyType(subPropertyType.data[selectedSubPropertyTypeIndex]);
             }
         }
-    }, [selectedSubPropertyTypeId]);
+    }, [selectedSubPropertyTypeId, subPropertyType.data]);
 
     const displayCategoryWithSubCategorySelect = (): React.JSX.Element => {
         return (

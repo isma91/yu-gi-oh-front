@@ -2,6 +2,7 @@ import { SelectDeckArtworkType } from "@app/types/Deck";
 import Autocomplete from "@components/field/Autocomplete";
 import { makeStyles } from "@mui/styles";
 import { Box, Theme } from "@mui/material";
+import Image from "next/image";
 
 type AutocompleteDeckArtworkPropsType = {
     error?: string;
@@ -32,7 +33,7 @@ export default function AutocompleteDeckArtwork(props: AutocompleteDeckArtworkPr
     const getRenderOption = (props: React.HTMLAttributes<HTMLLIElement>, option: SelectDeckArtworkType) => {
         return (
             <Box component="li" sx={{ height: "200px" }} {...props}>
-                <img src={option.url} className={classes.artwork} alt="" />
+                <Image width={0} height={0} sizes="100vw" src={option.url} className={classes.artwork} alt={`Artwork of card ${option.name}`} />
                 {option.name}
             </Box>
         );

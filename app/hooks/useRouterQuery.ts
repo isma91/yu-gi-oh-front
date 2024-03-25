@@ -22,23 +22,23 @@ export default function useRouterQuery(routerQuery: ParsedUrlQuery): { query: Pa
      */
     useEffect(() => {
         if (loading === true) {
-            const routerQueryLength = getObjectLength(routerQuery);
-            const queryLength = getObjectLength(query);
-            if (routerQueryLength !== queryLength) {
-                setQuery(routerQuery);
-                setCountMillisecond(0);
-            }
-            if (intervalId === null) {
-                setIntervalId(window.setInterval(() => setCountMillisecond((prevState) => prevState + millisecond), millisecond));
-            }
             if (countMillisecond >= maxMillisecond) {
                 if (intervalId !== null) {
                     clearInterval(intervalId);
                 }
                 setLoading(false);
             }
+            if (intervalId === null) {
+                setIntervalId(window.setInterval(() => setCountMillisecond((prevState) => prevState + millisecond), millisecond));
+            }
+            const routerQueryLength = getObjectLength(routerQuery);
+            const queryLength = getObjectLength(query);
+            if (routerQueryLength !== queryLength) {
+                setQuery(routerQuery);
+                setCountMillisecond(0);
+            }
         }
-    }, [routerQuery, countMillisecond]);
+    }, [routerQuery, countMillisecond, intervalId, loading, query]);
 
     return { query: query, loading: loading };
 }

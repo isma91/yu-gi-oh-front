@@ -112,7 +112,7 @@ export default function Select(props: SelectPropsType) {
             }
             setSkipDefaultValue(true);
         }
-    }, [props]);
+    }, [props, setValue, skipDefaultValue, value]);
 
     return (
         <>
