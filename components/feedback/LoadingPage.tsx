@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { FadeLoading } from "@utils/Loading";
+import Image from "next/image";
 
 type LoadingPagePropsType = {
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,11 +14,11 @@ export default function LoadingPage(props: LoadingPagePropsType): React.JSX.Elem
         if (loadingRef.current !== null) {
             FadeLoading(setLoading);
         }
-    }, [loadingRef]);
+    }, [loadingRef, setLoading]);
 
     return (
         <div id="div-loading" ref={loadingRef}>
-            <img src="/static/images/loading.png" alt="Loading..." />
+            <Image height={0} width={0} sizes="100vw" src="/static/images/loading.png" alt="Millenium puzzle with blue halo" />
         </div>
     );
 }

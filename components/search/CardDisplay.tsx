@@ -16,6 +16,7 @@ import { CardInfoToDisplayType } from "@app/types/SearchCard";
 import { enqueueSnackbar } from "notistack";
 import SearchPaginationDisplay from "@components/search/PaginationDisplay";
 import { RedirectToNewTab } from "@utils/Route";
+import Image from "next/image";
 
 type SearchCardDisplayProps = {
     cardResult: CardSearchType[];
@@ -68,6 +69,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     cardPicturePictureView: {
         objectFit: "contain",
         height: "200px",
+        width: "auto",
         "&:hover": {
             cursor: "pointer",
         },
@@ -107,6 +109,7 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
     if (props.autoClick !== undefined) {
         autoClick = props.autoClick;
     }
+    const nextImageProps = { width: 0, height: 0, sizes: "100vw" };
 
     const handleDisplayButton = (searchCardDisplayType: SearchCardDisplayType) => {
         handlePopoverClose();
@@ -179,7 +182,7 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
                 onClick={(e) => handleCardClick(cardInfo)}
             >
                 <Grid item xs={12} md={3} className={classes.cardPictureGridListView}>
-                    <img src={pictureUrl} className={classes.cardPictureListView} />
+                    <Image {...nextImageProps} alt={`Card ${cardInfo.name} picture`} src={pictureUrl} className={classes.cardPictureListView} />
                 </Grid>
                 <Grid
                     item
@@ -226,7 +229,9 @@ export default function SearchCardDisplay(props: SearchCardDisplayProps) {
                 sx={{ margin: "auto", marginTop: Theme.spacing(2), marginBottom: Theme.spacing(2) }}
                 className={genericClasses.textAlignCenter}
             >
-                <img
+                <Image
+                    {...nextImageProps}
+                    alt={`Card ${cardInfo.name} picture`}
                     aria-owns={popoverId}
                     aria-haspopup="true"
                     src={pictureUrl}

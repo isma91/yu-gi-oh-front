@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext, useRef, useMemo } from "react";
 import { StoreContext } from "@app/lib/state-provider";
 import useRouterQuery from "@app/hooks/useRouterQuery";
 import { useSnackbar } from "notistack";
@@ -21,6 +21,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import { RedirectToNewTab } from "@utils/Route";
+import Image from "next/image";
 
 type CardInfoPictureType = Pick<CardPictureGetAllType, "id" | "pictureUrl" | "pictureSmallUrl" | "artworkUrl">;
 
@@ -91,9 +92,10 @@ export default function CardInfoPage() {
     const classes = useStyles();
     const Theme = useTheme();
     const { enqueueSnackbar } = useSnackbar();
-    const { query, loading: loadingRouterQuery } = useRouterQuery(router.query);
+    const customRouterQuery = useRouterQuery(router.query);
     const [cardInfo, setCardInfo] = useState<CardGetInfoType | null>(null);
     const [loading, setLoading] = useState(true);
+    const [skip, setSkip] = useState(false);
     const [currentPictureUrl, setCurrentPictureUrl] = useState<string>(GetDefaultCardPicturePath());
     const [skipCurrentPictureUrlUpdateInit, setSkipCurrentPictureUrlUpdateInit] = useState<boolean>(false);
     const cardInfoPictureRef = useRef<React.LegacyRef<HTMLImageElement> | any>(null);
@@ -101,33 +103,19 @@ export default function CardInfoPage() {
     const [openCardSetInfo, setOpenCardSetInfo] = useState<boolean>(true);
     const [openDeckInfo, setOpenDeckInfo] = useState<boolean>(true);
     const queryKeyName = "info";
-
-    const redirectToCardSearchPage = () => {
-        router.push(CardGetFullRoute(CardRouteName.SEARCH));
-    };
-
-    const getCardInfoReq = async (cardUuid: string) => {
-        return CardGetInfoRequest(cardUuid)
-            .then((res) => {
-                setCardInfo(res.data.card);
-            })
-            .catch((err) => {
-                enqueueSnackbar(err, { variant: "error" });
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    };
+    const cardSearchPageUrl = useMemo(() => CardGetFullRoute(CardRouteName.SEARCH), []);
+    const nextImageProps = { width: 0, height: 0, sizes: "100vw" };
 
     useEffect(() => {
-        if (globalState.user !== null && loadingRouterQuery === false) {
+        if (globalState.user !== null && customRouterQuery.loading === false && skip === false) {
+            const { query } = customRouterQuery;
             const queryKeyArray = Object.keys(query);
             if (queryKeyArray.length === 0 || queryKeyArray.includes(queryKeyName) === false) {
-                redirectToCardSearchPage();
+                router.push(cardSearchPageUrl);
             } else {
                 const queryInfoArray = query[queryKeyName] as string[];
                 if (queryInfoArray.length === 0) {
-                    redirectToCardSearchPage();
+                    router.push(cardSearchPageUrl);
                 }
                 let cardUuidString = null;
                 for (let i = 0; i < queryInfoArray.length; i++) {
@@ -140,11 +128,21 @@ export default function CardInfoPage() {
                 if (cardUuidString === null) {
                     setLoading(false);
                 } else {
-                    getCardInfoReq(cardUuidString);
+                    CardGetInfoRequest(cardUuidString)
+                        .then((res) => {
+                            setCardInfo(res.data.card);
+                        })
+                        .catch((err) => {
+                            enqueueSnackbar(err, { variant: "error" });
+                        })
+                        .finally(() => {
+                            setLoading(false);
+                            setSkip(true);
+                        });
                 }
             }
         }
-    }, [loadingRouterQuery, globalState]);
+    }, [customRouterQuery, globalState, enqueueSnackbar, skip, cardSearchPageUrl, router]);
 
     const displayCardPictureUrlFromFieldName = (picture: CardInfoPictureType, fieldName: CardInfoPictureKeyType): string => {
         let url = null;
@@ -258,9 +256,11 @@ export default function CardInfoPage() {
                             {cardInfoOtherPictureArray.map((otherPictureArray, otherPictureArrayKey) => {
                                 return (
                                     <Grid key={`cardInfoSmallPictureUrl-${otherPictureArrayKey}`} item xs={4} md={2}>
-                                        <img
+                                        <Image
+                                            {...nextImageProps}
                                             src={otherPictureArray.pictureSmallUrl}
                                             className={`${classes.cardInfoCardPictureImg} ${classes.cardInfoOtherCardPictureImg} cardInfoCardPictureImg`}
+                                            alt={`Card ${cardInfoName} alternative picture n°${otherPictureArrayKey}`}
                                             onClick={(e) => handleOtherPicture(otherPictureArray, "pictureUrl")}
                                         />
                                     </Grid>
@@ -477,7 +477,12 @@ export default function CardInfoPage() {
                                     >
                                         <Paper elevation={1} sx={{ width: "100%" }}>
                                             <Grid item xs={12}>
-                                                <img src={artwork} className={classes.deckPicture} />
+                                                <Image
+                                                    {...nextImageProps}
+                                                    src={artwork}
+                                                    className={classes.deckPicture}
+                                                    alt={`Deck n°${deckKey} ${name} by ${user.username} Artwork`}
+                                                />
                                             </Grid>
                                             <Grid item xs={12} sx={{ textAlign: "center" }}>
                                                 <Typography component="span">
@@ -686,7 +691,13 @@ export default function CardInfoPage() {
         return (
             <Grid item xs={12} container spacing={2} sx={{ height: "100%" }}>
                 <Grid item xs={12} md={4}>
-                    <img ref={cardInfoPictureRef} src={currentPictureUrl} className={`${classes.cardInfoCardPictureImg} cardInfoCardPictureImg`} />
+                    <Image
+                        ref={cardInfoPictureRef}
+                        src={currentPictureUrl}
+                        {...nextImageProps}
+                        className={`${classes.cardInfoCardPictureImg} cardInfoCardPictureImg`}
+                        alt={`Card ${cardInfo.name} picture`}
+                    />
                 </Grid>
                 <Grid item xs={12} md={8} container spacing={2} sx={{ height: "100%" }}>
                     <Grid item xs={12}>

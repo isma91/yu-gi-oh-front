@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo, useCallback } from "react";
 import { useTheme, Grid, Skeleton, Typography } from "@mui/material";
 import { StoreContext } from "@app/lib/state-provider";
 import useRouterQuery from "@app/hooks/useRouterQuery";
@@ -21,7 +21,7 @@ export default function DeckEditPage() {
     const { state: globalState } = useContext(StoreContext);
     const router = useRouter();
     const { enqueueSnackbar } = useSnackbar();
-    const { query, loading: loadingRouterQuery } = useRouterQuery(router.query);
+    const customRouterQuery = useRouterQuery(router.query);
     const Theme = useTheme();
     const limitArray: number[] = [15, 30, 45, 60];
     const [deckInfo, setDeckInfo] = useState<DeckGetInfoType | null>(null);
@@ -34,65 +34,62 @@ export default function DeckEditPage() {
     const [cardDialogInfo, setCardDialogInfo] = useState<CardSearchType | null>(null);
     const [autoClick, setAutoClick] = useState<boolean>(true);
     const [loading, setLoading] = useState(true);
+    const [skip, setSkip] = useState(false);
     const queryKeyName = "info";
-
-    const redirectToDeckCurrentListPage = () => {
-        router.push(GetFullRoute(DeckRouteName.LIST));
-    };
-
-    const transformCardDeck = (array: CardDeckGetInfoType[]): CardSearchType[] => {
-        let newArray: CardSearchType[] = [];
-        array.forEach((v) => {
-            const { nbCopie, cards } = v;
-            const newCardInfo = { ...cards[0], picture: cards[0].pictures[0] };
-            const arrayNumber = CreateArrayNumber(0, nbCopie - 1);
-            for (let i = 0; i < arrayNumber.length; i++) {
-                newArray.push(newCardInfo);
-            }
-        });
-        return newArray;
-    };
-
-    const transformToDeckInfo = (deckInfo: DeckGetInfoType | null): DeckCardType | null => {
+    const deckCurrentUserListPage = useMemo(() => GetFullRoute(DeckRouteName.LIST), []);
+    const transformToDeckCard = useCallback((deckInfo: DeckGetInfoType | null): DeckCardType => {
         if (deckInfo === null) {
-            return null;
+            return {
+                [DeckCardFieldType.MAIN_DECK]: [],
+                [DeckCardFieldType.EXTRA_DECK]: [],
+                [DeckCardFieldType.SIDE_DECK]: [],
+            };
         }
+        const transformCardDeck = (array: CardDeckGetInfoType[]): CardSearchType[] => {
+            let newArray: CardSearchType[] = [];
+            array.forEach((v) => {
+                const { nbCopie, cards } = v;
+                const newCardInfo = { ...cards[0], picture: cards[0].pictures[0] };
+                const arrayNumber = CreateArrayNumber(0, nbCopie - 1);
+                for (let i = 0; i < arrayNumber.length; i++) {
+                    newArray.push(newCardInfo);
+                }
+            });
+            return newArray;
+        };
         return {
             [DeckCardFieldType.MAIN_DECK]: transformCardDeck(deckInfo.cardMainDecks),
             [DeckCardFieldType.EXTRA_DECK]: transformCardDeck(deckInfo.cardExtraDecks),
             [DeckCardFieldType.SIDE_DECK]: transformCardDeck(deckInfo.cardSideDecks),
         };
-    };
-
-    const getDeckInfoReq = async (id: number) => {
-        return DeckGetInfoRequest(id)
-            .then((res) => {
-                const resData = res.data.deck;
-                if (
-                    resData !== null &&
-                    globalState.user !== null &&
-                    (IsAdmin(globalState) === true || globalState.user.username === resData.user.username)
-                ) {
-                    setDeckInfo(resData);
-                    const transformedResData = transformToDeckInfo(resData);
-                    if (transformedResData !== null) {
-                        setDeckCard(transformedResData);
-                    }
+    }, []);
+    const handleResData = useCallback(
+        (resData: DeckGetInfoType | null) => {
+            if (
+                resData !== null &&
+                globalState.user !== null &&
+                (IsAdmin(globalState) === true || globalState.user.username === resData.user.username)
+            ) {
+                setDeckInfo(resData);
+                const transformedResData = transformToDeckCard(resData);
+                if (transformedResData !== null) {
+                    setDeckCard(transformedResData);
                 }
-            })
-            .catch((err) => enqueueSnackbar(err, { variant: "error" }))
-            .finally(() => setLoading(false));
-    };
+            }
+        },
+        [globalState, transformToDeckCard]
+    );
 
     useEffect(() => {
-        if (globalState.user !== null && loadingRouterQuery === false) {
+        if (globalState.user !== null && customRouterQuery.loading === false && skip === false) {
+            const { query } = customRouterQuery;
             const queryKeyArray = Object.keys(query);
             if (queryKeyArray.length === 0 || queryKeyArray.includes(queryKeyName) === false) {
-                redirectToDeckCurrentListPage();
+                router.push(deckCurrentUserListPage);
             } else {
                 const queryInfoArray = query[queryKeyName] as string[];
                 if (queryInfoArray.length === 0) {
-                    redirectToDeckCurrentListPage();
+                    router.push(deckCurrentUserListPage);
                 }
                 let deckId = null;
                 for (let i = 0; i < queryInfoArray.length; i++) {
@@ -106,11 +103,19 @@ export default function DeckEditPage() {
                 if (deckId === null) {
                     setLoading(false);
                 } else {
-                    getDeckInfoReq(deckId);
+                    DeckGetInfoRequest(deckId)
+                        .then((res) => {
+                            handleResData(res.data.deck);
+                        })
+                        .catch((err) => enqueueSnackbar(err, { variant: "error" }))
+                        .finally(() => {
+                            setLoading(false);
+                            setSkip(true);
+                        });
                 }
             }
         }
-    }, [loadingRouterQuery, globalState]);
+    }, [customRouterQuery, globalState, enqueueSnackbar, skip, deckCurrentUserListPage, router, handleResData]);
 
     return (
         <DashboardHome active={3} title="Deck edit Page">

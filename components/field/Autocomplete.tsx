@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
     Autocomplete as AutocompleteMUI,
     FormControl,
@@ -57,7 +57,7 @@ interface AutocompleteValueObject extends Object {
 }
 
 export default function Autocomplete(props: AutocompletePropsType) {
-    const { name, error, options, optionLabel, optionValue, loading } = props;
+    const { name, error, options, optionLabel, optionValue, loading, onChange: propsOnChange } = props;
     const classes = useStyles();
     const filter = createFilterOptions<object>();
     const optionLabelArray: string[] = optionLabel.split(".");
@@ -77,6 +77,39 @@ export default function Autocomplete(props: AutocompletePropsType) {
     const grouped = props.grouped !== undefined;
     const multiple = props.multiple !== undefined;
     optionAutoComplete.multiple = multiple;
+
+    const handleChange = useCallback(
+        (event: React.SyntheticEvent, value: object | object[] | null) => {
+            let newValue: string = "";
+            let newAutoCompleteValue: object[] | object = [];
+            if (value !== null) {
+                newAutoCompleteValue = value;
+            }
+            if (multiple === false) {
+                if (value !== null) {
+                    newValue = GetObjectValueFromKey(value, optionValueArray) as string;
+                }
+            } else {
+                newAutoCompleteValue = [];
+                if (value !== null && Array.isArray(value)) {
+                    newAutoCompleteValue = value;
+                    let arrayToTransformInValue: Array<string | number> = [];
+                    for (let i = 0; i < value.length; i++) {
+                        const el: object = value[i];
+                        arrayToTransformInValue.push(GetObjectValueFromKey(el, optionValueArray));
+                    }
+                    newValue = arrayToTransformInValue.join(",");
+                }
+            }
+            setValue(newValue);
+            setAutoCompleteValue(newAutoCompleteValue);
+            if (propsOnChange !== undefined) {
+                propsOnChange(event, value);
+            }
+            setOnChangeString("");
+        },
+        [multiple, optionValueArray, propsOnChange]
+    );
 
     let disabled: boolean = false;
     if (props.disabled !== undefined) {
@@ -129,7 +162,7 @@ export default function Autocomplete(props: AutocompletePropsType) {
         inputOptions.className = props.className;
     }
 
-    const handleChange = (event: React.SyntheticEvent, value: object | object[] | null) => {
+    /*const handleChange = (event: React.SyntheticEvent, value: object | object[] | null) => {
         let newValue: string = "";
         let newAutoCompleteValue: object[] | object = [];
         if (value !== null) {
@@ -157,7 +190,7 @@ export default function Autocomplete(props: AutocompletePropsType) {
             props.onChange(event, value);
         }
         setOnChangeString("");
-    };
+    };*/
 
     const handleFilterOptions = (options: object[], params: FilterOptionsState<object>): object[] => {
         params.inputValue = onChangeString;
@@ -203,7 +236,7 @@ export default function Autocomplete(props: AutocompletePropsType) {
         if ((propsLoadingDefaultValue === undefined && propsLoadingDefaultValue === false) || propsDefaultValue === undefined) {
             setSkipDefaultValue(true);
         }
-    }, [props]);
+    }, [props.defaultValue, props.loadingDefaultValue, multiple, options.length, skipDefaultValue, handleChange]);
 
     if (props.renderOption !== undefined) {
         optionAutoComplete.renderOption = props.renderOption;

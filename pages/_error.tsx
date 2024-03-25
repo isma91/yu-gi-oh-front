@@ -2,15 +2,15 @@
 import "@app/css/not-found.css";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Grid, Skeleton, Typography } from "@mui/material";
 import CardGetRandomRequest from "@api/Card/GetRandom";
 import { useSnackbar } from "notistack";
 import { CardRandomType } from "@app/types/entity/Card";
 import { AddApiBaseUrl, GetDefaultCardPicturePath } from "@utils/Url";
 import { CardRouteName, GetFullRoute } from "@routes/Card";
+import Image from "next/image";
 
-export default function NotFound() {
+export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
     const { enqueueSnackbar } = useSnackbar();
     const [card, setCard] = useState<CardRandomType | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -35,6 +35,11 @@ export default function NotFound() {
             sendCardGetRandomReq();
         }
     }, [skip, card, enqueueSnackbar]);
+
+    useEffect(() => {
+        console.error("error info:");
+        console.error(error);
+    }, [error]);
 
     const displayCardInfo = (cardInfo: CardRandomType) => {
         const { uuid, name, slugName, pictures } = cardInfo;
@@ -85,7 +90,9 @@ export default function NotFound() {
                         Grab this random Card above or stay here foreveeeeer !!!
                     </Typography>
                     <Typography component="p" sx={{ textAlign: "center", fontSize: "0.8rem !important" }}>
-                        <Link href="/">You can also go to the Home page...</Link>
+                        <Link href="/">
+                            Your top deck does not work because you do not beleive in the heart of the Cards !! Go to the Home page...
+                        </Link>
                     </Typography>
                 </Grid>
             </Grid>
