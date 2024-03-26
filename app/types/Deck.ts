@@ -28,3 +28,9 @@ export type DeckInfoType = {
     [DeckCardFieldType.EXTRA_DECK]: CardExtraDeckGetInfoType[];
     [DeckCardFieldType.SIDE_DECK]: CardSideDeckGetInfoType[];
 }
+
+export type DeckCardNumberPerFieldTypeType = {
+    [DeckCardFieldType.MAIN_DECK]: number;
+    [DeckCardFieldType.EXTRA_DECK]: number;
+    [DeckCardFieldType.SIDE_DECK]: number;
+}

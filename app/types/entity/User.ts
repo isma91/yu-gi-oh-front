@@ -1,5 +1,6 @@
 import { RequestGetAll, RequestGetInfo, RequestSuccessWithDataType } from "@app/types/Request";
 import { DateStringType, TimestampableEntity } from "@app/types/Entity";
+import { DeckGetAllFromCurrentUserType } from "@app/types/entity/Deck";
 
 export type UserLoginRequestType = RequestSuccessWithDataType<"userInfo", UserLoginType>;
 
@@ -23,6 +24,15 @@ export type UserGetAllType = {
     createdAt: DateStringType;
 }
 
+export type UserGetBasicInfoDeckType = Pick<DeckGetAllFromCurrentUserType, "id" | "name" | "slugName" | "isPublic" | "cardMainDeckNumber" | "cardExtraDeckNumber" | "cardSideDeckNumber" | "artworkUrl">;
+
+export type UserGetBasicInfoType = {
+    username: string;
+    decks: UserGetBasicInfoDeckType[];
+}
+
 export type UserGetAllRequestType = RequestGetAll<"user", UserGetAllType>;
 
 export type UserGetInfoRequestType = RequestGetInfo<"user", UserGetAllType>;
+
+export type UserGetBasicInfoRequestType = RequestGetInfo<"user", UserGetBasicInfoType>;
