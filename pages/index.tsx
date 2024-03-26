@@ -107,7 +107,7 @@ export default function Home() {
                     setSkip(true);
                 });
         }
-    }, [globalState, skip]);
+    }, [globalState, skip, enqueueSnackbar]);
 
     const displayUserInfo = (userInfo: UserGetBasicInfoType) => {
         const userDeckNumber = userDeckArray.length;
