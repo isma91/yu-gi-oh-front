@@ -105,7 +105,7 @@ export default function SearchDeckDisplay(props: SearchDeckDisplayProps) {
                                         width={0}
                                         height={0}
                                         sizes="100vw"
-                                        alt={`Dack ${deckInfo.name} artwork`}
+                                        alt={`Deck ${deckInfo.name} artwork`}
                                         src={artwork}
                                         className={classes.deckPicture}
                                     />
