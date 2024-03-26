@@ -1,7 +1,6 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { DeckGetAllFromCurrentUserType } from "@app/types/entity/Deck";
 import Form from "@components/util/Form";
-import { StoreContext } from "@app/lib/state-provider";
 import { Grid } from "@mui/material";
 import { useSnackbar } from "notistack";
 import InputText from "@components/field/InputText";
@@ -29,7 +28,6 @@ type ValuesType = {
 
 export default function DeckSearchCurrentUserForm(props: DeckSearchCurrentUserFormPropsType) {
     const { setDeckAllResultCount, setDeckResult, searchLimit, limit } = props;
-    const { state: globalState } = useContext(StoreContext);
     const { enqueueSnackbar } = useSnackbar();
     const [offset, setOffset] = props.offsetState;
     const [loadingForm, setLoadingForm] = props.loadingFormState;
