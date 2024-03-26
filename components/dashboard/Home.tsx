@@ -112,7 +112,7 @@ export default function DashboardHome(props: DashboardHomeType): React.JSX.Eleme
                 },
                 {
                     name: "Create",
-                    path: COLLECTION_ROUTE_JSON[CollectionRouteName.LIST],
+                    path: COLLECTION_ROUTE_JSON[CollectionRouteName.CREATE],
                 },
             ],
         },
