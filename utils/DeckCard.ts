@@ -1,4 +1,4 @@
-import { DeckCardFieldType, DeckCardType, SelectDeckArtworkType } from "@app/types/Deck";
+import { DeckCardFieldType, DeckCardNumberPerFieldTypeType, DeckCardType, SelectDeckArtworkType } from "@app/types/Deck";
 import { GetCardPictureUrl } from "@utils/SearchCard";
 
 export function GetSelectDeckArtworkFromDeckCard(deckCard: DeckCardType): SelectDeckArtworkType[] {
@@ -47,4 +47,25 @@ export function TransformDeckCardToValueRequest(deckCard: DeckCardType, values: 
         });
     });
     return { ...values, ...newDeckCardValues };
+}
+
+export function FindAllDeckCardWarning(deckCardNumberPerFieldType: DeckCardNumberPerFieldTypeType): string[] {
+    const nbCardMinMainDeck = parseInt(process.env["NEXT_PUBLIC_NB_MIN_CARD_MAIN_DECK"] as string, 10);
+    const nbCardMaxMainDeck = parseInt(process.env["NEXT_PUBLIC_NB_MAX_CARD_MAIN_DECK"] as string, 10);
+    const nbCardMaxExtraDeck = parseInt(process.env["NEXT_PUBLIC_NB_MAX_CARD_EXTRA_DECK"] as string, 10);
+    const nbCardMaxSideDeck = parseInt(process.env["NEXT_PUBLIC_NB_MAX_CARD_SIDE_DECK"] as string, 10);
+    const deckCardMainDeckNumber = deckCardNumberPerFieldType[DeckCardFieldType.MAIN_DECK];
+    const deckCardExtraDeckNumber = deckCardNumberPerFieldType[DeckCardFieldType.EXTRA_DECK];
+    const deckCardSideDeckNumber = deckCardNumberPerFieldType[DeckCardFieldType.SIDE_DECK];
+    let deckWarningArray = [];
+    if (deckCardMainDeckNumber > nbCardMaxMainDeck) {
+        deckWarningArray.push(`The ${DeckCardFieldType.MAIN_DECK} have more than ${nbCardMaxMainDeck} cards !!`);
+    } else if (deckCardMainDeckNumber < nbCardMinMainDeck) {
+        deckWarningArray.push(`The ${DeckCardFieldType.MAIN_DECK} have less than ${nbCardMinMainDeck} cards !!`);
+    } else if (deckCardExtraDeckNumber > nbCardMaxExtraDeck) {
+        deckWarningArray.push(`The ${DeckCardFieldType.EXTRA_DECK} have more than ${nbCardMaxExtraDeck} cards !!`);
+    } else if (deckCardSideDeckNumber > nbCardMaxSideDeck) {
+        deckWarningArray.push(`The ${DeckCardFieldType.SIDE_DECK} have more than ${nbCardMaxSideDeck} cards !!`);
+    }
+    return deckWarningArray;
 }

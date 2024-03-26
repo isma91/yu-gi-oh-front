@@ -22,6 +22,7 @@ import { GetCardPictureUrl } from "@utils/SearchCard";
 import { RedirectToNewTab } from "@utils/Route";
 import { GetFullRoute as CardGetFullRoute, CardRouteName } from "@routes/Card";
 import Image from "next/image";
+import { Pluralize } from "@utils/String";
 
 const useStyles = makeStyles((theme: Theme) => ({
     cardPicturePictureView: {
@@ -170,7 +171,7 @@ export default function DeckInfoPage() {
                             initialValue={false}
                             triggerElement={
                                 <Typography component="span" sx={{ fontWeight: "bolder", fontSize: "1.1rem" }}>
-                                    {`${rarity.name} (${cardSetsSorted.length} card(s))`}
+                                    {`${rarity.name} (${cardSetsSorted.length} ${Pluralize("card", cardSetsSorted.length)}`}
                                 </Typography>
                             }
                         >
@@ -252,7 +253,7 @@ export default function DeckInfoPage() {
                     </Typography>
                     <Typography component="p" sx={{ textAlign: "center" }}>
                         <span style={{ fontWeight: "bolder" }}>{nbCard}</span>
-                        <span> Card(s)</span>
+                        <span>{` ${Pluralize("card", nbCard)}`}</span>
                     </Typography>
                 </Grid>
                 <Grid item xs={12} container spacing={0} justifyContent="center" sx={{ marginTop: Theme.spacing(2) }}>

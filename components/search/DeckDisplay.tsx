@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Theme, Grid, Typography, useTheme, Paper, useMediaQuery } from "@mui/material";
+import { Theme, Grid, Typography, useTheme, Paper } from "@mui/material";
 import { StoreContext } from "@app/lib/state-provider";
 import { useRouter } from "next/router";
 import { DeckGetAllFromCurrentUserType } from "@app/types/entity/Deck";
@@ -105,7 +105,7 @@ export default function SearchDeckDisplay(props: SearchDeckDisplayProps) {
                                         width={0}
                                         height={0}
                                         sizes="100vw"
-                                        alt={`Dack ${deckInfo.name} artwork`}
+                                        alt={`Deck ${deckInfo.name} artwork`}
                                         src={artwork}
                                         className={classes.deckPicture}
                                     />
