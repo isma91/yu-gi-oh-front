@@ -28,10 +28,12 @@ export type UserGetAllType = {
 
 export type UserGetBasicInfoDeckType = Pick<DeckGetAllFromCurrentUserType, "id" | "name" | "slugName" | "isPublic" | "cardMainDeckNumber" | "cardExtraDeckNumber" | "cardSideDeckNumber" | "artworkUrl">;
 
+export type UserGetBasicInfoCollectionType = Pick<CollectionGetInfoType, "id" | "name" | "slugName" | "isPublic" | "artworkUrl" | "cardCardCollectionNumber">;
+
 export type UserGetBasicInfoType = {
     username: string;
     decks: UserGetBasicInfoDeckType[];
-    cardCollections: Array<Pick<CollectionGetInfoType, "id" | "name" | "slugName" | "isPublic" | "artworkUrl" | "cardCardCollectionNumber">>
+    cardCollections: UserGetBasicInfoCollectionType[];
 }
 
 export type UserGetAllRequestType = RequestGetAll<"user", UserGetAllType>;
