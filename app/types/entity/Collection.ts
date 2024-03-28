@@ -21,10 +21,12 @@ export type CollectionGetInfoType = NameSlugNameEntity & {
     user: Pick<UserEntityType, "username">;
 };
 
+export type CollectionGetFromFilterFromCurrentUserType = Pick<CollectionGetInfoType, "id" | "name" | "slugName" | "isPublic" | "artworkUrl" | "cardCardCollectionNumber" | "user">;
+
 export type CollectionGetFromFilterFromCurrentUserTypeRequestType = {
     success: string;
     data: {
-        collection: Array<Pick<CollectionGetInfoType, "id" | "name" | "slugName" | "isPublic" | "artworkUrl" | "cardCardCollectionNumber">>
+        collection: CollectionGetFromFilterFromCurrentUserType[];
         collectionAllResultCount: number;
     };
 }
