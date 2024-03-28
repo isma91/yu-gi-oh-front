@@ -104,6 +104,7 @@ export default function DashboardHome(props: DashboardHomeType): React.JSX.Eleme
         {
             name: "Collection",
             path: COLLECTION_BASE_URL,
+            parentPath: `${COLLECTION_BASE_URL}${COLLECTION_ROUTE_JSON[CollectionRouteName.LIST]}`,
             logo: <AutoStoriesIcon />,
             children: [
                 {
