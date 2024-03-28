@@ -2,6 +2,7 @@ import { NameSlugNameEntity, TimestampableEntity } from "@app/types/Entity";
 import { RequestGetInfo } from "@app/types/Request";
 import { CardPictureEntityType } from "@app/types/entity/CardPicture";
 import { UserEntityType } from "@app/types/entity/User";
+import { CardCollectionGetInfoType } from "@app/types/entity/CardCollection";
 
 
 export type CollectionEntityType = TimestampableEntity & NameSlugNameEntity & {
@@ -16,7 +17,7 @@ export type CollectionGetInfoType = NameSlugNameEntity & {
     id: number;
     isPublic: boolean;
     artworkUrl: string | null;
-    cardCardCollections: [];
+    cardCardCollections: CardCollectionGetInfoType[];
     cardCardCollectionNumber: number;
     user: Pick<UserEntityType, "username">;
 };
