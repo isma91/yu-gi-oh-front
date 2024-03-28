@@ -258,7 +258,7 @@ export default function Home() {
                         {displayUserDeck(userDeckArray)}
                     </Grid>
                 ) : null}
-                <Grid item xs={12}>
+                <Grid item xs={12} sx={{ marginTop: Theme.spacing(2) }}>
                     <Typography component="p">
                         {`Dear duelist, `}
                         {userCollectionNumber === 0 ? (
