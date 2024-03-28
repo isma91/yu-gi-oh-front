@@ -5,7 +5,7 @@ import { Grid } from "@mui/material";
 import { useSnackbar } from "notistack";
 import InputText from "@components/field/InputText";
 import Button from "@components/field/Button";
-import DeckListFromCurrentUserRequest from "@api/Search/ListFromCurrentUser";
+import DeckListFromCurrentUserRequest from "@api/Search/DeckFromCurrentUser";
 
 type DeckSearchCurrentUserFormPropsType = {
     offsetState: [number, React.Dispatch<React.SetStateAction<number>>];

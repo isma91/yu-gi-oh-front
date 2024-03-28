@@ -21,4 +21,12 @@ export type CollectionGetInfoType = NameSlugNameEntity & {
     user: Pick<UserEntityType, "username">;
 };
 
+export type CollectionGetFromFilterFromCurrentUserTypeRequestType = {
+    success: string;
+    data: {
+        collection: Array<Pick<CollectionGetInfoType, "id" | "name" | "slugName" | "isPublic" | "artworkUrl" | "cardCardCollectionNumber">>
+        collectionAllResultCount: number;
+    };
+}
+
 export type CollectionGetInfoRequestType = RequestGetInfo<"collection", CollectionGetInfoType>;
