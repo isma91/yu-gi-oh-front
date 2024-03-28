@@ -219,6 +219,12 @@ export default function Home() {
                                 {isPublic ? <LockOpenOutlinedIcon className={classes.deckIcon} /> : <LockOutlinedIcon className={classes.deckIcon} />}
                             </Typography>
                         </Grid>
+                        <Grid item xs={12} sx={{ paddingLeft: Theme.spacing(2) }}>
+                            <Typography component="span">
+                                <span>{cardCardCollectionNumber}</span>
+                                <span>{` ${Pluralize("card", cardCardCollectionNumber)} in this collection`}</span>
+                            </Typography>
+                        </Grid>
                     </Paper>
                 </Grid>
             );
