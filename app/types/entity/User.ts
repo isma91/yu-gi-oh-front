@@ -1,11 +1,13 @@
 import { RequestGetAll, RequestGetInfo, RequestSuccessWithDataType } from "@app/types/Request";
 import { DateStringType, TimestampableEntity } from "@app/types/Entity";
 import { DeckGetAllFromCurrentUserType } from "@app/types/entity/Deck";
+import { CollectionGetInfoType } from "@app/types/entity/Collection";
 
 export type UserLoginRequestType = RequestSuccessWithDataType<"userInfo", UserLoginType>;
 
 export type UserEntityType = TimestampableEntity & {
     id: number;
+    username: string;
     password: string;
     roles: string[];
     token: string;
@@ -29,6 +31,7 @@ export type UserGetBasicInfoDeckType = Pick<DeckGetAllFromCurrentUserType, "id" 
 export type UserGetBasicInfoType = {
     username: string;
     decks: UserGetBasicInfoDeckType[];
+    cardCollections: Array<Pick<CollectionGetInfoType, "id" | "name" | "slugName" | "isPublic" | "artworkUrl" | "cardCardCollectionNumber">>
 }
 
 export type UserGetAllRequestType = RequestGetAll<"user", UserGetAllType>;
