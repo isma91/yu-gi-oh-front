@@ -221,7 +221,11 @@ export default function Home() {
                         </Grid>
                         <Grid item xs={12} sx={{ paddingLeft: Theme.spacing(2) }}>
                             <Typography component="span">
-                                {`${cardCardCollectionNumber} ${Pluralize("card", cardCardCollectionNumber)} in this collection`}
+                                <span style={{ fontWeight: "bolder" }}>{`${cardCardCollectionNumber} ${Pluralize(
+                                    "card",
+                                    cardCardCollectionNumber
+                                )}`}</span>
+                                {` in this collection`}
                             </Typography>
                         </Grid>
                     </Paper>

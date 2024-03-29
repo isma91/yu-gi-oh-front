@@ -11,6 +11,7 @@ import { CollectionRouteName, GetFullRoute } from "@routes/Collection";
 import { IsAdmin } from "@utils/Role";
 import Image from "next/image";
 import { CollectionGetFromFilterFromCurrentUserType } from "@app/types/entity/Collection";
+import { Pluralize } from "@utils/String";
 
 type SearchCollectionDisplayProps = {
     collectionResult: CollectionGetFromFilterFromCurrentUserType[];
@@ -71,7 +72,7 @@ export default function SearchCollectionDisplay(props: SearchCollectionDisplayPr
                     if (checkIfDisplayable(collectionInfo) === false) {
                         return null;
                     }
-                    const { id, name, slugName, isPublic, artworkUrl } = collectionInfo;
+                    const { id, name, slugName, isPublic, artworkUrl, cardCardCollectionNumber } = collectionInfo;
                     let artwork = artworkUrl;
                     if (artwork !== null) {
                         artwork = AddApiBaseUrl(artwork);
@@ -119,6 +120,15 @@ export default function SearchCollectionDisplay(props: SearchCollectionDisplayPr
                                         ) : (
                                             <LockOutlinedIcon className={classes.deckIcon} />
                                         )}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} sx={{ textAlign: "center" }}>
+                                    <Typography component="span">
+                                        <span style={{ fontWeight: "bolder" }}>{`${cardCardCollectionNumber} ${Pluralize(
+                                            "card",
+                                            cardCardCollectionNumber
+                                        )}`}</span>
+                                        {` in this collection`}
                                     </Typography>
                                 </Grid>
                             </Paper>
