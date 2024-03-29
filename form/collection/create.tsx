@@ -12,6 +12,7 @@ import { CardCollectionInfoType } from "@app/types/Collection";
 import { AddApiBaseUrl, GetDefaultCardPicturePath } from "@utils/Url";
 import { TransformCardCollectionToValuesRequest } from "@utils/Collection";
 import CollectionCreateRequest from "@api/Collection/Create";
+import { CollectionRouteName, GetFullRoute } from "@routes/Collection";
 
 type ErrorsType = {
     [key in string]: string | undefined;
@@ -59,6 +60,7 @@ export default function CollectionCreateForm(props: CollectionCreateForm) {
         return CollectionCreateRequest(data)
             .then((res) => {
                 enqueueSnackbar(res.success, { variant: "success" });
+                router.push(GetFullRoute(CollectionRouteName.LIST));
             })
             .catch((err) => {
                 enqueueSnackbar(err, { variant: "error" });
