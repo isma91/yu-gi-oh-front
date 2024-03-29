@@ -4,12 +4,14 @@ export enum CollectionRouteName {
     LIST = "list",
     CREATE = "create",
     INFO = "info",
+    EDIT = "edit",
 }
 
 export const COLLECTION_ROUTE_JSON = {
     [CollectionRouteName.LIST]: "/list",
     [CollectionRouteName.CREATE]: "/create",
     [CollectionRouteName.INFO]: "/info/{id}/{slugName}",
+    [CollectionRouteName.EDIT]: "/edit/{id}/{slugName}",
 };
 
 export const COLLECTION_BASE_URL = "/collection";
