@@ -18,7 +18,7 @@ export type CardCollectionEntityType = TimestampableEntity & NameSlugNameEntity 
 
 export type CardCollectionGetInfoType = NameSlugNameEntity & {
     id: number;
-    card: CardSearchType;
+    card: Omit<CardSearchType, "picture">;
     nbCopie: number;
     cardSet: SetGetAllType | null;
     rarity: RarityGetAllType | null;
