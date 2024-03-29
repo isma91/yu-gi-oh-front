@@ -16,7 +16,7 @@ export default function CollectionListPage() {
     const limitArray: number[] = [15, 30, 45, 60];
 
     return (
-        <DashboardHome active={4} activeChild={0} title="Deck List Page">
+        <DashboardHome active={4} activeChild={0} title="Collection List Page">
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <CollectionSearchCurrentUserForm
