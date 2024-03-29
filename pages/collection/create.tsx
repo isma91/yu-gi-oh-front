@@ -1,4 +1,4 @@
-import { CardCollectionInfoType } from "@app/types/Collection";
+import { CardCollectionInfoType } from "@app/types/CardCollection";
 import { CardSearchType } from "@app/types/entity/Card";
 import DisplayCollection from "@components/collection/DisplayCollection";
 import DashboardHome from "@components/dashboard/Home";

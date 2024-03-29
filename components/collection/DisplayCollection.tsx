@@ -19,7 +19,7 @@ import { GetIndexArray } from "@utils/Parsing";
 import { Capitalize } from "@utils/String";
 import RemoveIcon from "@mui/icons-material/Remove";
 import CountryGetAllRequest from "@api/Country/GetAll";
-import { CardCollectionInfoType } from "@app/types/Collection";
+import { CardCollectionInfoType } from "@app/types/CardCollection";
 
 type DisplayCollectionPropsType = {
     openDialogState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];

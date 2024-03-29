@@ -1,4 +1,4 @@
-import { CardCollectionInfoType } from "@app/types/Collection";
+import { CardCollectionInfoType } from "@app/types/CardCollection";
 
 
 export function TransformCardCollectionToValuesRequest(cardCollection: CardCollectionInfoType[], values: { [key: string]: any }): { [key in string]: any } {
