@@ -8,7 +8,7 @@ import { SelectDeckArtworkType } from "@app/types/Deck";
 import { useSnackbar } from "notistack";
 import { useRouter } from "next/router";
 import AutocompleteDeckArtwork from "@components/deck/AutocompleteArtwork";
-import { CardCollectionInfoType } from "@app/types/CardCollection";
+import { CollectionInfoType } from "@app/types/Collection";
 import { AddApiBaseUrl, GetDefaultCardPicturePath } from "@utils/Url";
 import { TransformCardCollectionToValuesRequest } from "@utils/Collection";
 import CollectionCreateRequest from "@api/Collection/Create";
@@ -23,7 +23,7 @@ type ValuesType = {
 };
 
 type CollectionCreateForm = {
-    cardCollection: CardCollectionInfoType[];
+    cardCollection: CollectionInfoType[];
 };
 
 export default function CollectionCreateForm(props: CollectionCreateForm) {

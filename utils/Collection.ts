@@ -1,7 +1,7 @@
-import { CardCollectionInfoType } from "@app/types/CardCollection";
+import { CollectionInfoType } from "@app/types/Collection";
 
 
-export function TransformCardCollectionToValuesRequest(cardCollection: CardCollectionInfoType[], values: { [key: string]: any }): { [key in string]: any } {
+export function TransformCardCollectionToValuesRequest(cardCollection: CollectionInfoType[], values: { [key: string]: any }): { [key in string]: any } {
     let newCardCollectionValues: { [key in string]: string } = {};
     cardCollection.forEach((cardCollectionInfo, index) => {
         console.log(cardCollectionInfo);

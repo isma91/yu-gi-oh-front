@@ -19,12 +19,12 @@ import { GetIndexArray } from "@utils/Parsing";
 import { Capitalize } from "@utils/String";
 import RemoveIcon from "@mui/icons-material/Remove";
 import CountryGetAllRequest from "@api/Country/GetAll";
-import { CardCollectionInfoType } from "@app/types/CardCollection";
+import { CollectionInfoType } from "@app/types/Collection";
 
 type DisplayCollectionPropsType = {
     openDialogState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
     cardDialogInfoState: [CardSearchType | null, React.Dispatch<React.SetStateAction<CardSearchType | null>>];
-    cardCollectionState: [CardCollectionInfoType[], React.Dispatch<React.SetStateAction<CardCollectionInfoType[]>>];
+    cardCollectionState: [CollectionInfoType[], React.Dispatch<React.SetStateAction<CollectionInfoType[]>>];
 };
 
 type ErrorsType = {
@@ -134,7 +134,7 @@ export default function DisplayCollection(props: DisplayCollectionPropsType) {
             setSelectedSet(val);
         }
     }, []);
-    const transformValuesToCollectionCard = useCallback((): CardCollectionInfoType | null => {
+    const transformValuesToCollectionCard = useCallback((): CollectionInfoType | null => {
         if (cardDialogInfo === null) {
             return null;
         }

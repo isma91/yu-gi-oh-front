@@ -1,4 +1,4 @@
-import { CardCollectionInfoType } from "@app/types/CardCollection";
+import { CollectionInfoType } from "@app/types/Collection";
 import { CardSearchType } from "@app/types/entity/Card";
 import DisplayCollection from "@components/collection/DisplayCollection";
 import DashboardHome from "@components/dashboard/Home";
@@ -10,7 +10,7 @@ import { useState } from "react";
 export default function CollectionCreatePage() {
     const [openCardDialog, setOpenCardDialog] = useState<boolean>(false);
     const [cardDialogInfo, setCardDialogInfo] = useState<CardSearchType | null>(null);
-    const [cardCollection, setCardCollection] = useState<CardCollectionInfoType[]>([]);
+    const [cardCollection, setCardCollection] = useState<CollectionInfoType[]>([]);
     const limitArray: number[] = [15, 30, 45, 60];
 
     return (
