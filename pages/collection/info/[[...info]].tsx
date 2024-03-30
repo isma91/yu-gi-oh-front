@@ -20,9 +20,6 @@ import CollectionGetInfoRequest from "@api/Collection/GetInfo";
 import CollectionDeleteRequest from "@api/Collection/Delete";
 import CollectionUpdatePublicFromIdRequest from "@api/Collection/UpdatePublic";
 import { Pluralize } from "@utils/String";
-import { CardCollectionGetInfoType } from "@app/types/entity/CardCollection";
-import { CollectionInfoType } from "@app/types/Collection";
-import { AddApiBaseUrl, GetDefaultCardPicturePath } from "@utils/Url";
 import DisplayCollectionCard from "@components/collection/DisplayCard";
 
 const useStyles = makeStyles((theme: Theme) => ({
