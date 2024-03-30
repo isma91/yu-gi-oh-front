@@ -72,9 +72,7 @@ export default function DeckEditPage() {
             ) {
                 setDeckInfo(resData);
                 const transformedResData = transformToDeckCard(resData);
-                if (transformedResData !== null) {
-                    setDeckCard(transformedResData);
-                }
+                setDeckCard(transformedResData);
             }
         },
         [globalState, transformToDeckCard]
