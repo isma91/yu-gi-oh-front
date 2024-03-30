@@ -56,7 +56,7 @@ export default function DisplayCollectionCard(props: DisplayCollectionCardPropsT
         return (
             <Grid item xs={12} container spacing={2} sx={{ marginTop: Theme.spacing(2) }}>
                 {newCardCollection.map((cardCollectionInfo, cardCollectionInfoKey) => {
-                    const { card, set, rarity } = cardCollectionInfo;
+                    const { card, set, rarity, country } = cardCollectionInfo;
                     const { name, slugName } = card;
                     const pictureUrl = GetCardPictureUrl(card);
                     const popoverId = `popover-collection-cardInfo-${card.id}-${cardCollectionInfoKey}`;
@@ -101,6 +101,10 @@ export default function DisplayCollectionCard(props: DisplayCollectionCardPropsT
                                 <Typography component="p">
                                     <span style={{ fontWeight: "bolder" }}>Rarity: </span>
                                     <span style={{ fontSize: "0.9rem" }}>{` ${rarity.name}`}</span>
+                                </Typography>
+                                <Typography component="p">
+                                    <span style={{ fontWeight: "bolder" }}>Country: </span>
+                                    <span style={{ fontSize: "0.9rem" }}>{` ${country.name}`}</span>
                                 </Typography>
                             </Grid>
                         </Grid>
