@@ -20,6 +20,7 @@ export type CollectionGetInfoType = NameSlugNameEntity & {
     cardCardCollections: CardCollectionGetInfoType[];
     cardCardCollectionNumber: number;
     user: Pick<UserEntityType, "username">;
+    artworkCardId: number | null;
 };
 
 export type CollectionGetFromFilterFromCurrentUserType = Pick<CollectionGetInfoType, "id" | "name" | "slugName" | "isPublic" | "artworkUrl" | "cardCardCollectionNumber" | "user">;
