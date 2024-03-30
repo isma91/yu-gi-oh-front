@@ -8,7 +8,6 @@ import { CardSearchType } from "@app/types/entity/Card";
 export function TransformCardCollectionToValuesRequest(cardCollection: CollectionInfoType[], values: { [key: string]: any }): { [key in string]: any } {
     let newCardCollectionValues: { [key in string]: string } = {};
     cardCollection.forEach((cardCollectionInfo, index) => {
-        console.log(cardCollectionInfo);
         const { nbCopie, picture, country, set, rarity } = cardCollectionInfo;
         const cardCollectionBasicInfoArray = [
             { name: "picture", value: picture.id },
