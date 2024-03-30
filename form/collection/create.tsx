@@ -9,8 +9,7 @@ import { useSnackbar } from "notistack";
 import { useRouter } from "next/router";
 import AutocompleteDeckArtwork from "@components/deck/AutocompleteArtwork";
 import { CollectionInfoType } from "@app/types/Collection";
-import { AddApiBaseUrl, GetDefaultCardPicturePath } from "@utils/Url";
-import { TransformCardCollectionToValuesRequest } from "@utils/Collection";
+import { GetSelectCollectionArtworkFromCollectionInfo, TransformCardCollectionToValuesRequest } from "@utils/Collection";
 import CollectionCreateRequest from "@api/Collection/Create";
 import { CollectionRouteName, GetFullRoute } from "@routes/Collection";
 
@@ -36,24 +35,7 @@ export default function CollectionCreateForm(props: CollectionCreateForm) {
     const [selectCollectionArtworkArray, setSelectCollectionArtworkArray] = useState<SelectDeckArtworkType[]>([]);
 
     useEffect(() => {
-        let newSelectCollectionArtworkJson: { [key in number]: SelectDeckArtworkType } = {};
-        for (let i = 0; i < cardCollection.length; i++) {
-            const { name, pictures } = cardCollection[i].card;
-            for (let j = 0; j < pictures.length; j++) {
-                const { id, artworkUrl } = pictures[j];
-                let url: string;
-                if (artworkUrl !== null) {
-                    url = AddApiBaseUrl(artworkUrl);
-                } else {
-                    url = GetDefaultCardPicturePath();
-                }
-                if (newSelectCollectionArtworkJson[id] !== undefined) {
-                    continue;
-                }
-                newSelectCollectionArtworkJson[id] = { id: id, name: `${name} [n°${j + 1}]`, url: url };
-            }
-        }
-        setSelectCollectionArtworkArray(Object.values(newSelectCollectionArtworkJson));
+        setSelectCollectionArtworkArray(GetSelectCollectionArtworkFromCollectionInfo(cardCollection));
     }, [cardCollection]);
 
     const sendCollectionCreateReq = async (data: object) => {
