@@ -1,13 +1,15 @@
 export enum SearchApiRouteName {
     CARD = "card",
     SET = "set",
-    LIST_CURRENT_USER = "list-from-current-user",
+    LIST_DECK_CURRENT_USER = "list-deck-from-current-user",
+    LIST_COLLECTION_CURRENT_USER = "list-collection-from-current-user",
 }
 
 const SEARCH_API_ROUTE_JSON = {
     [SearchApiRouteName.CARD]: "/card",
     [SearchApiRouteName.SET]: "/set",
-    [SearchApiRouteName.LIST_CURRENT_USER]: "/deck-current-user",
+    [SearchApiRouteName.LIST_DECK_CURRENT_USER]: "/deck-current-user",
+    [SearchApiRouteName.LIST_COLLECTION_CURRENT_USER]: "/collection-current-user",
 };
 
 export const SEARCH_API_BASE_URL = "/search";

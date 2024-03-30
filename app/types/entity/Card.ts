@@ -47,6 +47,8 @@ export type CardSearchType = NameSlugNameEntity & {
     property: PropertyGetAllType;
     category: Omit<CategoryGetAllType, "subCategories">;
     picture: Pick<CardPictureGetAllType, "id" | "pictureSmallUrl">;
+    pictures: Array<Pick<CardPictureGetAllType, "id" | "pictureSmallUrl" | "artworkUrl">>;
+    cardSets: CardSetGetAllType[];
     type: TypeGetAllType;
     subTypes: SubTypeGetAllType[];
     isEffect: boolean | null;

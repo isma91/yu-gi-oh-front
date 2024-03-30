@@ -4,5 +4,5 @@ import { DeckGetFromFilterFromCurrentUserTypeRequestType } from "@app/types/enti
 import { GetFullRoute, SearchApiRouteName } from "@routes/api/Search";
 
 export default function SearchDeckFromCurrentUser(data: object): Promise<DeckGetFromFilterFromCurrentUserTypeRequestType> {
-    return Request(GetFullRoute(SearchApiRouteName.LIST_CURRENT_USER), RequestMethodType.POST, "Error while getting your Decks.", data, true);
+    return Request(GetFullRoute(SearchApiRouteName.LIST_DECK_CURRENT_USER), RequestMethodType.POST, "Error while getting your Decks.", data, true);
 }

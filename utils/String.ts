@@ -54,3 +54,14 @@ export function CheckUuid(uuid: string, version: number = 7): boolean {
     }
     return testRegex(regex, uuid);
 }
+
+/**
+ * Pluralize basic word
+ * @param {string} word 
+ * @param {number} number 
+ * @returns {string}
+ */
+export function Pluralize(word: string, number: number): string {
+    const suffixe = (number > 0) ? "s" : "";
+    return `${word}${suffixe}`;
+}

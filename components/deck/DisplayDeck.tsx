@@ -17,7 +17,6 @@ import { CardSearchType } from "@app/types/entity/Card";
 import { ArrayIncludes, CreateArrayNumber } from "@utils/Array";
 import { Capitalize } from "@utils/String";
 import { Sort as CardSort } from "@utils/CardSort";
-import { GetLocalStorageValue } from "@utils/Window";
 
 type DisplayDeckPropsType = {
     deckCardState: [DeckCardType, React.Dispatch<React.SetStateAction<DeckCardType>>];

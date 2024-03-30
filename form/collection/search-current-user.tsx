@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { DeckGetAllFromCurrentUserType } from "@app/types/entity/Deck";
+import { CollectionGetFromFilterFromCurrentUserType } from "@app/types/entity/Collection";
 import Form from "@components/util/Form";
 import { Grid } from "@mui/material";
 import { useSnackbar } from "notistack";
 import InputText from "@components/field/InputText";
 import Button from "@components/field/Button";
-import DeckListFromCurrentUserRequest from "@api/Search/DeckFromCurrentUser";
+import CollectionListFromCurrentUserRequest from "@api/Search/CollectionFromCurrentUser";
 
-type DeckSearchCurrentUserFormPropsType = {
+type CollectionSearchCurrentUserFormPropsType = {
     offsetState: [number, React.Dispatch<React.SetStateAction<number>>];
     loadingFormState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-    setDeckAllResultCount: React.Dispatch<React.SetStateAction<number>>;
-    setDeckResult: React.Dispatch<React.SetStateAction<DeckGetAllFromCurrentUserType[]>>;
+    setCollectionAllResultCount: React.Dispatch<React.SetStateAction<number>>;
+    setCollectionResult: React.Dispatch<React.SetStateAction<CollectionGetFromFilterFromCurrentUserType[]>>;
     searchLimit: React.JSX.Element;
     limit: number;
 };
@@ -26,19 +26,19 @@ type ValuesType = {
     [key: string]: any;
 };
 
-export default function DeckSearchCurrentUserForm(props: DeckSearchCurrentUserFormPropsType) {
-    const { setDeckAllResultCount, setDeckResult, searchLimit, limit } = props;
+export default function CollectionSearchCurrentUserForm(props: CollectionSearchCurrentUserFormPropsType) {
+    const { setCollectionAllResultCount, setCollectionResult, searchLimit, limit } = props;
     const { enqueueSnackbar } = useSnackbar();
     const [offset, setOffset] = props.offsetState;
     const [loadingForm, setLoadingForm] = props.loadingFormState;
     const [values, setValues] = useState<ValuesType>({});
     const [errors, setErrors] = useState<ErrorsType>({});
 
-    const sendDeckSearchReq = async (data: object): Promise<void> => {
-        return DeckListFromCurrentUserRequest(data)
+    const sendCollectionSearchReq = async (data: object): Promise<void> => {
+        return CollectionListFromCurrentUserRequest(data)
             .then((res) => {
-                setDeckAllResultCount(res.data.deckAllResultCount);
-                setDeckResult(res.data.deck);
+                setCollectionAllResultCount(res.data.collectionAllResultCount);
+                setCollectionResult(res.data.collection);
             })
             .catch((err) => {
                 enqueueSnackbar(err, { variant: "error" });
@@ -48,30 +48,30 @@ export default function DeckSearchCurrentUserForm(props: DeckSearchCurrentUserFo
             });
     };
 
-    const launchSendDeckSearchReq = (resetOffset: boolean = true) => {
+    const launchSendCollectionSearchReq = (resetOffset: boolean = true) => {
         setLoadingForm(true);
         if (resetOffset === true) {
             setOffset(0);
         }
         const newValues = { ...values, offset: offset, limit: limit };
         setLoadingForm(false);
-        sendDeckSearchReq(newValues);
+        sendCollectionSearchReq(newValues);
     };
 
     useEffect(() => {
         const valuesLength = Object.keys(values).length;
         const errorsLength = Object.keys(errors).length;
         if (valuesLength > 0 && errorsLength === 0) {
-            launchSendDeckSearchReq();
+            launchSendCollectionSearchReq();
         }
     }, [values, errors]);
 
     useEffect(() => {
-        launchSendDeckSearchReq();
+        launchSendCollectionSearchReq();
     }, [limit]);
 
     useEffect(() => {
-        launchSendDeckSearchReq(false);
+        launchSendCollectionSearchReq(false);
     }, [offset]);
 
     return (
@@ -84,7 +84,7 @@ export default function DeckSearchCurrentUserForm(props: DeckSearchCurrentUserFo
                     {searchLimit}
                 </Grid>
                 <Grid item xs={12}>
-                    <Button loading={loadingForm}>Search Deck</Button>
+                    <Button loading={loadingForm}>Search Collection</Button>
                 </Grid>
             </Grid>
         </Form>

@@ -2,21 +2,22 @@ import { useContext } from "react";
 import { Theme, Grid, Typography, useTheme, Paper } from "@mui/material";
 import { StoreContext } from "@app/lib/state-provider";
 import { useRouter } from "next/router";
-import { DeckGetAllFromCurrentUserType } from "@app/types/entity/Deck";
 import SearchPaginationDisplay from "@components/search/PaginationDisplay";
 import { makeStyles } from "@mui/styles";
 import { AddApiBaseUrl, GetDefaultCardPicturePath } from "@utils/Url";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
-import { DeckRouteName, GetFullRoute } from "@routes/Deck";
+import { CollectionRouteName, GetFullRoute } from "@routes/Collection";
 import { IsAdmin } from "@utils/Role";
 import Image from "next/image";
+import { CollectionGetFromFilterFromCurrentUserType } from "@app/types/entity/Collection";
+import { Pluralize } from "@utils/String";
 
-type SearchDeckDisplayProps = {
-    deckResult: DeckGetAllFromCurrentUserType[];
+type SearchCollectionDisplayProps = {
+    collectionResult: CollectionGetFromFilterFromCurrentUserType[];
     offsetState: [number, React.Dispatch<React.SetStateAction<number>>];
     limit: number;
-    deckAllResultCount: number;
+    collectionAllResultCount: number;
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -39,16 +40,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 }));
 
-export default function SearchDeckDisplay(props: SearchDeckDisplayProps) {
-    const { deckResult, limit, deckAllResultCount } = props;
+export default function SearchCollectionDisplay(props: SearchCollectionDisplayProps) {
+    const { collectionResult, limit, collectionAllResultCount } = props;
     const router = useRouter();
     const classes = useStyles();
     const Theme = useTheme();
     const { state: globalState } = useContext(StoreContext);
 
-    const checkIfDisplayable = (deckInfo: DeckGetAllFromCurrentUserType): boolean => {
-        const deckUserUserName = deckInfo.user.username;
-        const { isPublic } = deckInfo;
+    const checkIfDisplayable = (collectionInfo: CollectionGetFromFilterFromCurrentUserType): boolean => {
+        const collectionUserUserName = collectionInfo.user.username;
+        const { isPublic } = collectionInfo;
         const { user } = globalState;
         if (IsAdmin(globalState) === true) {
             return true;
@@ -59,19 +60,19 @@ export default function SearchDeckDisplay(props: SearchDeckDisplayProps) {
         if (isPublic === true) {
             return true;
         } else {
-            return user.username === deckUserUserName;
+            return user.username === collectionUserUserName;
         }
     };
 
     return (
         <Grid container spacing={2}>
-            <SearchPaginationDisplay offsetState={props.offsetState} allResultCount={deckAllResultCount} limit={limit} entity="deck" />
+            <SearchPaginationDisplay offsetState={props.offsetState} allResultCount={collectionAllResultCount} limit={limit} entity="collection" />
             <Grid item xs={12} container spacing={2} sx={{ marginTop: Theme.spacing(2) }}>
-                {deckResult.map((deckInfo) => {
-                    if (checkIfDisplayable(deckInfo) === false) {
+                {collectionResult.map((collectionInfo) => {
+                    if (checkIfDisplayable(collectionInfo) === false) {
                         return null;
                     }
-                    const { id, name, slugName, isPublic, artworkUrl } = deckInfo;
+                    const { id, name, slugName, isPublic, artworkUrl, cardCardCollectionNumber } = collectionInfo;
                     let artwork = artworkUrl;
                     if (artwork !== null) {
                         artwork = AddApiBaseUrl(artwork);
@@ -80,7 +81,7 @@ export default function SearchDeckDisplay(props: SearchDeckDisplayProps) {
                     }
                     return (
                         <Grid
-                            key={`deck-list-${id}-${slugName}`}
+                            key={`collection-list-${id}-${slugName}`}
                             item
                             xs={12}
                             md={3}
@@ -92,7 +93,7 @@ export default function SearchDeckDisplay(props: SearchDeckDisplayProps) {
                                 marginTop: Theme.spacing(1),
                                 padding: `${Theme.spacing(0)} !important`,
                             }}
-                            onClick={(e) => router.push(GetFullRoute(DeckRouteName.INFO, { id: id.toString(10), slugName: slugName }))}
+                            onClick={(e) => router.push(GetFullRoute(CollectionRouteName.INFO, { id: id.toString(10), slugName: slugName }))}
                         >
                             <Paper
                                 elevation={1}
@@ -105,7 +106,7 @@ export default function SearchDeckDisplay(props: SearchDeckDisplayProps) {
                                         width={0}
                                         height={0}
                                         sizes="100vw"
-                                        alt={`Deck ${deckInfo.name} artwork`}
+                                        alt={`Deck ${collectionInfo.name} artwork`}
                                         src={artwork}
                                         className={classes.deckPicture}
                                     />
@@ -113,12 +114,21 @@ export default function SearchDeckDisplay(props: SearchDeckDisplayProps) {
                                 <Grid item xs={12} sx={{ textAlign: "center" }}>
                                     <Typography component="span">
                                         <span className={classes.deckTitle}>{name}</span>
-                                        <span>{` by ${deckInfo.user.username}`}</span>
+                                        <span>{` by ${collectionInfo.user.username}`}</span>
                                         {isPublic ? (
                                             <LockOpenOutlinedIcon className={classes.deckIcon} />
                                         ) : (
                                             <LockOutlinedIcon className={classes.deckIcon} />
                                         )}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} sx={{ textAlign: "center" }}>
+                                    <Typography component="span">
+                                        <span style={{ fontWeight: "bolder" }}>{`${cardCardCollectionNumber} ${Pluralize(
+                                            "card",
+                                            cardCardCollectionNumber
+                                        )}`}</span>
+                                        {` in this collection`}
                                     </Typography>
                                 </Grid>
                             </Paper>
