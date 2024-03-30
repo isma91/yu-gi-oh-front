@@ -1,7 +1,6 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { makeStyles } from "@mui/styles";
-import { useTheme, Grid, Typography, Badge, Theme } from "@mui/material";
-import RemoveIcon from "@mui/icons-material/Remove";
+import { useTheme, Grid, Typography, Theme } from "@mui/material";
 import { CardSearchType } from "@app/types/entity/Card";
 import { GetCardPictureUrl } from "@utils/SearchCard";
 import { CardInfoToDisplayType } from "@app/types/SearchCard";
@@ -11,8 +10,7 @@ import { RedirectToNewTab } from "@utils/Route";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { CollectionGetInfoType } from "@app/types/entity/Collection";
-import { CollectionInfoType } from "@app/types/Collection";
-import { AddApiBaseUrl, GetDefaultCardPicturePath } from "@utils/Url";
+import { TransformCollectionInfoToCardCollectionInfo } from "@utils/Collection";
 
 type DisplayCollectionCardPropsType = {
     cardCollection: CollectionGetInfoType;
@@ -37,35 +35,6 @@ export default function DisplayCollectionCard(props: DisplayCollectionCardPropsT
     const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
     const openPopover = Boolean(anchorEl);
     const Theme = useTheme();
-    const newCardCollection = useMemo(() => {
-        let newArray: Array<Omit<CollectionInfoType, "picture">> = [];
-        cardCollection.cardCardCollections.forEach((cardCardCollectionInfo) => {
-            const { card, cardSet, rarity, picture } = cardCardCollectionInfo;
-            let newCardPicture: CardSearchType["picture"] = { id: 0, pictureSmallUrl: null };
-            if (picture !== null) {
-                newCardPicture = { ...picture };
-            }
-            let newSet: CollectionInfoType["set"];
-            if (cardSet !== null) {
-                newSet = { ...cardSet };
-            } else {
-                newSet = { id: 0, name: "Unknown" };
-            }
-            let newRarity: CollectionInfoType["rarity"];
-            if (rarity !== null) {
-                newRarity = { ...rarity };
-            } else {
-                newRarity = { id: 0, name: "Unknown" };
-            }
-            newArray.push({
-                ...cardCardCollectionInfo,
-                set: newSet,
-                rarity: newRarity,
-                card: { ...card, picture: newCardPicture },
-            });
-        });
-        return newArray;
-    }, [cardCollection]);
 
     const handlePopoverClose = () => {
         setAnchorEl(null);
@@ -83,6 +52,7 @@ export default function DisplayCollectionCard(props: DisplayCollectionCardPropsT
     };
 
     const displayCard = () => {
+        const newCardCollection = TransformCollectionInfoToCardCollectionInfo(cardCollection);
         return (
             <Grid item xs={12} container spacing={2} sx={{ marginTop: Theme.spacing(2) }}>
                 {newCardCollection.map((cardCollectionInfo, cardCollectionInfoKey) => {
