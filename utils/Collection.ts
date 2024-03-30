@@ -1,6 +1,8 @@
 import { CollectionInfoType } from "@app/types/Collection";
 import { SelectDeckArtworkType } from "@app/types/Deck";
 import { AddApiBaseUrl, GetDefaultCardPicturePath } from "./Url";
+import { CollectionGetInfoType } from "@app/types/entity/Collection";
+import { CardSearchType } from "@app/types/entity/Card";
 
 
 export function TransformCardCollectionToValuesRequest(cardCollection: CollectionInfoType[], values: { [key: string]: any }): { [key in string]: any } {
@@ -44,4 +46,40 @@ export function GetSelectCollectionArtworkFromCollectionInfo(cardCollection: Col
             }
         }
     return Object.values(newSelectCollectionArtworkJson);
+}
+
+export function TransformCollectionInfoToCardCollectionInfo(collectionInfo: CollectionGetInfoType) {
+    let newArray: CollectionInfoType[] = [];
+    collectionInfo.cardCardCollections.forEach((cardCardCollectionInfo) => {
+        const { card, cardSet, rarity, picture } = cardCardCollectionInfo;
+        let newPicture = { id: 0, url: GetDefaultCardPicturePath() };
+        let newCardPicture: CardSearchType["picture"] = { id: 0, pictureSmallUrl: null };
+        if (picture !== null) {
+            if (picture.artworkUrl !== null) {
+                newPicture = { id: picture.id, url: AddApiBaseUrl(picture.artworkUrl) };
+            }
+            newCardPicture = { ...picture };
+        }
+        let newSet: CollectionInfoType["set"];
+        if (cardSet !== null) {
+            newSet = { ...cardSet };
+        } else {
+            newSet = { id: 0, name: "Unknown" };
+        }
+        let newRarity: CollectionInfoType["rarity"];
+        if (rarity !== null) {
+            newRarity = { ...rarity };
+        } else {
+            newRarity = { id: 0, name: "Unknown" };
+        }
+        newArray.push({
+            ...cardCardCollectionInfo,
+            set: newSet,
+            rarity: newRarity,
+            card: { ...card, picture: newCardPicture },
+            name: card.name,
+            picture: newPicture
+        });
+    });
+    return newArray;
 }
