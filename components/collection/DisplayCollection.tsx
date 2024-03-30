@@ -205,7 +205,7 @@ export default function DisplayCollection(props: DisplayCollectionPropsType) {
             rarity: rarityInfo,
             picture: pictureInfo,
         };
-    }, [values, cardDialogInfo]);
+    }, [values, cardDialogInfo, cardInfoSetRarityArray, country]);
 
     useEffect(() => {
         if (globalState.user !== null && skipCountry === false) {
@@ -217,7 +217,7 @@ export default function DisplayCollection(props: DisplayCollectionPropsType) {
                     setSkipCountry(true);
                 });
         }
-    }, [globalState, skipCountry, loadingCountry]);
+    }, [globalState, skipCountry, loadingCountry, enqueueSnackbar]);
 
     useEffect(() => {
         const valuesLength = Object.keys(values).length;
@@ -237,7 +237,7 @@ export default function DisplayCollection(props: DisplayCollectionPropsType) {
             setValues({});
             setCardDialogInfo(null);
         }
-    }, [values, errors, transformValuesToCollectionCard, enqueueSnackbar, handleCloseCardDialog, setCardDialogInfo]);
+    }, [values, errors, transformValuesToCollectionCard, enqueueSnackbar, handleCloseCardDialog, setCardDialogInfo, setCardCollection]);
 
     const displayDialog = (): React.JSX.Element => {
         return (
