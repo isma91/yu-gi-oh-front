@@ -34,7 +34,7 @@ export type AutocompletePropsType = BasicInputPropsType & {
     icon?: React.ReactNode;
     helperText?: string;
     className?: string;
-    onChange?: (event: React.SyntheticEvent, value: object | null | object[]) => void;
+    onChange?: <T extends object>(event: React.SyntheticEvent, value: T | null | T[]) => void;
     defaultValue?: object | null | object[];
     loadingDefaultValue?: boolean;
     renderOption?: (props: React.HTMLAttributes<HTMLLIElement>, option: any) => React.JSX.Element;
@@ -51,10 +51,6 @@ type AutocompleteInputOptionType = {
     required: boolean;
     className?: string;
 };
-
-interface AutocompleteValueObject extends Object {
-    length: number;
-}
 
 export default function Autocomplete(props: AutocompletePropsType) {
     const { name, error, options, optionLabel, optionValue, loading, onChange: propsOnChange } = props;
@@ -161,36 +157,6 @@ export default function Autocomplete(props: AutocompletePropsType) {
     if (props.className !== undefined) {
         inputOptions.className = props.className;
     }
-
-    /*const handleChange = (event: React.SyntheticEvent, value: object | object[] | null) => {
-        let newValue: string = "";
-        let newAutoCompleteValue: object[] | object = [];
-        if (value !== null) {
-            newAutoCompleteValue = value;
-        }
-        if (multiple === false) {
-            if (value !== null) {
-                newValue = GetObjectValueFromKey(value, optionValueArray) as string;
-            }
-        } else {
-            newAutoCompleteValue = [];
-            if (value !== null && Array.isArray(value)) {
-                newAutoCompleteValue = value;
-                let arrayToTransformInValue: Array<string | number> = [];
-                for (let i = 0; i < value.length; i++) {
-                    const el: object = value[i];
-                    arrayToTransformInValue.push(GetObjectValueFromKey(el, optionValueArray));
-                }
-                newValue = arrayToTransformInValue.join(",");
-            }
-        }
-        setValue(newValue);
-        setAutoCompleteValue(newAutoCompleteValue);
-        if (props.onChange) {
-            props.onChange(event, value);
-        }
-        setOnChangeString("");
-    };*/
 
     const handleFilterOptions = (options: object[], params: FilterOptionsState<object>): object[] => {
         params.inputValue = onChangeString;

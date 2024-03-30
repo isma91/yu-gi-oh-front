@@ -99,7 +99,7 @@ export default function SearchCardPopover(props: SearchPopoverPropsType) {
                 disableScrollLock
             >
                 <Grid container spacing={0} sx={{ height: "100%" }}>
-                    <Grid item xs={9} spacing={0} sx={{ "& p": { marginLeft: Theme.spacing(1) } }}>
+                    <Grid item xs={9} sx={{ "& p": { marginLeft: Theme.spacing(1) } }}>
                         <Typography component="p" sx={{ fontSize: "1.5rem", marginTop: Theme.spacing(1) }}>
                             {cardInfo.name}
                         </Typography>
