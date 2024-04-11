@@ -18,6 +18,7 @@ import { useSnackbar } from "notistack";
 import LogoutRequest from "@api/User/Auth/Logout";
 import AdminName from "@app/.admin-name";
 import { ActionNameType } from "@app/types/GlobalState";
+import { AdminRouteName, GetFullRoute } from "@routes/Admin";
 
 type DashboardMenuPropsType = {
     name: string;
@@ -58,7 +59,7 @@ export default function Menu(props: DashboardMenuPropsType): React.JSX.Element {
     const mediaQueryUpMd = useMediaQuery(Theme.breakpoints.up("md"));
     const selectedItemClassName = genericClasses.cursorPointer + " " + genericClasses.backgroundColorThirdMain;
 
-    const menuItemAdmin = [{ name: "Admin", path: "/admin", logo: <SupervisorAccountIcon /> }];
+    const menuItemAdmin = [{ name: "Admin", path: GetFullRoute(AdminRouteName.BASE), logo: <SupervisorAccountIcon /> }];
 
     useEffect(() => {
         let newIsAdmin = false;
