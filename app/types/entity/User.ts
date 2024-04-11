@@ -36,8 +36,15 @@ export type UserGetBasicInfoType = {
     cardCollections: UserGetBasicInfoCollectionType[];
 }
 
+export type UserGetAllUserInfoType = UserGetAllType & {
+    userTokenCount: number;
+    updatedAt: DateStringType;
+}
+
 export type UserGetAllRequestType = RequestGetAll<"user", UserGetAllType>;
 
 export type UserGetInfoRequestType = RequestGetInfo<"user", UserGetAllType>;
 
 export type UserGetBasicInfoRequestType = RequestGetInfo<"user", UserGetBasicInfoType>;
+
+export type UserGetAllUserInfoRequestType = RequestGetAll<"user", UserGetAllUserInfoType>;
