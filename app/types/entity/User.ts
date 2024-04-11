@@ -2,6 +2,7 @@ import { RequestGetAll, RequestGetInfo, RequestSuccessWithDataType } from "@app/
 import { DateStringType, TimestampableEntity } from "@app/types/Entity";
 import { DeckGetAllFromCurrentUserType } from "@app/types/entity/Deck";
 import { CollectionGetInfoType } from "@app/types/entity/Collection";
+import { UserTokenEntityType } from "@app/types/entity/UserToken";
 
 export type UserLoginRequestType = RequestSuccessWithDataType<"userInfo", UserLoginType>;
 
@@ -10,7 +11,7 @@ export type UserEntityType = TimestampableEntity & {
     username: string;
     password: string;
     roles: string[];
-    token: string;
+    userTokens: UserTokenEntityType[];
 };
 
 export type UserLoginType = {
@@ -41,6 +42,11 @@ export type UserGetAllUserInfoType = UserGetAllType & {
     updatedAt: DateStringType;
 }
 
+export type UserGetAdminInfoType = UserGetAllType & {
+    userTokens: Array<Omit<UserTokenEntityType, "user">>;
+    updatedAt: DateStringType;
+}
+
 export type UserGetAllRequestType = RequestGetAll<"user", UserGetAllType>;
 
 export type UserGetInfoRequestType = RequestGetInfo<"user", UserGetAllType>;
@@ -48,3 +54,5 @@ export type UserGetInfoRequestType = RequestGetInfo<"user", UserGetAllType>;
 export type UserGetBasicInfoRequestType = RequestGetInfo<"user", UserGetBasicInfoType>;
 
 export type UserGetAllUserInfoRequestType = RequestGetAll<"user", UserGetAllUserInfoType>;
+
+export type UserGetUserAdminInfoRequestType = RequestGetInfo<"user", UserGetAdminInfoType>;
