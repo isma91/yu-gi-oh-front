@@ -3,9 +3,10 @@ export type DashboardMenuItemElementParentType = {
     path: string;
     parentPath?: string;
     logo: React.JSX.Element;
+    isAdmin?: boolean;
 };
 
-export type DashboardMenuItemElementChildrenType = Omit<DashboardMenuItemElementParentType, "logo">;
+export type DashboardMenuItemElementChildrenType = Omit<DashboardMenuItemElementParentType, "logo" | "parentPath" | "isAdmin">;
 
 export type DashboardMenuItemElementType = DashboardMenuItemElementParentType & {
     children?: DashboardMenuItemElementChildrenType[]
