@@ -9,7 +9,6 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CloseIcon from "@mui/icons-material/Close";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useRouter } from "next/router";
 import { CancelPropagation } from "@utils/Event";
@@ -18,7 +17,6 @@ import { useSnackbar } from "notistack";
 import LogoutRequest from "@api/User/Auth/Logout";
 import AdminName from "@app/.admin-name";
 import { ActionNameType } from "@app/types/GlobalState";
-import { AdminRouteName, GetFullRoute } from "@routes/Admin";
 
 type DashboardMenuPropsType = {
     name: string;
@@ -58,8 +56,6 @@ export default function Menu(props: DashboardMenuPropsType): React.JSX.Element {
     const Theme = useTheme();
     const mediaQueryUpMd = useMediaQuery(Theme.breakpoints.up("md"));
     const selectedItemClassName = genericClasses.cursorPointer + " " + genericClasses.backgroundColorThirdMain;
-
-    const menuItemAdmin = [{ name: "Admin", path: GetFullRoute(AdminRouteName.BASE), logo: <SupervisorAccountIcon /> }];
 
     useEffect(() => {
         let newIsAdmin = false;
@@ -197,11 +193,18 @@ export default function Menu(props: DashboardMenuPropsType): React.JSX.Element {
         setOpen(false);
     };
 
-    const displayMenuItemFromArray = (menuItemArray: DashboardMenuItemElementType[], isAdmin: boolean = false): React.JSX.Element[] => {
-        return menuItemArray.map((v, k) => {
+    const displayMenuItemFromArray = (): React.JSX.Element[] => {
+        return menuItem.map((v, k) => {
+            let menuItemIsAdmin = false;
+            if (v.isAdmin !== undefined) {
+                menuItemIsAdmin = v.isAdmin;
+            }
             const key = `${name}-${k}`;
             let className = active === k && activeChild === -1 ? selectedItemClassName : classes.elementMenu;
-            if (isAdmin === true) {
+            if (menuItemIsAdmin === true) {
+                if (isAdmin === false) {
+                    return <Fragment key={key}></Fragment>;
+                }
                 className = `${classes.elementMenu} ${classes.elementMenuAdmin}`;
             }
             const childIsOpen = findOpenChildIsOpen(k);
@@ -256,13 +259,7 @@ export default function Menu(props: DashboardMenuPropsType): React.JSX.Element {
                 </>
             ) : null}
             <List sx={{ with: "100%" }}>
-                {displayMenuItemFromArray(menuItem)}
-                {isAdmin === true ? (
-                    <>
-                        {displayDivider()}
-                        {displayMenuItemFromArray(menuItemAdmin, true)}
-                    </>
-                ) : null}
+                {displayMenuItemFromArray()}
                 {displayDivider()}
                 <ListItem key="menu-logout" className={classes.elementMenu} onClick={handleLogout}>
                     <Typography component="span" className={genericClasses.verticalAlign}>

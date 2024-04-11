@@ -9,6 +9,7 @@ import BookIcon from "@mui/icons-material/Book";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import SettingsIcon from "@mui/icons-material/Settings";
 import FeaturedPlayListIcon from "@mui/icons-material/FeaturedPlayList";
+import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import GenericStyles from "@app/css/style";
 import { makeStyles } from "@mui/styles";
 import { CardRouteName, CARD_ROUTE_JSON, CARD_BASE_URL } from "@routes/Card";
@@ -17,6 +18,7 @@ import { COLLECTION_BASE_URL, COLLECTION_ROUTE_JSON, CollectionRouteName } from 
 import { SETTING_BASE_URL } from "@routes/Setting";
 import Divider from "@components/Divider";
 import { SET_BASE_URL, SET_ROUTE_JSON, SetRouteName } from "@routes/Set";
+import { ADMIN_BASE_URL, ADMIN_ROUTE_JSON, AdminRouteName } from "@routes/Admin";
 
 type DashboardHomeType = {
     children: React.ReactNode;
@@ -121,6 +123,18 @@ export default function DashboardHome(props: DashboardHomeType): React.JSX.Eleme
             name: "Setting",
             path: SETTING_BASE_URL,
             logo: <SettingsIcon />,
+        },
+        {
+            isAdmin: true,
+            name: "Admin",
+            path: ADMIN_BASE_URL,
+            logo: <SupervisorAccountIcon />,
+            children: [
+                {
+                    name: "Create User",
+                    path: ADMIN_ROUTE_JSON[AdminRouteName.USER_INFO],
+                },
+            ],
         },
     ];
 
