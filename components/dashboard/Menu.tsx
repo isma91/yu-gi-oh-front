@@ -217,8 +217,8 @@ export default function Menu(props: DashboardMenuPropsType): React.JSX.Element {
                         {displayDrawerMenuItem(v)}
                         {hasChildren === true ? (
                             childIsOpen === true ? (
-                                <IconButton className={genericClasses.verticalAlign}>
-                                    <ExpandLessIcon onClick={(e) => launchUpdateOpenChild(e, k)} />
+                                <IconButton className={genericClasses.verticalAlign} onClick={(e) => launchUpdateOpenChild(e, k)}>
+                                    <ExpandLessIcon />
                                 </IconButton>
                             ) : (
                                 <ExpandMoreIcon className={genericClasses.verticalAlign} onClick={(e) => launchUpdateOpenChild(e, k)} />
