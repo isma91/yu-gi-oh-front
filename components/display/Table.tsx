@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, useCallback } from "react";
 import { Table as TableMUI, TableHead, TableRow, TableCell, Typography, TableSortLabel, Skeleton, TableBody, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { TableHeaderType, TableContentType, TableContentTypeType, TableContentValueType } from "@app/types/Table";
@@ -40,38 +40,42 @@ export default function Table(props: TablePropsType) {
     const [order, setOrder] = useState<OrderType>(OrderType.ASC);
     const [orderBy, setOrderBy] = useState<string>("");
     const [body, setBody] = useState<Array<TableContentType[]>>([]);
+    const getValueForComparator = useCallback(
+        (array: TableContentType[]): TableContentValueType => {
+            let response: TableContentValueType = "";
+            for (let i = 0; i < array.length; i++) {
+                const el = array[i];
+                if (el.field === orderBy) {
+                    response = el.search !== undefined ? el.search : el.value;
+                }
+            }
+            return response;
+        },
+        [orderBy]
+    );
+    const comparator = useCallback(
+        (a: TableContentType[], b: TableContentType[]): number => {
+            if (orderBy !== "") {
+                let response = 0;
+                const valueA = getValueForComparator(a);
+                const valueB = getValueForComparator(b);
+                if (valueA === "" || valueB === "") {
+                    return 0;
+                } else if (valueA < valueB) {
+                    response = -1;
+                } else if (valueA > valueB) {
+                    response = 1;
+                }
+                return order === OrderType.DESC ? -response : response;
+            }
+            return 0;
+        },
+        [getValueForComparator, order, orderBy]
+    );
     let isEmptyMessage = "No element founded.";
     if (props.isEmptyMessage !== undefined && props.isEmptyMessage !== "") {
         isEmptyMessage = props.isEmptyMessage;
     }
-
-    const getValueForComparator = (array: TableContentType[]): TableContentValueType => {
-        let response: TableContentValueType = "";
-        for (let i = 0; i < array.length; i++) {
-            const el = array[i];
-            if (el.field === orderBy) {
-                response = el.search !== undefined ? el.search : el.value;
-            }
-        }
-        return response;
-    };
-
-    const comparator = (a: TableContentType[], b: TableContentType[]): number => {
-        if (orderBy !== "") {
-            let response = 0;
-            const valueA = getValueForComparator(a);
-            const valueB = getValueForComparator(b);
-            if (valueA === "" || valueB === "") {
-                return 0;
-            } else if (valueA < valueB) {
-                response = -1;
-            } else if (valueA > valueB) {
-                response = 1;
-            }
-            return order === OrderType.DESC ? -response : response;
-        }
-        return 0;
-    };
 
     useEffect(() => {
         if (content.length !== 0) {
@@ -89,7 +93,7 @@ export default function Table(props: TablePropsType) {
         } else {
             setBody([]);
         }
-    }, [content, orderBy, order]);
+    }, [content, orderBy, order, comparator]);
 
     const getIndexBodyFromFieldNameAndValue = (arrayJson: TableContentType[], fieldName: string, fieldValue: string | number): number => {
         let response: number = -1;
