@@ -32,7 +32,7 @@ export default function useEnhancedMediaQuery(query: string) : { value: boolean 
                 setLoading(false);
             }
         }
-    }, [mediaQuery, countMillisecond]);
+    }, [mediaQuery, countMillisecond, intervalId, loading, value]);
 
     return { value: value, loading: loading };
 }
