@@ -3,6 +3,7 @@ import { DateStringType, TimestampableEntity } from "@app/types/Entity";
 import { DeckGetAllFromCurrentUserType } from "@app/types/entity/Deck";
 import { CollectionGetInfoType } from "@app/types/entity/Collection";
 import { UserTokenEntityType } from "@app/types/entity/UserToken";
+import { UserTrackingEntityType } from "@app/types/entity/UserTracking";
 
 export type UserLoginRequestType = RequestSuccessWithDataType<"userInfo", UserLoginType>;
 
@@ -43,9 +44,13 @@ export type UserGetAllUserInfoType = UserGetAllType & {
 }
 
 export type UserGetAdminInfoType = UserGetAllType & {
-    userTokens: Array<Omit<UserTokenEntityType, "user">>;
+    userTokens: UserGetAllUserInfoUserTokenType[],
     updatedAt: DateStringType;
 }
+
+export type UserGetAllUserInfoUserTokenType = Omit<UserTokenEntityType, "user" | "userTrackings"> & {
+    userTrackings: Array<Omit<UserTrackingEntityType, "userToken">>
+};
 
 export type UserGetAllRequestType = RequestGetAll<"user", UserGetAllType>;
 
