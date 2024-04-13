@@ -132,7 +132,7 @@ export default function DashboardHome(props: DashboardHomeType): React.JSX.Eleme
             children: [
                 {
                     name: "Create User",
-                    path: ADMIN_ROUTE_JSON[AdminRouteName.USER_INFO],
+                    path: ADMIN_ROUTE_JSON[AdminRouteName.CREATE_USER],
                 },
             ],
         },
