@@ -56,7 +56,8 @@ export type UserGetAllUserTokenType = Pick<UserTokenEntityType, "id" | "expirate
     ip: UserTrackingInfoType["ip"] | null;
     mostPreciseIp: UserTrackingInfoType["ip"] | null;
     geoip: Pick<UserTrackingInfoGeoIpCityType["location"], "latitude" | "longitude" | "accuracy_radius"> | null;
-    address: UserTrackingInfoGeoIpCityType["address"]
+    address: UserTrackingInfoGeoIpCityType["address"],
+    createdAt: DateStringType;
 };
 
 export type UserGetAllRequestType = RequestGetAll<"user", UserGetAllType>;
