@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import DashboardHome from "@components/dashboard/Home";
 import { Grid, useTheme } from "@mui/material";
 import { StoreContext } from "@app/lib/state-provider";
@@ -17,59 +17,12 @@ import { AdminRouteName, GetFullRoute } from "@routes/Admin";
 export default function AdminIndexPage() {
     const { state: globalState } = useContext(StoreContext);
     const Theme = useTheme();
-    const { value: mediaQueryUpMd, loading: loadingMediaQueryUpMd } = useEnhancedMediaQuery(Theme.breakpoints.up("md"));
+    const enhanceMediaQuery = useEnhancedMediaQuery(Theme.breakpoints.up("md"));
     const [user, setUser] = useState<Array<TableContentType[]>>([]);
     const [userHeader, setUserHeader] = useState<TableHeaderType[]>([]);
     const [loadingUser, setLoadingUser] = useState<boolean>(true);
     const [skipUser, setSkipUser] = useState<boolean>(false);
-
-    const userGetAllUserReq = async () => {
-        return UserGetAllUserInfoRequest()
-            .then((res) => {
-                setUser(parseUser(res.data.user));
-                let header: TableHeaderType[] = [
-                    { name: "Username", field: "username" },
-                    { name: "UserToken Number", field: "userTokenCount" },
-                    { name: "Creation Date", field: "createdAt" },
-                    { name: "Last Update Date", field: "updatedAt" },
-                ];
-                if (mediaQueryUpMd === true) {
-                    header = [
-                        { name: "ID", field: "id" },
-                        { name: "Username", field: "username" },
-                        { name: "Is Admin", field: "isAdmin" },
-                        { name: "UserToken Number", field: "userTokenCount" },
-                        { name: "Creation Date", field: "createdAt" },
-                        { name: "Last Update Date", field: "updatedAt" },
-                    ];
-                }
-                setUserHeader(header);
-            })
-            .catch((err) => {
-                enqueueSnackbar(err, { variant: "error" });
-            })
-            .finally(() => {
-                setLoadingUser(false);
-                setSkipUser(true);
-            });
-    };
-
-    useEffect(() => {
-        if (globalState.user !== null && skipUser === false && loadingMediaQueryUpMd === false) {
-            userGetAllUserReq();
-        }
-    }, [globalState, skipUser, loadingMediaQueryUpMd]);
-
-    const parseUser = (data: UserGetAllUserInfoType[]): Array<TableContentType[]> => {
-        let newUser: Array<TableContentType[]> = [];
-        for (let i = 0; i < data.length; i++) {
-            const el = data[i];
-            newUser.push(parseUniqueUser(el));
-        }
-        return newUser;
-    };
-
-    const parseUniqueUser = (data: UserGetAllUserInfoType): TableContentType[] => {
+    const parseUniqueUser = useCallback((data: UserGetAllUserInfoType): TableContentType[] => {
         const { id, username, userTokenCount, createdAt, updatedAt, role } = data;
         const isAdmin = AdminName === role;
         return [
@@ -100,7 +53,51 @@ export default function AdminIndexPage() {
             },
             AddRowAction(GetFullRoute(AdminRouteName.USER_INFO, { id: id.toString(10), username: username })),
         ];
-    };
+    }, []);
+    const parseUser = useCallback(
+        (data: UserGetAllUserInfoType[]) => {
+            let newUser: Array<TableContentType[]> = [];
+            for (let i = 0; i < data.length; i++) {
+                const el = data[i];
+                newUser.push(parseUniqueUser(el));
+            }
+            return newUser;
+        },
+        [parseUniqueUser]
+    );
+
+    useEffect(() => {
+        if (globalState.user !== null && skipUser === false && enhanceMediaQuery.loading === false) {
+            UserGetAllUserInfoRequest()
+                .then((res) => {
+                    setUser(parseUser(res.data.user));
+                    let header: TableHeaderType[] = [
+                        { name: "Username", field: "username" },
+                        { name: "UserToken Number", field: "userTokenCount" },
+                        { name: "Creation Date", field: "createdAt" },
+                        { name: "Last Update Date", field: "updatedAt" },
+                    ];
+                    if (enhanceMediaQuery.value === true) {
+                        header = [
+                            { name: "ID", field: "id" },
+                            { name: "Username", field: "username" },
+                            { name: "Is Admin", field: "isAdmin" },
+                            { name: "UserToken Number", field: "userTokenCount" },
+                            { name: "Creation Date", field: "createdAt" },
+                            { name: "Last Update Date", field: "updatedAt" },
+                        ];
+                    }
+                    setUserHeader(header);
+                })
+                .catch((err) => {
+                    enqueueSnackbar(err, { variant: "error" });
+                })
+                .finally(() => {
+                    setLoadingUser(false);
+                    setSkipUser(true);
+                });
+        }
+    }, [globalState, skipUser, enhanceMediaQuery, parseUser]);
 
     return (
         <DashboardHome active={6} title="Admin Page">

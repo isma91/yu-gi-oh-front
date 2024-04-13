@@ -70,7 +70,21 @@ export default function AdminUserInfoPage() {
             });
             return sortBasicInfoArray(result);
         },
-        []
+        [sortBasicInfoArray]
+    );
+    const userGetUserAdminInfoReq = useCallback(
+        async (id: number) => {
+            return UserGetUserAdminInfoRequest(id)
+                .then((res) => {
+                    setUser(res.data.user);
+                })
+                .catch((err) => enqueueSnackbar(err, { variant: "error" }))
+                .finally(() => {
+                    setLoading(false);
+                    setSkip(true);
+                });
+        },
+        [enqueueSnackbar]
     );
 
     const userRevokeTokenReq = async (id: number) => {
@@ -84,18 +98,6 @@ export default function AdminUserInfoPage() {
             })
             .catch((err) => enqueueSnackbar(err, { variant: "error" }))
             .finally(() => setLoading(false));
-    };
-
-    const userGetUserAdminInfoReq = async (id: number) => {
-        return UserGetUserAdminInfoRequest(id)
-            .then((res) => {
-                setUser(res.data.user);
-            })
-            .catch((err) => enqueueSnackbar(err, { variant: "error" }))
-            .finally(() => {
-                setLoading(false);
-                setSkip(true);
-            });
     };
 
     useEffect(() => {
@@ -114,7 +116,7 @@ export default function AdminUserInfoPage() {
                 userGetUserAdminInfoReq(idUser);
             }
         }
-    }, [customRouterQuery, globalState, enqueueSnackbar, router]);
+    }, [customRouterQuery, globalState, router, adminBasePage, skip, userGetUserAdminInfoReq]);
 
     const handleMap = (geoipLocation: AdminUserInfoUserTrackingGeoipLocationType) => {
         setGeoipLocation(geoipLocation);
@@ -194,7 +196,7 @@ export default function AdminUserInfoPage() {
                                                             loading={false}
                                                             fullWidth={false}
                                                             icon={<MapIcon />}
-                                                            onClick={(e) => handleMap(geoipLocation)}
+                                                            onClick={(e) => handleMap(geoipLocation as AdminUserInfoUserTrackingGeoipLocationType)}
                                                         >
                                                             Display map for location
                                                         </Button>
@@ -282,7 +284,7 @@ export default function AdminUserInfoPage() {
                 confirm
                 confirmYes={() => userRevokeTokenReq(idUserToken)}
             >
-                If it's your current token you will be disconnected
+                {`If it's your current token you will be disconnected`}
             </Dialog>
         );
     };

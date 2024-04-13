@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { StoreContext } from "@app/lib/state-provider";
 import { enqueueSnackbar } from "notistack";
 import useEnhancedMediaQuery from "@app/hooks/useEnhanceMediaQuery";
@@ -27,7 +27,7 @@ export default function SettingPage() {
     const LeafletMap = dynamic(() => import("@components/display/Leaflet"), { ssr: false });
     const { state: globalState } = useContext(StoreContext);
     const Theme = useTheme();
-    const { value: mediaQueryUpMd, loading: loadingMediaQueryUpMd } = useEnhancedMediaQuery(Theme.breakpoints.up("md"));
+    const enhanceMediaQuery = useEnhancedMediaQuery(Theme.breakpoints.up("md"));
     const [openMap, setOpenMap] = useState<boolean>(false);
     const [geoipLocation, setGeoipLocation] = useState<SettingGeoipLocationType | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -35,102 +35,7 @@ export default function SettingPage() {
     const [userToken, setUserToken] = useState<Array<TableContentType[]>>([]);
     const [userTokenHeader, setUserTokenHeader] = useState<TableHeaderType[]>([]);
     const [userTokenToRevoke, setUserTokenToRevoke] = useState<number | null>(null);
-
-    const sendUserGetAllUserTokenReq = async () => {
-        return UserGetAllUserTokenRequest()
-            .then((res) => {
-                setUserToken(parseUserToken(res.data.userToken));
-                let header: TableHeaderType[] = [
-                    { name: "Usage", field: "nbUsage" },
-                    { name: "Expiration date", field: "expiratedAt" },
-                    { name: "Map", field: "map" },
-                    { name: "Revoke Token", field: "revokeToken" },
-                ];
-                if (mediaQueryUpMd === true) {
-                    header = [
-                        { name: "Ip", field: "ip" },
-                        { name: "Most precise Ip", field: "mostPreciseIp" },
-                        { name: "Usage", field: "nbUsage" },
-                        { name: "Expiration date", field: "expiratedAt" },
-                        { name: "Creation date", field: "createdAt" },
-                        { name: "Map", field: "map" },
-                        { name: "Revoke Token", field: "revokeToken" },
-                    ];
-                }
-                setUserTokenHeader(header);
-            })
-            .catch((err) => enqueueSnackbar(err, { variant: "error" }))
-            .finally(() => {
-                setLoading(false);
-                setSkip(true);
-            });
-    };
-
-    const findIndexElementInTable = (fieldName: string, fieldValue: string | number): number | null => {
-        let index = null;
-        loop1: for (let i = 0; i < userToken.length; i++) {
-            const el = userToken[i];
-            for (let j = 0; j < el.length; j++) {
-                const el2 = el[j];
-                if (el2.field === fieldName && el2.value === fieldValue) {
-                    index = i;
-                    break loop1;
-                }
-            }
-        }
-        return index;
-    };
-
-    const userRevokeTokenReq = async (id: number) => {
-        setLoading(true);
-        return UserRevokeTokenRequest(id)
-            .then((res) => {
-                enqueueSnackbar(res.success, { variant: "success" });
-                const index = findIndexElementInTable("id", id);
-                if (index !== null) {
-                    setUserToken((prevState) => {
-                        let newUserToken = [...prevState];
-                        newUserToken.splice(index, 1);
-                        return newUserToken;
-                    });
-                }
-            })
-            .catch((err) => enqueueSnackbar(err, { variant: "error" }))
-            .finally(() => {
-                setLoading(false);
-                setUserTokenToRevoke(null);
-            });
-    };
-
-    useEffect(() => {
-        if (globalState.user !== null && skip === false && loadingMediaQueryUpMd === false) {
-            sendUserGetAllUserTokenReq();
-        }
-    }, [globalState, skip, loadingMediaQueryUpMd]);
-
-    useEffect(() => {
-        if (userTokenToRevoke !== null) {
-            userRevokeTokenReq(userTokenToRevoke);
-        }
-    }, [userTokenToRevoke]);
-
-    const parseUserToken = (data: UserGetAllUserTokenType[]): Array<TableContentType[]> => {
-        let newUserToken: Array<TableContentType[]> = [];
-        for (let i = 0; i < data.length; i++) {
-            const el = data[i];
-            newUserToken.push(parseUniqueUserToken(el));
-        }
-        return newUserToken;
-    };
-
-    const handleMap = (geoip: SettingGeoipLocationType | null) => {
-        if (geoip !== null) {
-            setGeoipLocation(geoip);
-            setOpenMap(true);
-        }
-    };
-
-    const parseUniqueUserToken = (data: UserGetAllUserTokenType): TableContentType[] => {
+    const parseUniqueUserToken = useCallback((data: UserGetAllUserTokenType): TableContentType[] => {
         let { id, nbUsage, ip, mostPreciseIp, address, geoip, expiratedAt, createdAt } = data;
         if (ip === null) {
             ip = "Cannot find Ip address";
@@ -201,11 +106,101 @@ export default function SettingPage() {
                         confirm
                         confirmYes={() => setUserTokenToRevoke(id)}
                     >
-                        If it's your current token you will be disconnected
+                        {`If it's your current token you will be disconnected`}
                     </Dialog>
                 ),
             },
         ];
+    }, []);
+    const parseUserToken = useCallback(
+        (data: UserGetAllUserTokenType[]): Array<TableContentType[]> => {
+            let newUserToken: Array<TableContentType[]> = [];
+            for (let i = 0; i < data.length; i++) {
+                const el = data[i];
+                newUserToken.push(parseUniqueUserToken(el));
+            }
+            return newUserToken;
+        },
+        [parseUniqueUserToken]
+    );
+    const findIndexElementInTable = useCallback(
+        (fieldName: string, fieldValue: string | number): number | null => {
+            let index = null;
+            loop1: for (let i = 0; i < userToken.length; i++) {
+                const el = userToken[i];
+                for (let j = 0; j < el.length; j++) {
+                    const el2 = el[j];
+                    if (el2.field === fieldName && el2.value === fieldValue) {
+                        index = i;
+                        break loop1;
+                    }
+                }
+            }
+            return index;
+        },
+        [userToken]
+    );
+
+    useEffect(() => {
+        if (globalState.user !== null && skip === false && enhanceMediaQuery.loading === false) {
+            UserGetAllUserTokenRequest()
+                .then((res) => {
+                    setUserToken(parseUserToken(res.data.userToken));
+                    let header: TableHeaderType[] = [
+                        { name: "Usage", field: "nbUsage" },
+                        { name: "Expiration date", field: "expiratedAt" },
+                        { name: "Map", field: "map" },
+                        { name: "Revoke Token", field: "revokeToken" },
+                    ];
+                    if (enhanceMediaQuery.value === true) {
+                        header = [
+                            { name: "Ip", field: "ip" },
+                            { name: "Most precise Ip", field: "mostPreciseIp" },
+                            { name: "Usage", field: "nbUsage" },
+                            { name: "Expiration date", field: "expiratedAt" },
+                            { name: "Creation date", field: "createdAt" },
+                            { name: "Map", field: "map" },
+                            { name: "Revoke Token", field: "revokeToken" },
+                        ];
+                    }
+                    setUserTokenHeader(header);
+                })
+                .catch((err) => enqueueSnackbar(err, { variant: "error" }))
+                .finally(() => {
+                    setLoading(false);
+                    setSkip(true);
+                });
+        }
+    }, [globalState, skip, enhanceMediaQuery, parseUserToken]);
+
+    useEffect(() => {
+        if (userTokenToRevoke !== null) {
+            setLoading(true);
+            UserRevokeTokenRequest(userTokenToRevoke)
+                .then((res) => {
+                    enqueueSnackbar(res.success, { variant: "success" });
+                    const index = findIndexElementInTable("id", userTokenToRevoke);
+                    if (index !== null) {
+                        setUserToken((prevState) => {
+                            let newUserToken = [...prevState];
+                            newUserToken.splice(index, 1);
+                            return newUserToken;
+                        });
+                    }
+                })
+                .catch((err) => enqueueSnackbar(err, { variant: "error" }))
+                .finally(() => {
+                    setLoading(false);
+                    setUserTokenToRevoke(null);
+                });
+        }
+    }, [userTokenToRevoke, findIndexElementInTable]);
+
+    const handleMap = (geoip: SettingGeoipLocationType | null) => {
+        if (geoip !== null) {
+            setGeoipLocation(geoip);
+            setOpenMap(true);
+        }
     };
 
     return (
