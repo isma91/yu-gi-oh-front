@@ -62,6 +62,6 @@ export function CheckUuid(uuid: string, version: number = 7): boolean {
  * @returns {string}
  */
 export function Pluralize(word: string, number: number): string {
-    const suffixe = (number > 0) ? "s" : "";
+    const suffixe = (number > 1) ? "s" : "";
     return `${word}${suffixe}`;
 }
