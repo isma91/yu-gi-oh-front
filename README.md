@@ -1,6 +1,6 @@
 # Yu-Gi-Oh Front
 
-**Yu-Gi-Oh Front** is a complete solution frontend for the [Yu-Gi-Oh API package]([https://git.ismaydogmus.fr/isma91/yu-gi-oh-api](https://github.com/isma91/yu-gi-oh-api)).
+**Yu-Gi-Oh Front** is a complete solution frontend for the [Yu-Gi-Oh API package](https://git.ismaydogmus.fr/isma91/yu-gi-oh-api](https://github.com/isma91/yu-gi-oh-api).
 
 ## Run the project
 
