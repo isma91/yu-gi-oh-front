@@ -10,6 +10,7 @@ export enum UserApiRouteName {
     EDIT_PASSWORD = "edit-password",
     EDIT_USERNAME = "edit-username",
     GET_BASIC_INFO = "basic-info",
+    REVOKE_TOKEN = "revoke-token",
 }
 
 const USER_API_ROUTE_JSON = {
@@ -22,6 +23,7 @@ const USER_API_ROUTE_JSON = {
     [UserApiRouteName.EDIT_PASSWORD]: "/edit-password",
     [UserApiRouteName.EDIT_USERNAME]: "/edit-username/{username}",
     [UserApiRouteName.GET_BASIC_INFO]: "/basic-info",
+    [UserApiRouteName.REVOKE_TOKEN]: "/revoke-token/{id}",
 };
 
 export const USER_API_BASE_URL = "/user";
