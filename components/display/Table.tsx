@@ -86,6 +86,8 @@ export default function Table(props: TablePropsType) {
             });
             const newBody = newContent.map((el) => el[0]);
             setBody(newBody);
+        } else {
+            setBody([]);
         }
     }, [content, orderBy, order]);
 
