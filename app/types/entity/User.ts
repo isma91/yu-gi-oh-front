@@ -3,7 +3,7 @@ import { DateStringType, TimestampableEntity } from "@app/types/Entity";
 import { DeckGetAllFromCurrentUserType } from "@app/types/entity/Deck";
 import { CollectionGetInfoType } from "@app/types/entity/Collection";
 import { UserTokenEntityType } from "@app/types/entity/UserToken";
-import { UserTrackingEntityType } from "@app/types/entity/UserTracking";
+import { UserTrackingEntityType, UserTrackingInfoGeoIpCityType, UserTrackingInfoType } from "@app/types/entity/UserTracking";
 
 export type UserLoginRequestType = RequestSuccessWithDataType<"userInfo", UserLoginType>;
 
@@ -52,6 +52,13 @@ export type UserGetAllUserInfoUserTokenType = Omit<UserTokenEntityType, "user" |
     userTrackings: Array<Omit<UserTrackingEntityType, "userToken">>
 };
 
+export type UserGetAllUserTokenType = Pick<UserTokenEntityType, "id" | "expiratedAt" | "nbUsage"> & {
+    ip: UserTrackingInfoType["ip"] | null;
+    mostPreciseIp: UserTrackingInfoType["ip"] | null;
+    geoip: Pick<UserTrackingInfoGeoIpCityType["location"], "latitude" | "longitude" | "accuracy_radius"> | null;
+    address: UserTrackingInfoGeoIpCityType["address"]
+};
+
 export type UserGetAllRequestType = RequestGetAll<"user", UserGetAllType>;
 
 export type UserGetInfoRequestType = RequestGetInfo<"user", UserGetAllType>;
@@ -61,3 +68,5 @@ export type UserGetBasicInfoRequestType = RequestGetInfo<"user", UserGetBasicInf
 export type UserGetAllUserInfoRequestType = RequestGetAll<"user", UserGetAllUserInfoType>;
 
 export type UserGetUserAdminInfoRequestType = RequestGetInfo<"user", UserGetAdminInfoType>;
+
+export type UserGetAllUserTokenInfoRequestType = RequestGetAll<"userToken", UserGetAllUserTokenType>;

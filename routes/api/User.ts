@@ -11,6 +11,7 @@ export enum UserApiRouteName {
     EDIT_USERNAME = "edit-username",
     GET_BASIC_INFO = "basic-info",
     REVOKE_TOKEN = "revoke-token",
+    GET_ALL_USER_TOKEN = "get-all-user-token",
 }
 
 const USER_API_ROUTE_JSON = {
@@ -24,6 +25,7 @@ const USER_API_ROUTE_JSON = {
     [UserApiRouteName.EDIT_USERNAME]: "/edit-username/{username}",
     [UserApiRouteName.GET_BASIC_INFO]: "/basic-info",
     [UserApiRouteName.REVOKE_TOKEN]: "/revoke-token/{id}",
+    [UserApiRouteName.GET_ALL_USER_TOKEN]: "/all-token",
 };
 
 export const USER_API_BASE_URL = "/user";
