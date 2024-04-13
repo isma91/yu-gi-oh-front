@@ -22,4 +22,4 @@ Just run `npm install --legacy-peer-deps` in the root of the project.
 
 ### Build and Run the project
 
-`npm prod`
+`npm run prod`
