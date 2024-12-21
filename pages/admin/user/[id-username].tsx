@@ -51,7 +51,7 @@ export default function AdminUserInfoPage() {
         (obj: object, key: string | number = "", result: AdminUserInfoUserTokenBasicInfoType[] = []): AdminUserInfoUserTokenBasicInfoType[] => {
             const objKeyArray = Object.keys(obj);
             objKeyArray.forEach((objKey) => {
-                const objValue = obj[objKey as keyof object];
+                const objValue: any = obj[objKey as keyof object];
                 let nameToAdd = objKey;
                 if (key !== "") {
                     nameToAdd = `${key}-${objKey}`;
@@ -61,7 +61,11 @@ export default function AdminUserInfoPage() {
                         transformToBasicInfoArray(el, `${nameToAdd}-${key}`, result);
                     });
                 } else if (typeof objValue === "object") {
-                    transformToBasicInfoArray(objValue, nameToAdd, result);
+                    if (objValue !== null) {
+                        transformToBasicInfoArray(objValue, nameToAdd, result);
+                    } else {
+                        result.push({ name: Capitalize(nameToAdd), value: "NULL" });
+                    }
                 } else if (typeof objValue === "boolean") {
                     result.push({ name: Capitalize(nameToAdd), value: objValue === true ? "yes" : "no" });
                 } else {
