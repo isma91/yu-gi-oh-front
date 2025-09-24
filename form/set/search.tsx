@@ -70,7 +70,7 @@ export default function SetSearchForm(props: SetSearchFormPropsType) {
     }, [offset]);
 
     return (
-        <Form setValues={setValues} setErrors={setErrors} fields={["name", "date", "code"]}>
+        <Form setValues={setValues} setErrors={setErrors} fields={["name", "date", "code", "yearBegin", "yearEnd"]}>
             <Grid item xs={12} container spacing={2}>
                 <Grid item xs={12}>
                     <InputText name="name" error={errors.name} optional />
